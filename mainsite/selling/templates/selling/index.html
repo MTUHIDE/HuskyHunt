@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Selling Form</h2>
+<div class='row' style='padding-bottom: 80px;'>
+</div>
+<div class='row'>
+    <div class='col-md-3'>
+    </div>
+    <div class='col-md-6'>
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <strong>{{ form.errors }}</strong>
+            </div>
+        {% endif %}
+
+        <form role="form" method="post" style='border: 2xp;'> 
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div class='col-md-3'>
+    </div>
+</div>
+{% endblock %}
