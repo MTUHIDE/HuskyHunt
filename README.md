@@ -6,8 +6,11 @@ Like BarkBoard but BorkBoard
 
 #Setup
 ## Prereqs
-### Git need to be setup
+### Git needs to be setup
 Follow the instructions in [this Doc](https://docs.google.com/document/d/1E2wAXAIfVQe39cs4nv5TfXGxbGzUXE5yun1oFoxynLc/edit).
+
+Note: Please read and follow the Doc carefully to prevent potential data loss, particularly Part 3!
+
 ### Python needs to be installed
 Python should be installed, versions __Python 3.5 or later__
 1. [Download Python](https://www.python.org/downloads/)
