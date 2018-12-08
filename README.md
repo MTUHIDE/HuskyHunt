@@ -1,5 +1,6 @@
-# BorkBoard
-Like BarkBoard but BorkBoard
+# HuskyHunt
+Providing a secure network for MTU students and the surrounding community to safely buy/sell items.
+Similar to BarkBoard (now discontinued), and somewhat similar to Craigslist.
 
 ## Excluded Files
 **All project files are now in the template, the previously excluded files have been added to the repository.**
