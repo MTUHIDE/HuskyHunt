@@ -24,7 +24,7 @@ from catalog.models import CatalogItem
 
 def index(request):
     template = 'selling/index.html'
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if request.method == 'POST':
             form = SellingForm(request.POST)
             if form.is_valid():

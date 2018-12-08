@@ -2,35 +2,98 @@
 {% load static %}
 
 {% block content %}
+
 <head>
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="apps.googleusercontent.com"> <!--"YOUR_CLIENT_ID.apps.googleusercontent.com">-->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <link rel="stylesheet" type="text/css" href="{% static 'landing.css' %}">
+
+    <!-- Video background player preload -->
+    <script src="https://unpkg.com/video.js/dist/video.js"></script>
+    <script src="https://unpkg.com/videojs-flash/dist/videojs-flash.js"></script>
+    <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
+    <script>
+      (function(window, videojs) {
+        var player = window.player = videojs('example-video');
+
+        // hook up the video switcher
+        var loadUrl = document.getElementById('load-url');
+        var url = document.getElementById('url');
+        loadUrl.addEventListener('submit', function(event) {
+          event.preventDefault();
+          player.src({
+            src: url.value,
+            type: 'application/x-mpegURL'
+          });
+          return false;
+        });
+      }(window, window.videojs));
+    </script>
+
 </head>
 
-<h1>Login</h1>
-<div class="row">
-    <div id="loginPicture" class="col-md-8">
-    </div>
-    <div id="loginAuth" class="col-md-4">
+<!-- Video Background Main -->
+<video id=example-video playsinline="playsinline" autoplay="autoplay" muted="muted" class="video-js vjs-default-skin mw-100"
+style="position: absolute;
+  top: 0px;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  //background-size: cover;
+">
+    <source
+       src="https://streamingwebcams.mtu.edu:1935/rtplive/camera029.stream/playlist.m3u8"
+       type="application/x-mpegURL">
+</video>
 
-        <form action="/?next=/catalog/" method="post">
+<!-- Page Title -->
+<br><br>
+<div class="row justify-content-md-center">
+      <div class="col-auto">
+  <h1 style="text-align: center; text-decoration: underline; color: white;">Welcome</h1>
+      </div></div>
+<br>
+<!-- Google login section -->
+<div class="row justify-content-md-center">
+    <div class="col-auto" style="color: white;">
+      Sign in with MTU Account:</div>
+      </div>
+      <div class="row justify-content-md-center">
+    <div class="col-auto"><br>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div><br><br>
+    </div>
+  </div>
+<!-- Development login section -->
+<div class="row justify-content-md-center fixed-bottom">
+    <div id="loginAuth" class="col-2" style="background-color: white; opacity: 0.8; text-align: center">
+      Development Login:
+        <form action="/?next=/catalog/" method="post" id="devLogin">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="inputEmail">Email address</label>
+            <div>
                 <input type="username" class="form-control" name="inputEmail" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
             </div>
-            <div class="form-group">
-                <label for="inputPassword">Password</label>
+            <div>
                 <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Password">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-        <a href="{% url 'landing:signup' %}">Sign Up</a>
+        <!-- Removed <a href="{% url 'landing:signup' %}">Sign Up</a> as it isn't used -->
 
-        <!--
-        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+
+<!-- Video background player script -->
+        <script src="video.js"></script>
+        <script src="videojs.hls.min.js"></script>
+        <script>
+        var player = videojs('example-video');
+        player.play();
+        </script>
+        <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+        </div>
+        </div>
+
+<!-- Google Sign-In Script -->
             <script>
                 function onSignIn(googleUser) {
                     // Useful data for your client-side scripts:
@@ -47,7 +110,5 @@
                     console.log("ID Token: " + id_token);
                 };
             </script>
-        --gauth>
-    </div>
-</div>
+
 {% endblock %}

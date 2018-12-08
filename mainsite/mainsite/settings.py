@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'n1og)mxchrliw48h85fu6e&0g_x^4&j=!1&bdudctd*e-k4^te'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True 
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'polls',
     'selling',
 ]
-
-# AUTH_USER_MODEL = "accountant.Account"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,7 +81,9 @@ WSGI_APPLICATION = 'mainsite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-	'NAME': 'barkerdb',
+	'NAME': 'huskydb',
+	'USER': 'djadmin',
+	'PASSWORD': '!@#qweASDzxc',
     }
 }
 
