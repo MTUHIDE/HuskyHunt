@@ -79,12 +79,12 @@ virtualenv 16.0.0
 2. Similarly, use pip to install __Pillow__.
 ... Run `pip install pillow` in command line.
 
-3. Run the local server.
-... Using the command line, cd into GitHub/HuskyHunt/mainsite.
-... Also in command line, run `python manage.py runserver`.
-... Attempt to go to localhost:8000 in your web browser.
-You should see the HuskyHunt homepage. Done!
-
+3. Run the local server.  
+... Using the command line, cd into GitHub/HuskyHunt/mainsite.  
+... Also in command line, run `python manage.py runserver`.  
+... Attempt to go to localhost:8000 in your web browser.  
+You should see the HuskyHunt homepage. Done  
+  
 4. **_There is no shortcut to learning, only to do_** so I would recommend going through Django's expansive documentation.  
 ... Start with the [Tutorial](https://docs.djangoproject.com/en/2.1/intro/install/) section to get a feel of how it works which will walk you through setting up a _polls app_. **Read through it carefully, and don't skip any steps.**
 
