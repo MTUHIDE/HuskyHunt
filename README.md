@@ -5,7 +5,7 @@ Similar to BarkBoard (now discontinued), and somewhat similar to Craigslist.
 ## Excluded Files
 **All project files are now in the template, the previously excluded files have been added to the repository.**
 
-#Setup
+# Setup Process:
 ## Prereqs
 ### Git needs to be setup
 Follow the instructions in [this Doc](https://docs.google.com/document/d/1E2wAXAIfVQe39cs4nv5TfXGxbGzUXE5yun1oFoxynLc/edit).
@@ -61,15 +61,20 @@ pytz       2018.5
 setuptools 39.0.1
 virtualenv 16.0.0
 ```
-<#### MySQL Client is required to connect to the database>
-[//]: <> (Long and short of this is that the mysqlclient module for python is extremely particular so make sure you install the correct version:)
-[//]: <> (**`pip install mysqlclient==1.3.12`**)
+
+[//]: # (<#### MySQL Client is required to connect to the database>)
+
+[//]: # (Long and short of this is that the mysqlclient module for python is extremely particular so make sure you install the correct version:)
+
+[//]: # (**`pip install mysqlclient==1.3.12`**)
 
 ### Django needs to be installed
 1. Using _pip_, you will need to install __Django__.
 ... You can do this with `pip install django`. 
-[//]: <> (**Be aware that the version matters [Django 2.1.1]**)
-[//]: <> (... To specify the version you can use `pip install django==2.1.1`.)
+
+[//]: # (**Be aware that the version matters [Django 2.1.1]**)
+
+[//]: # (... To specify the version you can use `pip install django==2.1.1`.)
 
 2. Similarly, use pip to install __Pillow__.
 ... Run `pip install pillow` in command line.
