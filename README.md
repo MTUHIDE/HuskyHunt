@@ -12,10 +12,10 @@ Follow the instructions in [this Doc](https://docs.google.com/document/d/1E2wAXA
 
 Note: Please read and follow the Doc carefully to prevent potential data loss when you try to push, particularly Part 3!
 
-When you're done with that, you'll have (pretty much) an empty HuskyHunt folder because you're defaulted into the master branch. Our codebase lives in the dev branch. To fix this:
-1: In the command line, go into your GitHub folder, then your HuskyHunt folder.
-2: Still in command line, run this command: git checkout dev
-You should now have the project files downloaded.
+When you're done with that, you'll have (pretty much) an empty HuskyHunt folder because you're defaulted into the master branch. Our codebase lives in the dev branch. To fix this:  
+1: In the command line, go into your GitHub folder, then your HuskyHunt folder.  
+2: Still in command line, run this command: git checkout dev  
+3: You should now have the project files downloaded.  
 
 ### Python needs to be installed
 Python should be installed, versions __Python 3.5 or later__
