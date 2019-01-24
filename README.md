@@ -13,9 +13,9 @@ Follow the instructions in [this Doc](https://docs.google.com/document/d/1E2wAXA
 Note: Please read and follow the Doc carefully to prevent potential data loss when you try to push, particularly Part 3!
 
 When you're done with that, you'll have (pretty much) an empty HuskyHunt folder because you're defaulted into the master branch. Our codebase lives in the dev branch. To fix this:  
-1: In the command line, go into your GitHub folder, then your HuskyHunt folder.  
-2: Still in command line, run this command: git checkout dev  
-3: You should now have the project files downloaded.  
+... 1: In the command line, go into your GitHub folder, then your HuskyHunt folder.  
+... 2: Still in command line, run this command: git checkout dev  
+... 3: You should now have the project files downloaded.  
 
 ### Python needs to be installed
 Python should be installed, versions __Python 3.5 or later__
@@ -62,13 +62,13 @@ setuptools 39.0.1
 virtualenv 16.0.0
 ```
 <#### MySQL Client is required to connect to the database>
-<Long and short of this is that the mysqlclient module for python is extremely particular so make sure you install the correct version:>
-<**`pip install mysqlclient==1.3.12`**>
+<> (Long and short of this is that the mysqlclient module for python is extremely particular so make sure you install the correct version:)
+<> (**`pip install mysqlclient==1.3.12`**)
 
 ### Django needs to be installed
 1. Using _pip_, you will need to install __Django__.
-... You can do this with `pip install django`. <**Be aware that the version matters [Django 2.1.1]**>
-<... To specify the version you can use `pip install django==2.1.1`.>
+... You can do this with `pip install django`. <> (**Be aware that the version matters [Django 2.1.1]**)
+<> (... To specify the version you can use `pip install django==2.1.1`.)
 
 2. Similarly, use pip to install __Pillow__.
 ... Run `pip install pillow` in command line.
@@ -83,7 +83,7 @@ You should see the HuskyHunt homepage. Done!
 ... Start with the [Tutorial](https://docs.djangoproject.com/en/2.1/intro/install/) section to get a feel of how it works which will walk you through setting up a _polls app_. **Read through it carefully, and don't skip any steps.**
 
 Here is a tutorial video to help visual how Django concepts and structure.  _Sentdex_ is a great python programmer and has a variety of tutorials on topics from beginners to the more advanced, but be aware some of these are related to older versions of python or django:
-<iframe width="719" height="404" src="https://www.youtube.com/embed/FNQxxpM1yOs?list=PLQVvvaa0QuDeA05ZouE4OzDYLHY-XH-Nd" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+https://www.youtube.com/embed/FNQxxpM1yOs?list=PLQVvvaa0QuDeA05ZouE4OzDYLHY-XH-Nd
 
 ### Knowing where and who to seek out help from
 Knowing where to get help is important, make sure you're in slack.
