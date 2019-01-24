@@ -62,13 +62,14 @@ setuptools 39.0.1
 virtualenv 16.0.0
 ```
 <#### MySQL Client is required to connect to the database>
-<> (Long and short of this is that the mysqlclient module for python is extremely particular so make sure you install the correct version:)
-<> (**`pip install mysqlclient==1.3.12`**)
+[//]: <> (Long and short of this is that the mysqlclient module for python is extremely particular so make sure you install the correct version:)
+[//]: <> (**`pip install mysqlclient==1.3.12`**)
 
 ### Django needs to be installed
 1. Using _pip_, you will need to install __Django__.
-... You can do this with `pip install django`. <> (**Be aware that the version matters [Django 2.1.1]**)
-<> (... To specify the version you can use `pip install django==2.1.1`.)
+... You can do this with `pip install django`. 
+[//]: <> (**Be aware that the version matters [Django 2.1.1]**)
+[//]: <> (... To specify the version you can use `pip install django==2.1.1`.)
 
 2. Similarly, use pip to install __Pillow__.
 ... Run `pip install pillow` in command line.
