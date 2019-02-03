@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url, include
 
 urlpatterns = [
     path('accountant/', include('accountant.urls', namespace='accountant')),
@@ -24,6 +25,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('django.contrib.auth.urls')),
     path('', include('landing.urls', namespace='landing')),
+    url(r'^auth/', include('social_django.urls', namespace='social')),  # <- Here
+    path('auth/complete/google-oauth2/catalog/', include('catalog.urls', namespace='authsuccess')),
+
 ]
 
 from .import settings

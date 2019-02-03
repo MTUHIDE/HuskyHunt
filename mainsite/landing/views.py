@@ -10,15 +10,16 @@ def index(request):
     template = 'landing/index.html'
     context = {}
 
-    #username = request.POST['inputEmail']
-    #password = request.POST['inputPassword']
+
     if request.POST:
-        username = 'Jesse'
-        password = 'P@ssw0rd1!'
+        username = request.POST['inputEmail']
+        password = request.POST['inputPassword']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return HttpResponseRedirect('/catalog/')
+        else:
+            HttpResponseRedirect('/')
     else:
         return render(request, template, context)
 
@@ -36,7 +37,7 @@ def signup(request):
     else:
         form = UserCreationForm()
     context = { 'form': form }
-    return render(request, template, context) 
+    return render(request, template, context)
 
 def passwordReset(email, from_email):
     template = 'registration/password_reset_email.html'

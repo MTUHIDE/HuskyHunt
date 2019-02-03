@@ -23,11 +23,23 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'n1og)mxchrliw48h85fu6e&0g_x^4&j=!1&bdudctd*e-k4^te'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 # Application definition
+
+LOGIN_URL = 'landing'
+LOGIN_REDIRECT_URL = 'catalog'
+
+AUTHENTICATION_BACKENDS = (
+ 'social_core.backends.google.GoogleOAuth2',  # for Google authentication
+ #'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
+ 'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='568921202692-kqmjfu42i0un3cjhl98g7oskhetj5ius.apps.googleusercontent.com'  #Paste CLient Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'vTf-kMaZBgIJxalzhGmAhk-2' #Paste Secret Key
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,6 +53,7 @@ INSTALLED_APPS = [
     'landing',
     'polls',
     'selling',
+    'social_django'
 ]
 
 MIDDLEWARE = [
@@ -66,6 +79,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',  # <- Here
+                'social_django.context_processors.login_redirect', # <- Here
             ],
         },
     },
