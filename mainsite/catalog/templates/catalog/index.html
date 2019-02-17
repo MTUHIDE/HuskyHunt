@@ -20,7 +20,10 @@
 			                <a href="#"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
                             <div class="card-body">
                                 <h4 class="card-title">
-			    	                <a href="#">{{ item.item_title }}</a>
+									<form id="form-id" method="post">
+										<input type="hidden" name="title" value="{{item.item_title}}">
+										<a href="\product" onclick="document.getElementById('form-id').submit();">{{ item.item_title }}</a>
+									</form>	
                                 </h4>
 			                    <h5>${{ item.item_price }}</h5>
 			                    <p class="card-text">{{ item.item_description }}</p>
