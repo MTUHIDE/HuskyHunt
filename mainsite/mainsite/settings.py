@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'landing',
     'polls',
     'selling',
-    'product',
+    
 ]
 
 MIDDLEWARE = [
