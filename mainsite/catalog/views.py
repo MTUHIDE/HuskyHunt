@@ -26,9 +26,9 @@ def index(request):
 def detail(request, pk):
     template = 'catalog/details.html'
     if request.user.is_authenticated:
-        item = CategoryItem.objects.filter(pk=pk)
+        item_list = CatalogItem.objects.filter(pk=pk)
         context = {
-                'object': item,
+                'item_list': item_list,
         }
     else:
         context = {}
