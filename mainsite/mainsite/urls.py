@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('django.contrib.auth.urls')),
     path('', include('landing.urls', namespace='landing')),
+    path('messages/', include('postman.urls', namespace='postman')),
 ]
 
 from .import settings
