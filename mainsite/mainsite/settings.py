@@ -38,8 +38,8 @@ AUTHENTICATION_BACKENDS = (
  'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='568921202692-kqmjfu42i0un3cjhl98g7oskhetj5ius.apps.googleusercontent.com'  #Paste CLient Key
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'vTf-kMaZBgIJxalzhGmAhk-2' #Paste Secret Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='568921202692-kqmjfu42i0un3cjhl98g7oskhetj5ius.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'vTf-kMaZBgIJxalzhGmAhk-2'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -79,8 +79,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',  # <- Here
-                'social_django.context_processors.login_redirect', # <- Here
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },

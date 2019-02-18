@@ -21,7 +21,7 @@ def index(request):
         }
         return render(request, template, context)
     else:
-        return HttpResponseRedirect('/') 
+        return HttpResponseRedirect('/')
 
 def detail(request, pk):
     template = 'catalog/details.html'
