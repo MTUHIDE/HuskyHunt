@@ -5,6 +5,7 @@ app_name = 'catalog'
 urlpatterns = [
     path('<int:pk>/', views.detail, name='detail'),
     path('', views.index, name='index'),
+    #path('auth/complete/google-oauth2/catalog/', views.index, name='authsuccess'),
 ]
 
 #path('<int:pk>/', views.DetailView.as_view(), name='detail'),
