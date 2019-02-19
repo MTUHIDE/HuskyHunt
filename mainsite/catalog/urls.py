@@ -5,6 +5,7 @@ app_name = 'catalog'
 urlpatterns = [
     path('<int:pk>/', views.detail, name='detail'),
     path('', views.index, name='index'),
+	path('<category>/', views.filter, name='filter'),
 ]
 
 #path('<int:pk>/', views.DetailView.as_view(), name='detail'),

@@ -5,8 +5,9 @@
         <div class="col-lg-3">
             <h1 class="my-4">On the Hunt!</h1>
             <div class="list-group">
+			<a href='\catalog\' class='list-group-item'>Recent</a>
                 {% for filter in filters %}
-                    <a href='#' class='list-group-item'>{{ filter.category_name }}</a>
+                    <a href='\catalog\{{ filter.category_name }}' class='list-group-item'>{{ filter.category_name }}</a>
                 {% endfor %}
             </div>
          </div>
