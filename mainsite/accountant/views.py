@@ -23,7 +23,7 @@ from django.contrib import auth
 
 
 def catalogRedirect(request):
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/catalog')
 
 def logout(request):
     auth.logout(request)
