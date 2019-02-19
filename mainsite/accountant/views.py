@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .forms import AccountForm
 from .models import Account
+from django.contrib import auth
 
 # Create your views here.
 #class AccountListView(ListView):
@@ -22,6 +23,10 @@ from .models import Account
 
 
 def catalogRedirect(request):
+    return HttpResponseRedirect('/')
+
+def logout(request):
+    auth.logout(request)
     return HttpResponseRedirect('/')
 
 def index(request):
