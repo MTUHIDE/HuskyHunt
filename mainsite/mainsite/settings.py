@@ -36,13 +36,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'postman',
+    'dj_pagination',
     'accountant',
     'catalog',
     'landing',
     'polls',
     'selling',
+    'postman',
 ]
+
+POSTMAN_AUTO_MODERATE_AS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
