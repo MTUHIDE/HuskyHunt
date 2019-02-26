@@ -36,17 +36,17 @@
                           Menu
                       </a>
 		      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{% url 'accountant:index' %}">Account</a>
                           <a class="dropdown-item" href="{% url 'catalog:index' %}">Catalog</a>
+                          <a class="dropdown-item" href="{% url 'accountant:index' %}">My Account</a>
                           <a class="dropdown-item" href="{% url 'polls:index' %}">Polls</a>
                           <a class="dropdown-item" href="{% url 'selling:index' %}">Selling</a>
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
-                          <a class="dropdown-item" href="{% url 'landing:index' %}">login</a>
-			              <a class="dropdown-item" href="{% url 'admin:logout' %}">logout</a>
+                          <!--<a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
+                          <a class="dropdown-item" href="{% url 'landing:index' %}">login</a>-->
+			              <a class="dropdown-item" href="{% url 'accountant:logout' %}">Logout</a>
                       </div>
                   </li>
-              </ul>    
+              </ul>
           </div>
         </div>
     </nav>

@@ -48,7 +48,7 @@ style="position: absolute;
 </video>
 
 <!-- Page Title -->
-<br><br>
+<br><br><br>
 <div class="row justify-content-md-center">
       <div class="col-auto">
   <h1 style="text-align: center; text-decoration: underline; color: white;">Welcome</h1>
@@ -61,10 +61,10 @@ style="position: absolute;
       </div>
       <div class="row justify-content-md-center">
     <div class="col-auto"><br>
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div><br><br>
+    <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="/static/mainsite/gauth.png"></a><br><br>
     </div>
   </div>
-<!-- Development login section -->
+<!-- Development login section
 <div class="row justify-content-md-center fixed-bottom">
     <div id="loginAuth" class="col-2" style="background-color: white; opacity: 0.8; text-align: center">
       Development Login:
@@ -78,7 +78,7 @@ style="position: absolute;
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-        <!-- Removed <a href="{% url 'landing:signup' %}">Sign Up</a> as it isn't used -->
+        Removed <a href="{% url 'landing:signup' %}">Sign Up</a> as it isn't used -->
 
 
 <!-- Video background player script -->
