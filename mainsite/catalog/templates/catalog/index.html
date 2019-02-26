@@ -5,8 +5,9 @@
         <div class="col-lg-3">
             <h1 class="my-4">On the Hunt!</h1>
             <div class="list-group">
+			<a href='\catalog\' class='list-group-item'>Recent</a>
                 {% for filter in filters %}
-                    <a href='#' class='list-group-item'>{{ filter.category_name }}</a>
+                    <a href='\catalog\filter\{{ filter.category_name }}' class='list-group-item'>{{ filter.category_name }}</a>
                 {% endfor %}
             </div>
          </div>
@@ -17,10 +18,10 @@
 		        {% for item in item_list %}
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card h-100">
-			                <a href="#"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
+			                <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
                             <div class="card-body">
                                 <h4 class="card-title">
-			    	                <a href="#">{{ item.item_title }}</a>
+									<a href="\catalog\{{item.id}}">{{ item.item_title }}</a>	
                                 </h4>
 			                    <h5>${{ item.item_price }}</h5>
 			                    <p class="card-text">{{ item.item_description }}</p>

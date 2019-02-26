@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
+
+
+{% if item_list %}
+{% for item in item_list %}
 <div class="row">
     <div class="col-md-4">
-        <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt="">
+        <img class="card-img-top img-fluid" src="{{item.item_picture.url}}" alt="">
     </div>
     <div class="col-md-8">
-        <h2> Test Title </h2>
+		<h2> {{item.item_title}} </h2>
     </div>
 </div>
+{% endfor %}
+{% endif %}
 {% endblock %}

@@ -27,7 +27,6 @@ urlpatterns = [
     path('', include('landing.urls', namespace='landing')),
     url(r'^auth/', include('social_django.urls', namespace='social')),  # <- Here
     path('auth/complete/google-oauth2/', include('accountant.urls', namespace='authsuccess')),
-
 ]
 
 from .import settings
