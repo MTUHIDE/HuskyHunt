@@ -1,11 +1,15 @@
 from django.urls import path
+#from django.urls import re_path
 from . import views
 
 app_name = 'catalog'
 urlpatterns = [
     path('<int:pk>/', views.detail, name='detail'),
     path('', views.index, name='index'),
-	path('<category>/', views.filter, name='filter'),
+	path('search/', views.search, name='search'),
+	path('filter/<category>/', views.filter, name='filter'),
+	
+	
 ]
 
 #path('<int:pk>/', views.DetailView.as_view(), name='detail'),

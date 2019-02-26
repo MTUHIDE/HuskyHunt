@@ -7,7 +7,7 @@
             <div class="list-group">
 			<a href='\catalog\' class='list-group-item'>Recent</a>
                 {% for filter in filters %}
-                    <a href='\catalog\{{ filter.category_name }}' class='list-group-item'>{{ filter.category_name }}</a>
+                    <a href='\catalog\filter\{{ filter.category_name }}' class='list-group-item'>{{ filter.category_name }}</a>
                 {% endfor %}
             </div>
          </div>
