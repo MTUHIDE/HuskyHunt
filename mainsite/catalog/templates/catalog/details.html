@@ -11,7 +11,22 @@
         <img class="card-img-top img-fluid" src="{{item.item_picture.url}}" alt="">
     </div>
     <div class="col-md-8">
-		<h2> {{item.item_title}} </h2>
+        <div class="row">
+            <div class="col-lg-9">
+                <h1 class="page-header">{{item.item_title}}</h1>
+            </div>
+            <div class="col-lg-3>">
+                <h1><span class="label label-default">${{item.item_price}}</span></h1>
+            </div>
+        </div>
+        <hr> <br>
+        <h6 class=""> {{item.item_description}} </h6>
+
+        <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
+            <h6>Message Owner:</h6>
+            <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..."></textarea>
+            <button type="button" class="btn btn-default" style="background-color: black; color: white; width: 100px;">Send</button>
+        </div>
     </div>
 </div>
 {% endfor %}
