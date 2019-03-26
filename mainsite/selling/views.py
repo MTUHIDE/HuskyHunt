@@ -2,6 +2,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from datetime import datetime
 
 from .forms import SellingForm
 from catalog.models import CatalogItem 
@@ -26,12 +27,17 @@ def index(request):
     template = 'selling/index.html'
     if request.user.is_authenticated:
         if request.method == 'POST':
-            form = SellingForm(request.POST)
+            form = SellingForm(request.POST, request.FILES)
             if form.is_valid():
-                description = form.cleaned_data['description']
-                price = form.cleaned_data['price']
-                title = form.cleaned_data['title']
-                return redirect('index')
+                category = form.cleaned_data['category']
+                item_description = form.cleaned_data['item_description']
+                item_price = form.cleaned_data['item_price']
+                item_title = form.cleaned_data['item_title']
+                username = request.user
+                item_picture = form.cleaned_data['item_picture']
+                catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
+                catalogItem_instance.save()
+                return HttpResponseRedirect('/')
 
         else:
             form = SellingForm()
