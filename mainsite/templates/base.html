@@ -26,24 +26,24 @@
           <div class="collapse navbar-collapse topnav-right" id="navbarResponsive">
               <ul class="navbar-nav ml-auto" style="text-align: center;">
                   <li class="nav-item active">
-                      <form class="form-inline my-2 my-lg-0">
-                      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                      <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
+                      <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search">
+                      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                       </form>
                   </li>
                   <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #ffcd00;">
                           Menu
                       </a>
-		                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="{% url 'accountant:index' %}">Account</a>
+		      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                           <a class="dropdown-item" href="{% url 'catalog:index' %}">Catalog</a>
+                          <a class="dropdown-item" href="{% url 'accountant:index' %}">My Account</a>
                           <a class="dropdown-item" href="{% url 'polls:index' %}">Polls</a>
                           <a class="dropdown-item" href="{% url 'selling:index' %}">Selling</a>
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
-                          <a class="dropdown-item" href="{% url 'landing:index' %}">login</a>
-			                    <a class="dropdown-item" href="{% url 'admin:logout' %}">logout</a>
+                          <!--<a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
+                          <a class="dropdown-item" href="{% url 'landing:index' %}">login</a>-->
+			              <a class="dropdown-item" href="{% url 'accountant:logout' %}">Logout</a>
                       </div>
                   </li>
               </ul>

@@ -7,7 +7,7 @@
             <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: black;">What do you need?</button>
             <div class="dropdown-menu">
                 {% for filter in filters %}
-                    <a class="dropdown-item" href='#'>{{ filter.category_name }}</a>
+                    <a href='\catalog\filter\{{ filter.category_name }}' class='dropdown-item'>{{ filter.category_name }}</a>
                 {% endfor %}
             </div>
             NEWS <hr>

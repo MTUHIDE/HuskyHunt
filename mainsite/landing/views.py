@@ -4,23 +4,28 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from social_core.pipeline.partial import partial
+
 
 # Create your views here.
 def index(request):
     template = 'landing/index.html'
     context = {}
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/catalog/')
 
-    #username = request.POST['inputEmail']
-    #password = request.POST['inputPassword']
-    if request.POST:
-        username = 'Jesse'
-        password = 'P@ssw0rd1!'
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect('/catalog/')
-    else:
-        return render(request, template, context)
+    #if request.POST:
+    #    username = request.POST['inputEmail']
+    #    password = request.POST['inputPassword']
+    #    user = authenticate(request, username=username, password=password)
+    #    if user is not None:
+    #        login(request, user)
+    #        return HttpResponseRedirect('/catalog/')
+    #    else:
+    #        HttpResponseRedirect('/')
+    #else:
+    return render(request, template, context)
 
 def signup(request):
     template = 'landing/signup.html'
@@ -36,7 +41,7 @@ def signup(request):
     else:
         form = UserCreationForm()
     context = { 'form': form }
-    return render(request, template, context) 
+    return render(request, template, context)
 
 def passwordReset(email, from_email):
     template = 'registration/password_reset_email.html'
