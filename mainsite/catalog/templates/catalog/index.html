@@ -2,37 +2,47 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-lg-3">
-            <h1 class="my-4">On the Hunt!</h1>
-            <div class="list-group">
-			<a href='\catalog\' class='list-group-item'>Recent</a>
+        <div class="col-lg-3" style="background-color: white; border: 2px solid black;">
+            <h1 class="my-4">Catalog</h1>
+            <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: black;">What do you need?</button>
+            <div class="dropdown-menu">
                 {% for filter in filters %}
-                    <a href='\catalog\filter\{{ filter.category_name }}' class='list-group-item'>{{ filter.category_name }}</a>
+                    <a href='\catalog\filter\{{ filter.category_name }}' class='dropdown-item'>{{ filter.category_name }}</a>
                 {% endfor %}
             </div>
+            NEWS <hr>
+            NEWS <hr>
+            NEWS
          </div>
          <!-- /.col-lg-3 -->
         <div class="col-lg-9">
             <div class="row">
-            {% if item_list %}
-		        {% for item in item_list %}
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-			                <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
-                            <div class="card-body">
-                                <h4 class="card-title">
-									<a href="\catalog\{{item.id}}">{{ item.item_title }}</a>	
-                                </h4>
-			                    <h5>${{ item.item_price }}</h5>
-			                    <p class="card-text">{{ item.item_description }}</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">{{ item.username }} : &#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                {% if item_list %}
+		            {% for item in item_list %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100" style="border: 2px solid black;">
+			                  <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+									              <a href="\catalog\{{item.id}}">{{ item.item_title }}</a>
+                            </h4>
+			                      <h5>${{ item.item_price }}</h5>
+			                      <p class="card-text">{{ item.item_description }}</p>
+                        </div>
+                        <div class="card-footer" style="border: 1px solid black;">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <small class="text-dark">{{ item.username }} : </small>
+                                </div>
+                                <div class="col-lg-6">
+                                    <small class="text-warning"">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                </div>
                             </div>
                         </div>
                     </div>
-		        {% endfor %}
-	        {% endif %}
+                </div>
+		            {% endfor %}
+	              {% endif %}
             </div>
         <!-- /.row -->
         </div>
