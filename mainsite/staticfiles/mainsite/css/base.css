@@ -6,6 +6,11 @@ body {
     background: green;
 }
 
+.top-links a, .my-account a, .logout a{
+  color: #FFCD00;
+  padding-left: 1rem;
+}
+
 .product-icon {
     height:200px;
     display: block;
