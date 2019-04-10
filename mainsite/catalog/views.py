@@ -3,71 +3,80 @@ from django.shortcuts import render
 from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
 from django.db.models import Q
+from django.contrib import auth
 
 #from django.views import generic
 
 # Create your views here.
 def search(request):
-	template = 'catalog/index.html'
-	title = 'MTU Catalog'
-	if request.user.is_authenticated:
-		recent_items = CatalogItem.objects.filter(
-			Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
-		)
-		filters = Category.objects.all()
-		context = {
-			'item_list': recent_items,
-			'title': title,
-			'filters': filters,
-		}
-		return render(request, template, context)
-	else:
-		return HttpResponseRedirect('/')
+   if not request.user.email.endswith('@mtu.edu'):
+      auth.logout(request)
+   template = 'catalog/index.html'
+   title = 'MTU Catalog'
+   if request.user.is_authenticated:
+      recent_items = CatalogItem.objects.filter(
+         Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
+      )
+      filters = Category.objects.all()
+      context = {
+         'item_list': recent_items,
+         'title': title,
+         'filters': filters,
+      }
+      return render(request, template, context)
+   else:
+      return HttpResponseRedirect('/')
 		
 def index(request):
-	template = 'catalog/index.html'
-	title = "MTU Catalog"
-	if request.user.is_authenticated:
-		recent_items = CatalogItem.objects.filter(
-			date_added__lte=timezone.now()
-		).order_by('-date_added')[:5]
-		filters = Category.objects.all()
-		context = {
-			'item_list': recent_items,
-			'title': title,
-			'filters': filters,
-		}
-		return render(request, template, context)
-	else:
-		return HttpResponseRedirect('/')
+   if not request.user.email.endswith('@mtu.edu'):
+      auth.logout(request)
+   template = 'catalog/index.html'
+   title = "MTU Catalog"
+   if request.user.is_authenticated:
+      recent_items = CatalogItem.objects.filter(
+         date_added__lte=timezone.now()
+      ).order_by('-date_added')[:5]
+      filters = Category.objects.all()
+      context = {
+         'item_list': recent_items,
+         'title': title,
+         'filters': filters,
+      }
+      return render(request, template, context)
+   else:
+      return HttpResponseRedirect('/')
 
 
 			
 def detail(request, pk):
-    template = 'catalog/details.html'
-    if request.user.is_authenticated:
-        item_list = CatalogItem.objects.filter(pk=pk)
-        context = {
-                'item_list': item_list,
-        }
-    else:
-        context = {}
-    return render(request, template, context)
-	
+   if not request.user.email.endswith('@mtu.edu'):
+      auth.logout(request)
+   template = 'catalog/details.html'
+   if request.user.is_authenticated:
+         item_list = CatalogItem.objects.filter(pk=pk)
+         context = {
+            'item_list': item_list,
+         }
+   else:
+      context = {}
+   return render(request, template, context)
+      
 def filter(request, category):
-    template = 'catalog/index.html'
-    title = "MTU Catalog"
-    if request.user.is_authenticated:
-        recent_items = CatalogItem.objects.filter(category__category_name=category)
-        filters = Category.objects.all()
-        context = {
-            'item_list': recent_items,
-            'title': title,
-            'filters': filters,
-        }
-        return render(request, template, context)
-    else:
-        return HttpResponseRedirect('/')
+   if not request.user.email.endswith('@mtu.edu'):
+      auth.logout(request)
+   template = 'catalog/index.html'
+   title = "MTU Catalog"
+   if request.user.is_authenticated:
+      recent_items = CatalogItem.objects.filter(category__category_name=category)
+      filters = Category.objects.all()
+      context = {
+         'item_list': recent_items,
+         'title': title,
+         'filters': filters,
+      }
+      return render(request, template, context)
+   else:
+      return HttpResponseRedirect('/')
 
 
 """

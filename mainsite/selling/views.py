@@ -24,6 +24,8 @@ from catalog.models import CatalogItem
 
 
 def index(request):
+    if not request.user.email.endswith('@mtu.edu'):
+        return HttpResponseRedirect('/')
     template = 'selling/index.html'
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -42,7 +44,7 @@ def index(request):
         else:
             form = SellingForm()
         context = {'form': form,}
-        return render(request, template, context)
+        return render(request, template, context) 
     else:
         return HttpResponseRedirect('/')
 
