@@ -20,22 +20,27 @@
                 {% if item_list %}
 		            {% for item in item_list %}
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100" style="border: 2px solid black;">
+                    <div class="card h-100" width="auto" style="border: 2px solid black;">
 			                  <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
                         <div class="card-body">
                             <h4 class="card-title">
-									              <a href="\catalog\{{item.id}}">{{ item.item_title }}</a>
-                            </h4>
-			                      <h5>${{ item.item_price }}</h5>
-			                      <p class="card-text">{{ item.item_description }}</p>
-                        </div>
-                        <div class="card-footer" style="border: 1px solid black;">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <small class="text-dark">{{ item.username }} : </small>
+                                <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: #007bff;">
+									                  <a href="\catalog\{{item.id}}">{{ item.item_title }}</a>
                                 </div>
+                            </h4>
+                            <!--
+                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+			                          <p class="card-text">{{ item.item_description }}</p>
+                            </div>
+                            -->
+                        </div>
+                        <div class="card-footer" style="background-color: white;"> <!--black-->
+                            <div class="row" style="width: auto;">
                                 <div class="col-lg-6">
-                                    <small class="text-warning"">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                                    <small class="card-text">{{ item.username }}</small> <!--style="color: #ffcd00;" -->
+                                </div>
+                                <div class="col-lg-6" style="text-align: right;"> <!--color: #ffcd00; -->
+                                    <h6>${{ item.item_price }}</h6>
                                 </div>
                             </div>
                         </div>
