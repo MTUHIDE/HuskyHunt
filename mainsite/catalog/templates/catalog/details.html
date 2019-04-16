@@ -23,12 +23,16 @@
         <h6> {{item.item_description}} </h6>
         <br> <br> <br> <br> <br>
         <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
+        
             <h6>Message {{item.username}}:</h6>
-            <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..."></textarea>
+            <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform"></textarea>
             <div class="row">
                 <div class="col-lg-4">
-                    <button type="button" class="btn btn-default" style="background-color: black; color: white; width: 100px;">Send</button>
+                <form action="/catalog/{{item.id}}/email" method="get" id="emailform">
+                    <input type="submit" class="btn btn-default" style="background-color: black; color: white; width: 100px;" value="Send">
+                    </form>
                 </div>
+                
                 <div class="col-lg-4">
                     <h6> Owner: {{item.username}} </h6>
                 </div>

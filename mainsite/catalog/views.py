@@ -1,8 +1,10 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
 from django.db.models import Q
+from django.core.mail import BadHeaderError, send_mail
+
 
 #from django.views import generic
 
@@ -41,8 +43,22 @@ def index(request):
 	else:
 		return HttpResponseRedirect('/')
 
-
-			
+def email(request, pk):
+    if request.user.is_authenticated:
+        subject = "Interested in your item"
+        message = request.GET['message']
+        from_email = request.user.email
+        item_list = CatalogItem.objects.filter(pk=pk)
+        to_email = '' 
+        #need to add an email to category item. for now assume username is mtu username
+        for item in item_list:
+            to_email = item.username.email
+        if message:
+            send_mail(subject, message, from_email, [to_email], fail_silently=False,)    
+        return HttpResponseRedirect('/catalog/' + str(pk))
+    else:
+        return HttpResponseRedirect('/')
+	 	
 def detail(request, pk):
     template = 'catalog/details.html'
     if request.user.is_authenticated:

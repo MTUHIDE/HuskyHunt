@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.index, name='index'),
   	path('search/', views.search, name='search'),
   	path('filter/<category>/', views.filter, name='filter'),
+   path('<int:pk>/email/', views.email, name='email'),
 ]
 
 #path('<int:pk>/', views.DetailView.as_view(), name='detail'),
