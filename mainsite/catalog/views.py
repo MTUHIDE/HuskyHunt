@@ -47,7 +47,8 @@ def email(request, pk):
     if request.user.is_authenticated:
         subject = "Interested in your item"
         message = request.GET['message']
-        from_email = request.user.email
+        #from_email = request.user.email
+        from_email = 'admin@huskyhunt.com'
         item_list = CatalogItem.objects.filter(pk=pk)
         to_email = '' 
         #need to add an email to category item. for now assume username is mtu username
