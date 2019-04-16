@@ -47,7 +47,12 @@ def index(request):
 def email(request, pk):
     if request.user.is_authenticated:
         subject = "Interested in your item"
-        message = request.GET['message']
+        message = (request.user.username + 
+                  ' has messaged you about an item you posted on HuskyHunt!\n\n' + 
+                  request.user.username + ': ' + request.GET['message'] + 
+                  '\n\nReply at: ' + request.user.email + 
+                  '\n*Do not reply to this email. Your reply will be forever ' + 
+                  'lost in the interweb and your will be sad')
         from_email = 'admin@huskyhunt.com'
         item_list = CatalogItem.objects.filter(pk=pk)
         to_email = ''
