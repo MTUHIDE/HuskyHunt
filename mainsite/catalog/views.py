@@ -9,8 +9,6 @@ from django.contrib import auth
 
 # Create your views here.
 def search(request):
-   if not request.user.email.endswith('@mtu.edu'):
-      auth.logout(request)
    template = 'catalog/index.html'
    title = 'MTU Catalog'
    if request.user.is_authenticated:
@@ -28,8 +26,6 @@ def search(request):
       return HttpResponseRedirect('/')
 		
 def index(request):
-   if not request.user.email.endswith('@mtu.edu'):
-      auth.logout(request)
    template = 'catalog/index.html'
    title = "MTU Catalog"
    if request.user.is_authenticated:
@@ -49,8 +45,6 @@ def index(request):
 
 			
 def detail(request, pk):
-   if not request.user.email.endswith('@mtu.edu'):
-      auth.logout(request)
    template = 'catalog/details.html'
    if request.user.is_authenticated:
          item_list = CatalogItem.objects.filter(pk=pk)
@@ -62,8 +56,6 @@ def detail(request, pk):
    return render(request, template, context)
       
 def filter(request, category):
-   if not request.user.email.endswith('@mtu.edu'):
-      auth.logout(request)
    template = 'catalog/index.html'
    title = "MTU Catalog"
    if request.user.is_authenticated:
