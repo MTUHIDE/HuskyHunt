@@ -4,6 +4,7 @@ from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
 from django.db.models import Q
 from django.core.mail import BadHeaderError, send_mail
+from django.contrib import messages
 
 
 #from django.views import generic
@@ -25,7 +26,7 @@ def search(request):
 		return render(request, template, context)
 	else:
 		return HttpResponseRedirect('/')
-		
+
 def index(request):
 	template = 'catalog/index.html'
 	title = "MTU Catalog"
@@ -47,19 +48,19 @@ def email(request, pk):
     if request.user.is_authenticated:
         subject = "Interested in your item"
         message = request.GET['message']
-        #from_email = request.user.email
         from_email = 'admin@huskyhunt.com'
         item_list = CatalogItem.objects.filter(pk=pk)
-        to_email = '' 
+        to_email = ''
         #need to add an email to category item. for now assume username is mtu username
         for item in item_list:
             to_email = item.username.email
         if message:
-            send_mail(subject, message, from_email, [to_email], fail_silently=False,)    
+            send_mail(subject, message, from_email, [to_email], fail_silently=False,)
+            messages.error(request, 'Message sent successfully!')
         return HttpResponseRedirect('/catalog/' + str(pk))
     else:
         return HttpResponseRedirect('/')
-	 	
+
 def detail(request, pk):
     template = 'catalog/details.html'
     if request.user.is_authenticated:
@@ -70,7 +71,7 @@ def detail(request, pk):
     else:
         context = {}
     return render(request, template, context)
-	
+
 def filter(request, category):
     template = 'catalog/index.html'
     title = "MTU Catalog"
