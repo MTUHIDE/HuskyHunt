@@ -24,6 +24,11 @@
         <br> <br> <br> <br> <br>
         <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
         
+{% if messages %}
+    {% for message in messages %}
+      <p class="{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+{% endif %}        
             <h6>Message {{item.username}}:</h6>
             <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform"></textarea>
             <div class="row">
