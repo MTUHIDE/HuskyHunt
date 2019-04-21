@@ -3,9 +3,9 @@ from django.shortcuts import render
 from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
 from django.db.models import Q
+from django.contrib import auth
 from django.core.mail import BadHeaderError, send_mail
 from django.contrib import messages
-
 
 #from django.views import generic
 
@@ -28,21 +28,21 @@ def search(request):
 		return HttpResponseRedirect('/')
 
 def index(request):
-	template = 'catalog/index.html'
-	title = "MTU Catalog"
-	if request.user.is_authenticated:
-		recent_items = CatalogItem.objects.filter(
-			date_added__lte=timezone.now()
-		).order_by('-date_added')[:5]
-		filters = Category.objects.all()
-		context = {
-			'item_list': recent_items,
-			'title': title,
-			'filters': filters,
-		}
-		return render(request, template, context)
-	else:
-		return HttpResponseRedirect('/')
+   template = 'catalog/index.html'
+   title = "MTU Catalog"
+   if request.user.is_authenticated:
+      recent_items = CatalogItem.objects.filter(
+         date_added__lte=timezone.now()
+      ).order_by('-date_added')[:5]
+      filters = Category.objects.all()
+      context = {
+         'item_list': recent_items,
+         'title': title,
+         'filters': filters,
+      }
+      return render(request, template, context)
+   else:
+      return HttpResponseRedirect('/')
 
 def email(request, pk):
     if request.user.is_authenticated:
@@ -80,19 +80,19 @@ def detail(request, pk):
     return render(request, template, context)
 
 def filter(request, category):
-    template = 'catalog/index.html'
-    title = "MTU Catalog"
-    if request.user.is_authenticated:
-        recent_items = CatalogItem.objects.filter(category__category_name=category)
-        filters = Category.objects.all()
-        context = {
-            'item_list': recent_items,
-            'title': title,
-            'filters': filters,
-        }
-        return render(request, template, context)
-    else:
-        return HttpResponseRedirect('/')
+   template = 'catalog/index.html'
+   title = "MTU Catalog"
+   if request.user.is_authenticated:
+      recent_items = CatalogItem.objects.filter(category__category_name=category)
+      filters = Category.objects.all()
+      context = {
+         'item_list': recent_items,
+         'title': title,
+         'filters': filters,
+      }
+      return render(request, template, context)
+   else:
+      return HttpResponseRedirect('/')
 
 
 """

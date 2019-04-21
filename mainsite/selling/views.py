@@ -42,7 +42,7 @@ def index(request):
         else:
             form = SellingForm()
         context = {'form': form,}
-        return render(request, template, context)
+        return render(request, template, context) 
     else:
         return HttpResponseRedirect('/')
 
