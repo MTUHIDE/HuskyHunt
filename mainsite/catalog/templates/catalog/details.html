@@ -8,27 +8,39 @@
 {% for item in item_list %}
 <div class="row">
     <div class="col-md-4 col-sm-4">
-        <img class="card-img-top img-responsive" src="{{item.item_picture.url}}" alt="" style="height: auto; width: 70%;">
+      <br> <br> <br>
+        <img class="card-img-top img-responsive" src="{{item.item_picture.url}}" alt="" style="height: auto; width: 70%; border: 1px solid black;">
     </div>
     <div class="col-md-8">
         <div class="row">
             <div class="col-lg-9">
-                <h1 class="page-header">{{item.item_title}}</h1>
+                <h1 class="page-header" style="word-wrap: break-word;">{{item.item_title}}</h1>
             </div>
             <div class="col-lg-3>">
                 <h1><span class="label label-default">${{item.item_price}}</span></h1>
             </div>
         </div>
-        <hr> <br>
-        <h6> {{item.item_description}} </h6>
-        <br> <br> <br> <br> <br>
+        <hr style="border: 2px solid black;"> <br>
+        <div style="word-wrap: break-word;">
+            <h6> {{item.item_description}} </h6>
+        </div>
+        <br> <br>
         <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
+        
+{% if messages %}
+    {% for message in messages %}
+      <p class="{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+{% endif %}        
             <h6>Message {{item.username}}:</h6>
-            <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..."></textarea>
+            <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
             <div class="row">
                 <div class="col-lg-4">
-                    <button type="button" class="btn btn-default" style="background-color: black; color: white; width: 100px;">Send</button>
+                <form action="/catalog/{{item.id}}/email" method="get" id="emailform">
+                    <input type="submit" class="btn btn-default" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
+                    </form>
                 </div>
+                
                 <div class="col-lg-4">
                     <h6> Owner: {{item.username}} </h6>
                 </div>

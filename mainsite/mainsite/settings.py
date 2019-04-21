@@ -178,3 +178,15 @@ MEDIA_URL = '/uploads/'
 # Login Redirect
 LOGIN_REDIRECT_URL = 'catalog/'
 LOGOUT_REDIRECT_URL = '/'
+
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_HOST_USER = 'admin@huskyhunt.com'
+EMAIL_HOST_PASSWORD = 'BrKXYJcN3vvA'
+EMAIL_PORT = 587
+
+
+
+
