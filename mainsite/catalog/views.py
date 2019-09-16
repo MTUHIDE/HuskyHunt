@@ -75,9 +75,9 @@ def detail(request, pk):
         context = {
                 'item_list': item_list,
         }
+        return render(request, template, context)
     else:
-        context = {}
-    return render(request, template, context)
+        return HttpResponseRedirect('/')
 
 def filter(request, category):
    template = 'catalog/index.html'
