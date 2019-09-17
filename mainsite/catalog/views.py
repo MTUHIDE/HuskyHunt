@@ -146,12 +146,12 @@ def detail(request, pk):
                 'item_list': item_list,
         }
     
-    #If the user is not logged in display an empty screen (Needs to be changed)
-    else:
-        context = {}
-    
     #Changes what the user sees to be more detailed information on the one item
-    return render(request, template, context)
+        return render(request, template, context)
+    #If the user is not logged in, redirect to login
+    else:
+        return HttpResponseRedirect('/')
+
 
 #This function allows a user to choose from a dropdown
 #what category of items they want to see
