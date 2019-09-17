@@ -8,6 +8,9 @@ from django.core.mail import BadHeaderError, send_mail
 from django.contrib import messages
 
 #This function takes information from the search textfield
+#param: request - array variable that is passed around the website, kinda like global variables
+#returns: all items in the database that contain the string 
+#         from the search text field in their name or description
 def search(request):
     #The CSS code for this function can be found here                 
 	template = 'catalog/index.html'      
@@ -72,6 +75,9 @@ def index(request):
         return HttpResponseRedirect('/')
 
 #This function sends a prepared email message to a seller
+#param: request - array variable that is passed around the website, kinda like global variables
+#param: pk - a int variable that is used as the primary key for the item in the database
+#returns: The same page that the user is currently on
 def email(request, pk):
     #Checks if the user has logged in
     if request.user.is_authenticated:
@@ -121,6 +127,9 @@ def email(request, pk):
 
 #This function displays more detailed information about a item
 #while removing the other item from the view of the user
+#param: request - array variable that is passed around the website, kinda like global variables
+#param: pk - a int variable that is used as the primary key for the item in the database
+#returns: A new page of the website that contains all information on one item 
 def detail(request, pk):
 
     #The CSS for this page of the website can be found here
