@@ -56,12 +56,39 @@ def email(request, pk):
         from_email = 'admin@huskyhunt.com'
         item_list = CatalogItem.objects.filter(pk=pk)
         to_email = ''
+        #======================== Bad Word Dictionary ==============================
+        # List of bad words for censorship
+        badWords = ['fuck',
+                    'asshole',
+                    'bitch',
+                    'nigga',
+                    'nigger',
+                    'cunt',
+                    'slut',
+                    'whore',
+                    'piss',
+                    'gay',
+                    'retard',
+                    ]
+        foul = False
+        count = 0
+        #===========================================================================
         #need to add an email to category item. for now assume username is mtu username
         for item in item_list:
             to_email = item.username.email
         if (request.GET['message'] != ''):
-            send_mail(subject, message, from_email, [to_email], fail_silently=False,)
-            messages.error(request, 'Message sent successfully!')
+            # Censorship
+          while len(badWords) > count:
+            if(badWords[count] in request.GET['message']):
+              foul = True
+              break
+            count = count + 1
+
+          if(foul == True):
+              messages.error(request, 'Please, do not send any foul language!')
+          else:
+              send_mail(subject, message, from_email, [to_email], fail_silently=False,)
+              messages.error(request, 'Message sent successfully!')
         else:
             messages.error(request, 'Please enter a message!')
         return HttpResponseRedirect('/catalog/' + str(pk))

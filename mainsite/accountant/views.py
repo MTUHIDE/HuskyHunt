@@ -31,18 +31,29 @@ def logout(request):
 
 def index(request):
     template = 'accountant/index.html'
-    user = None
-    if request.method == 'POST':
-        form = AccountForm(request.POST, instance=request.user)
-        if form.is_valid():
-            user = request.user
-            zipcode = form.cleaned_data['zipcode']
-            return redirect('index')
-
-    else:
-        form = AccountForm()
+    user = request.user
+    #Filters out any items that aren't the current user's
+    my_items = CatalogItem.objects.filter(username = user)
+    filters = Category.objects.all()
+    title = 'My stuff'
     context = {
-            'form': form,
-            'user': user,
-            }
+                'item_list':my_items,
+                'title': title,
+                'filters': filters,
+    }
     return render(request, template, context)
+    
+    # if request.method == 'POST':
+    #     form = AccountForm(request.POST, instance=request.user)
+    #     if form.is_valid():
+    #         user = request.user
+    #         zipcode = form.cleaned_data['zipcode']
+    #         return redirect('index')
+
+    # else:
+    #     form = AccountForm()
+    # context = {
+    #         'form': form,
+    #         'user': user,
+    #         }
+    # return render(request, template, context)
