@@ -38,6 +38,8 @@ def index(request):
       ).order_by('-date_added')[:5]
       filters = Category.objects.all()
 
+
+
       context = {
          'item_list': recent_items,
          'title': title,
@@ -49,11 +51,16 @@ def index(request):
       return HttpResponseRedirect('/')
 
 def email(request, pk):
+    # Get the seller's first name
+    seller_name = CatalogItem.objects.filter(pk=pk).first().username
+    user = User.objects.filter(username = seller_name).first()
+    first_name = user.first_name
+
     if request.user.is_authenticated:
         subject = "Interested in your item"
-        message = (request.user.username + 
+        message = (first_name + 
                   ' has messaged you about an item you posted on HuskyHunt!\n\n' + 
-                  request.user.username + ': ' + request.GET['message'] + 
+                  first_name + ': ' + request.GET['message'] + 
                   '\n\nReply at: ' + request.user.email + 
                   '\n*Do not reply to this email. Your reply will be forever ' + 
                   'lost in the interweb and your will be sad')
@@ -72,18 +79,15 @@ def email(request, pk):
     else:
         return HttpResponseRedirect('/')
 
-# pk is the primary key in the catalogItem table
-def detail(request, pk):
+def detail(request, pk): # pk is the primary key in the catalogItem table
     template = 'catalog/details.html'
     if request.user.is_authenticated:
         item_list = CatalogItem.objects.filter(pk=pk)
 
-        # NEW CODE
+        # Get the seller's first name
         seller_name = CatalogItem.objects.filter(pk=pk).first().username
         user = User.objects.filter(username = seller_name).first()
         first_name = user.first_name
-
-
 
         context = {
                 'item_list': item_list,
