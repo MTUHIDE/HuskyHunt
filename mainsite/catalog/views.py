@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib import auth
 from django.core.mail import BadHeaderError, send_mail
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 #from django.views import generic
 
@@ -31,16 +32,19 @@ def index(request):
    template = 'catalog/index.html'
    title = "MTU Catalog"
    if request.user.is_authenticated:
+      # Retrieves all items, ordered by date (most recent to oldest)
       recent_items = CatalogItem.objects.filter(
          date_added__lte=timezone.now()
       ).order_by('-date_added')[:5]
       filters = Category.objects.all()
+
       context = {
          'item_list': recent_items,
          'title': title,
-         'filters': filters,
+         'filters': filters
       }
       return render(request, template, context)
+
    else:
       return HttpResponseRedirect('/')
 
@@ -68,10 +72,17 @@ def email(request, pk):
     else:
         return HttpResponseRedirect('/')
 
+# pk is the primary key in the catalogItem table
 def detail(request, pk):
     template = 'catalog/details.html'
     if request.user.is_authenticated:
         item_list = CatalogItem.objects.filter(pk=pk)
+
+        # NEW CODE
+        seller_name = CatalogItem.objects.filter(pk=pk).first().username
+        user = User.objects.filter(username = seller_name).first()
+        print(user.first_name)
+
         context = {
                 'item_list': item_list,
         }
