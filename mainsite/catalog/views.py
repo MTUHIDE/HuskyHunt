@@ -81,10 +81,13 @@ def detail(request, pk):
         # NEW CODE
         seller_name = CatalogItem.objects.filter(pk=pk).first().username
         user = User.objects.filter(username = seller_name).first()
-        print(user.first_name)
+        first_name = user.first_name
+
+
 
         context = {
                 'item_list': item_list,
+                'seller': first_name,
         }
     else:
         context = {}
