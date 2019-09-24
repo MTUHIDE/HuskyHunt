@@ -10,7 +10,7 @@ from django.contrib import messages
 #This function takes information from the search textfield
 #param: request - array variable that is passed around the website, kinda like global variables
 #returns: all items in the database that contain the string 
-#         from the search text field in their name or description
+#from the search text field in their name or description
 def search(request):
     #The CSS code for this function can be found here                 
 	template = 'catalog/index.html'      
@@ -184,23 +184,3 @@ def filter(request, category):
     #If the user is not logged in then they are sent to the Husky Statue
     else:
         return HttpResponseRedirect('/')
-
-
-"""
-item = get_object_or_404(CategoryItem, pk=pk)
-try:
-    selected_choice = item.choice_set.get(pk=request.POST['choice'])
-except (KeyError, CategoryItem.DoesNotExist):
-    # Redisplay the question voting form.
-    return render(request, 'polls/detail.html', {
-        'question': question,
-        'error_message': "You didn't select a choice.",
-    })
-else:
-    selected_choice.votes += 1
-    selected_choice.save()
-    #Always return an HttpResponseRedirect after successfully
-    #dealing with POST data.  This prevents data from being posted twice
-    #if a user hits the Back button in the browser.
-    return HttpResponseRedirect(reverse('polls:results', args=(question.pk,)))
-"""
