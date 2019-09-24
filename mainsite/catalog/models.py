@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User # imports the user table
 from django.db import models
 from django.conf import settings
 
@@ -21,7 +21,15 @@ class SubCategory(models.Model):
         return self.category_name
 
 class CatalogItem(models.Model):
+    # ORIGINAL CODE
+
+    # This seems to get the primary key from the "auth_user_model" table (which would be username (or id?), NOT first_name)
+    # Many to one relationship (one post has one username, but a user can have many posts)
+    # Can I further access this table from somewhere else,Such as in the template, using this key?
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=25)
+
+
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory = models.ManyToManyField(SubCategory)
     date_added = models.DateTimeField(auto_now=False, auto_now_add=True)
@@ -33,3 +41,6 @@ class CatalogItem(models.Model):
 
     def __str__(self):
         return self.item_title
+
+    def __getName__(self):
+        return self.username.first_name

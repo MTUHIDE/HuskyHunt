@@ -2,6 +2,8 @@
 {% load static %}
 {% block content %}
 
+
+
 {% if item_list %}
 {% for item in item_list %}
 <div class="row">
@@ -30,7 +32,7 @@
       <p class="{{ message.tags }}">{{ message }}</p>
     {% endfor %}
 {% endif %}        
-            <h6>Message {{seller}}:</h6>
+            <h6>Message {{item.first_name}}:</h6>
             <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
             <div class="row">
                 <div class="col-lg-4">
@@ -40,7 +42,7 @@
                 </div>
                 
                 <div class="col-lg-4">
-                    <h6> Owner: {{seller}} </h6>
+                    <h6> Owner: {{item.first_name}} </h6>
                 </div>
                 <div class="col-lg-4">
                     <h6> {{item.date_added}} </h6>
