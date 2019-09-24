@@ -2,8 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.conf import settings
 
-# Create your models here.
-
 #Defines a table of categories
 class Category(models.Model):
     #Each category has a name, date the category was created, and date of last update
