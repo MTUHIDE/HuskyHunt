@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from .forms import AccountForm
 from .models import Account
 from django.contrib import auth
+from catalog.models import CatalogItem, Category
 
 # Create your views here.
 #class AccountListView(ListView):
@@ -32,7 +33,7 @@ def logout(request):
 def index(request):
     template = 'accountant/index.html'
     user = request.user
-    #Filters out any items that aren't the current user's
+    # Filters out any items that aren't the current user's
     my_items = CatalogItem.objects.filter(username = user)
     filters = Category.objects.all()
     title = 'My stuff'
