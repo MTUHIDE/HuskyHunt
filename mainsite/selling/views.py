@@ -35,6 +35,9 @@ def index(request):
                 item_title = form.cleaned_data['item_title']
                 username = request.user
                 first_name = request.user.get_short_name()
+                # Use username if first_name is empty (null)
+                if not first_name:
+                    first_name = username
                 item_picture = form.cleaned_data['item_picture']
                 catalogItem_instance = CatalogItem.objects.create(username=username, first_name=first_name, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
                 catalogItem_instance.save()
