@@ -58,3 +58,4 @@ def index(request):
     #         'user': user,
     #         }
     # return render(request, template, context)
+

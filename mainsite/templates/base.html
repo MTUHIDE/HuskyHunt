@@ -14,46 +14,45 @@
 
     <title>HuskyHunt</title>
   </head>
-  <body style="background-color: #c3c3c3;">
+  <body style="background-color: #c3c3c3; padding-left: 0px; padding-right: 20px;">
     <!-- Implement NavBar -->
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-expand-lg navbar-dark fixed-top" style="background-color: black;">
-        <div class="container">
-          <div class="top-links">
-            <a class="navbar-brand" href="{% url 'catalog:index' %}">HuskyHunt</a>
-            <a class="link" href="{% url 'catalog:index' %}">Catalog</a>
-            <a class="link" href="{% url 'selling:index' %}">Selling</a>
-          </div>
+      <div class="top-links">
+        <a class="navbar-brand" href="{% url 'catalog:index' %}">HuskyHunt</a>
+        <a class="link" href="{% url 'catalog:index' %}">Catalog</a>
+        <a class="link" href="{% url 'selling:index' %}">Selling</a>
+      </div>
 
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse topnav-right" id="navbarResponsive">
-              <ul class="navbar-nav ml-auto" style="text-align: center;">
-                  <li class="nav-item active">
-                      <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search">
-                      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
-                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                      </form>
-                  </li>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse topnav-right" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto" style="text-align: center;">
+              <li class="nav-item active">
+                  <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                  </form>
+              </li>
 
-		      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="{% url 'catalog:index' %}">Catalog</a>
-                          <a class="dropdown-item" href="{% url 'accountant:index' %}">My Account</a>
-                          <a class="dropdown-item" href="{% url 'selling:index' %}">Selling</a>
-                          <div class="dropdown-divider"></div>
-                          <!--<a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
-                          <a class="dropdown-item" href="{% url 'landing:index' %}">login</a>-->
-                      </div>
-              </ul>
-          </div>
-          <div class="logout">
-            <a class="link" href="{% url 'accountant:index' %}">My Account</a>
-            <a class="link" href="{% url 'accountant:logout' %}">Logout</a>
-          </div>
-        </div>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item" href="{% url 'catalog:index' %}">Catalog</a>
+                      <a class="dropdown-item" href="{% url 'accountant:index' %}">My Account</a>
+                      <a class="dropdown-item" href="{% url 'selling:index' %}">Selling</a>
+                      <div class="dropdown-divider"></div>
+                      <!--<a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
+                      <a class="dropdown-item" href="{% url 'landing:index' %}">login</a>-->
+                  </div>
+          </ul>
+      </div>
+      <div class="logout">
+        <a class="link" href="{% url 'accountant:index' %}">My Account</a>
+        <a class="link" href="{% url 'accountant:logout' %}">Logout</a>
+      </div>
     </nav>
-    <div class="container" style="padding-top: 65px;">
+
+    <div style="padding-top: 65px;">
         {% block content %}
         {% endblock %}
     </div>
