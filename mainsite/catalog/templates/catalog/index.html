@@ -1,58 +1,57 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-lg-3" style="background-color: white; border: 2px solid black;">
-            <h1 class="my-4">Catalog</h1>
-            <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: black;">What do you need?</button>
-            <div class="dropdown-menu">
-                {% for filter in filters %}
-                    <a href='\catalog\filter\{{ filter.category_name }}' class='dropdown-item'>{{ filter.category_name }}</a>
-                {% endfor %}
-            </div>
-            NEWS <hr>
-            NEWS <hr>
-            NEWS
-         </div>
-         <!-- /.col-lg-3 -->
-        <div class="col-lg-9">
-            <div class="row">
-                {% if item_list %}
-		            {% for item in item_list %}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100" width="auto" style="border: 2px solid black;">
-			                  <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: #007bff;">
-									                  <a href="\catalog\{{item.id}}">{{ item.item_title }}</a>
-                                </div>
-                            </h4>
-                            <!--
-                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-			                          <p class="card-text">{{ item.item_description }}</p>
+
+<div class="row">
+  <div class="col-lg-2 col-md-3 col-sm-4">
+
+  </div>
+    <div style="background-color: black; border: 2px solid black; width: 14%; height: 96%; position: fixed; top: 50px; text-align: center;">
+      <h1 class="my-4" style="color: #ffcd00; text-align: center;">Catalog</h1>
+      <div style="display: inline-block;">
+        <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 80%; margin-bottom: 20px;">Books</button>
+        <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 80%; margin-bottom: 20px;">Household</button>
+        <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 80%; margin-bottom: 20px;">Electronics</button>
+        <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 80%; margin-bottom: 20px;">Sporting Goods</button>
+        <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 80%; margin-bottom: 20px;">Educational</button>
+      </div>
+
+      <!--{% for filter in filters %}
+        <a href='\catalog\filter\{{ filter.category_name }}' class='dropdown-item'>{{ filter.category_name }}</a>
+        {% endfor %}-->
+      </div>
+     <!-- /.col-lg-3 -->
+    <div class="col-lg-10 col-md-9 col-sm-8" style="position: static;">
+        <div class="row">
+            {% if item_list %}
+            {% for item in item_list %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100"  style="border: 2px solid black; width: auto;">
+                    <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
+                    <div class="card-body">
+                        <h4 class="card-title" style="color: black;">
+                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black;">
+                                <a href="\catalog\{{item.id}}" style="color: black;">{{ item.item_title }}</a>
                             </div>
-                            -->
+                        </h4>
+                        <h6>${{ item.item_price }}</h6>
+                        <!--
+                        <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                            <p class="card-text">{{ item.item_description }}</p>
                         </div>
-                        <div class="card-footer" style="background-color: white;"> <!--black-->
-                            <div class="row" style="width: auto;">
-                                <div class="col-lg-6">
-                                    <small class="card-text">{{ item.username }}</small> <!--style="color: #ffcd00;" -->
-                                </div>
-                                <div class="col-lg-6" style="text-align: right;"> <!--color: #ffcd00; -->
-                                    <h6>${{ item.item_price }}</h6>
-                                </div>
-                            </div>
+                        -->
+                    </div>
+                    <div class="card-footer" style="background-color: black;"> <!--black-->
+                        <div style="text-align: center; width: auto;">
+                            <h5 class="card-text" style="color: #ffcd00;">{{ item.username }}</h5>
                         </div>
                     </div>
                 </div>
-		            {% endfor %}
-	              {% endif %}
             </div>
-        <!-- /.row -->
+            {% endfor %}
+            {% endif %}
         </div>
-    <!-- /.col-lg-9 -->
+    <!-- /.row -->
     </div>
-<!-- /.row -->
+<!-- /.col-lg-9 -->
 </div>
 {% endblock %}
