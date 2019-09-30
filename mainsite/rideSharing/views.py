@@ -11,7 +11,11 @@ def index(request):
     #The CSS for this function can be found here
     template = 'rideSharing/index.html'
     #The title for the webpage
-    title = "MTU Ride-sharing"
-    
-    return HttpResponse("Hello. This is RideSharing")
-    #return render(request, template, context)
+    title = "MTU Ridesharing"
+
+    #Checks if the user is logged in
+    if request.user.is_authenticated:
+        #Call the CSS template to be displayed
+        return render(request, template)
+    else:
+        return HttpResponseRedirect('/')
