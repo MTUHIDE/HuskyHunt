@@ -20,6 +20,7 @@ from django.conf.urls import url, include
 urlpatterns = [
     path('accountant/', include('accountant.urls', namespace='accountant')),
     path('catalog/', include('catalog.urls', namespace='catalog')),
+    path('ridesharing/', include('rideSharing.urls', namespace='rideSharing')),
     path('polls/', include('polls.urls', namespace='polls')),
     path('selling/', include('selling.urls', namespace='selling')),
     path('admin/', admin.site.urls),
