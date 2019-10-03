@@ -12,34 +12,34 @@ from django.contrib import messages
 #returns: all items in the database that contain the string 
 #from the search text field in their name or description
 def search(request):
-    #The CSS code for this function can be found here                 
-	template = 'catalog/index.html'      
+  #The CSS code for this function can be found here           
+  template = 'catalog/index.html'      
     #The title for the webpage
-	title = 'MTU Catalog' 
+  title = 'MTU Catalog' 
 
     #Checks to make sure the user has logged in               
-	if request.user.is_authenticated:    
+  if request.user.is_authenticated:    
         #Uses the filter function to get the data of the searched items
-		recent_items = CatalogItem.objects.filter(
-			Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
-		)
+    recent_items = CatalogItem.objects.filter(
+      Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
+    )
         #Gets all the different categories
-		filters = Category.objects.all()
+    filters = Category.objects.all()
 
         #Puts all the data to be displayed into context
-		context = {
-			'item_list': recent_items,
-			'title': title,
-			'filters': filters,
-		}
+    context = {
+      'item_list': recent_items,
+      'title': title,
+      'filters': filters,
+    }
 
         #Returns a render function call to display onto the website for the user to see
-		return render(request, template, context)
+    return render(request, template, context)
 
     #If the user is not logged in then they get redirected to the HuskyStatue screen
-	else:
-		return HttpResponseRedirect('/')
-
+  else:
+    return HttpResponseRedirect('/')
+  
 #This function gets all the items from the database 
 #and displays them to the screen sorted by most recently added
 #param: request - array variable that is passed around the website, kinda like global variables
@@ -86,9 +86,9 @@ def email(request, pk):
         subject = "Interested in your item"
         
         #The body of the email
-        message = (request.user.username + 
+        message = (request.user.get_short_name() + 
                   ' has messaged you about an item you posted on HuskyHunt!\n\n' + 
-                  request.user.username + ': ' + request.GET['message'] + 
+                  request.user.get_short_name() + ': ' + request.GET['message'] + 
                   '\n\nReply at: ' + request.user.email + 
                   '\n*Do not reply to this email. Your reply will be forever ' + 
                   'lost in the interweb and your will be sad')

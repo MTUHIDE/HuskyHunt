@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User # imports the user table
 from django.db import models
 from django.conf import settings
 
@@ -42,12 +42,15 @@ class SubCategory(models.Model):
 class CatalogItem(models.Model):
     #Each item has a username, category, subcategory, date added, title, description
     #picture, and price associated to it
-
+    
     #The username is automatically set to the user that added the item
     #and the item is deleted if the user is deleted
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-    #The category is set by the user and the item is deleted if it's category is deleted
+    
+    # The user's first (preferred) name
+    first_name = models.CharField(max_length=25)
+    
+    #The category is set by the user and the item is deleted if its category is deleted
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     #The item has a subcategory that I don't believe does anything
@@ -73,3 +76,6 @@ class CatalogItem(models.Model):
 
     def __str__(self):
         return self.item_title
+
+    def __getName__(self):
+        return self.username.first_name
