@@ -12,7 +12,7 @@ from django.contrib import messages
 #returns: all items in the database that contain the string 
 #from the search text field in their name or description
 def search(request):
-    #The CSS code for this function can be found here                 
+  #The CSS code for this function can be found here           
   template = 'catalog/index.html'      
     #The title for the webpage
   title = 'MTU Catalog' 
@@ -39,7 +39,7 @@ def search(request):
     #If the user is not logged in then they get redirected to the HuskyStatue screen
   else:
     return HttpResponseRedirect('/')
-
+  
 #This function gets all the items from the database 
 #and displays them to the screen sorted by most recently added
 #param: request - array variable that is passed around the website, kinda like global variables
