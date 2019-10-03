@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accountant',
     'catalog',
+    'rideSharing',
     'landing',
     'polls',
     'selling',
