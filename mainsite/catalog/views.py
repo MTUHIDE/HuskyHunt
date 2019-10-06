@@ -61,7 +61,7 @@ def index(request):
         ).order_by('-date_added')[:500]
 
         # Paginator will show 8 items per page
-        paginator = Paginator(recent_items, 8)
+        paginator = Paginator(recent_items, 8, allow_empty_first_page=True)
         page = request.GET.get('page') # Gets the page number to display
         items = paginator.get_page(page)
 
