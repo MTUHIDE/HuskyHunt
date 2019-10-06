@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib import auth
 from django.core.mail import BadHeaderError, send_mail
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 #This function takes information from the search textfield
 #param: request - array variable that is passed around the website, kinda like global variables
@@ -54,19 +55,27 @@ def index(request):
     #Checks if the user is logged in
     if request.user.is_authenticated:
 
-        #Gets all the items from the database and sorts by date added
+        #Gets 500 most recent items from the database and sorts by date added
         recent_items = CatalogItem.objects.filter(
             date_added__lte=timezone.now()
-        ).order_by('-date_added')[:5]
+        ).order_by('-date_added')[:500]
+
+        # Paginator will show 8 items per page
+        paginator = Paginator(recent_items, 8)
+        page = request.GET.get('page') # Gets the page number to display
+        items = paginator.get_page(page)
+
+        print(paginator.num_pages)
 
         #The filters dropdown containing all the categories (need to get a default category)
         filters = Category.objects.all()
 
         #Packages the information to be displayed into context
         context = {
-            'item_list': recent_items,
+            'item_list': recent_items, # NOT NEEDED? ----------------------------------------
             'title': title,
             'filters': filters,
+            'items': items,
         }
 
         #Displays all the items from the database with repect to the CSS template

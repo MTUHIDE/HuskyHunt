@@ -22,8 +22,8 @@
      <!-- /.col-lg-3 -->
     <div class="col-lg-10 col-md-9 col-sm-8" style="position: static;">
         <div class="row">
-            {% if item_list %}
-            {% for item in item_list %}
+            {% if items %}
+            {% for item in items %}
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card h-100"  style="border: 2px solid black; width: auto;">
                     <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
@@ -53,5 +53,23 @@
     <!-- /.row -->
     </div>
 <!-- /.col-lg-9 -->
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if items.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ items.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ items.number }} of {{ items.paginator.num_pages }}.
+        </span>
+
+        {% if items.has_next %}
+            <a href="?page={{ items.next_page_number }}">next</a>
+            <a href="?page={{ items.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
 </div>
 {% endblock %}
