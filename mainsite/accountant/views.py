@@ -31,18 +31,22 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def index(request):
-    template = 'accountant/index.html'
-    user = request.user
-    # Filters out any items that aren't the current user's
-    my_items = CatalogItem.objects.filter(username = user)
-    filters = Category.objects.all()
-    title = 'My stuff'
-    context = {
-                'item_list':my_items,
-                'title': title,
-                'filters': filters,
-    }
-    return render(request, template, context)
+    if request.user.is_authenticated:
+        template = 'accountant/index.html'
+        user = request.user 
+        # Filters out any items that aren't the current user's
+        my_items = CatalogItem.objects.filter(username = user)
+        filters = Category.objects.all()
+        title = 'My stuff'
+        context = {
+                    'item_list':my_items,
+                    'title': title,
+                    'filters': filters,
+        }
+        return render(request, template, context)
+        
+    else:   
+        return HttpResponseRedirect('/')
     
     # if request.method == 'POST':
     #     form = AccountForm(request.POST, instance=request.user)
