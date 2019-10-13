@@ -37,7 +37,7 @@ def index(request):
         # Filters out any items that aren't the current user's
         my_items = CatalogItem.objects.filter(username = user)
         filters = Category.objects.all()
-        title = 'My stuff'
+        title = 'My items'
         context = {
                     'item_list':my_items,
                     'title': title,
