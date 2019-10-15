@@ -5,7 +5,8 @@ from django.http import HttpResponseRedirect
 from .forms import AccountForm
 from .models import Account
 from django.contrib import auth
-
+from catalog.models import CatalogItem, Category, SubCategory
+from django.utils import timezone
 # Create your views here.
 #class AccountListView(ListView):
 #    model = Account
@@ -30,22 +31,19 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def index(request):
-    if request.user.is_authenticated:
-      template = 'accountant/index.html'
-      user = None
-      if request.method == 'POST':
-          form = AccountForm(request.POST, instance=request.user)
-          if form.is_valid():
-              user = request.user
-              zipcode = form.cleaned_data['zipcode']
-              return redirect('index')
+   template = 'accountant/index.html'
+   defaultPicture= 'default-profile.gif'
 
-      else:
-          form = AccountForm()
+   if request.user.is_authenticated:
+      recent_items = CatalogItem.objects.filter(
+         date_added__lte=timezone.now()
+      ).order_by('-date_added')[:5]
+      filters = Category.objects.all()
       context = {
-              'form': form,
-              'user': user,
-              }
+         'item_list': recent_items,
+         'filters': filters,
+         'defaultPicture':defaultPicture,
+      }
       return render(request, template, context)
-    else:
+   else:
       return HttpResponseRedirect('/')
