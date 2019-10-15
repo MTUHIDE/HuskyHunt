@@ -118,6 +118,7 @@ def email(request, pk):
         
         #Checks if the message is no empty
         if (request.GET['message'] != ''):
+
             #Sends the email with a subject, body, the sender, and the recipient
             send_mail(subject, message, from_email, [to_email], fail_silently=False,)
             #Displays that the email was sent successfully
