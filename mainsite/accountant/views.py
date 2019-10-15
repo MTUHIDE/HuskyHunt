@@ -7,6 +7,7 @@ from .models import Account
 from django.contrib import auth
 from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
+
 # Create your views here.
 #class AccountListView(ListView):
 #    model = Account
@@ -31,19 +32,18 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def index(request):
-   template = 'accountant/index.html'
-   defaultPicture= 'default-profile.gif'
-
    if request.user.is_authenticated:
-      recent_items = CatalogItem.objects.filter(
-         date_added__lte=timezone.now()
-      ).order_by('-date_added')[:5]
+      template = 'accountant/index.html'
+      defaultPicture= 'default-profile.gif'
+      my_items = CatalogItem.objects.filter(username = request.user)
       filters = Category.objects.all()
+      title = 'My items'
       context = {
-         'item_list': recent_items,
-         'filters': filters,
-         'defaultPicture':defaultPicture,
-      }
+                  'item_list':my_items,
+                  'title': title,
+                  'filters': filters,
+        }
       return render(request, template, context)
    else:
       return HttpResponseRedirect('/')
+
