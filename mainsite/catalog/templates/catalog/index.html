@@ -13,14 +13,39 @@
         <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 80%; margin-bottom: 20px;">Electronics</button>
         <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 80%; margin-bottom: 20px;">Sporting Goods</button>
         <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 80%; margin-bottom: 20px;">Educational</button>
-    </div>
+      </div>
+
 
       <!--{% for filter in filters %}
         <a href='\catalog\filter\{{ filter.category_name }}' class='dropdown-item'>{{ filter.category_name }}</a>
-        {% endfor %}-->
+        {% endfor %} <!---->
     </div>
+
+
     <!-- /.col-lg-3 -->
     <div class="col-lg-10 col-md-9 col-sm-8" style="position: static;">
+
+
+      {% if failed_search %}
+        <div style="background-color: black; border: 2px solid black; border-spacing: 10px; text-align: center; margin-bottom: 20px; margin-top: 10px;">
+            <h1 style="color: #ffcd00; margin-top: 3px; margin-bottom: 1.5px;">Oops!</h1>
+            <h6 style="color: #ffcd00; margin-top: 1.5px; margin-bottom: 3px;">
+
+              {% if failed_search == 'FilterFail' %}
+              Looks like no items have been uploaded for that category. But here are some recently-uploaded items instead!
+              {% elif failed_search == 'PageNotFoundFail' %}
+              Looks like that item couldn't be found. But here are some recently-uploaded items instead!
+              {% elif failed_search == 'SearchFail' %}
+              Looks like no items could be found for your search. But here are some recently-uploaded items instead!
+              {% else %}
+              Looks like something went wrong. Please contact MTU HuskyHunt if this error persists.
+              {% endif %}
+
+            </h6>
+        </div>
+      {% endif %}
+      <!-- -->
+
         <div class="row">
             {% if items %}
             {% for item in items %}
@@ -68,7 +93,7 @@
             {% endif %}
         </span>
     </div>
-    
+
     <!-- /.row -->
 </div>
 <!-- /.col-lg-9 -->
