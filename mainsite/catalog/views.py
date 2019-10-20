@@ -64,15 +64,12 @@ def index(request):
         paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
         page = request.GET.get('page') # Gets the page number to display
         items = paginator.get_page(page)
-
-        print(paginator.num_pages)
-
+        
         #The filters dropdown containing all the categories (need to get a default category)
         filters = Category.objects.all()
 
         #Packages the information to be displayed into context
         context = {
-            'item_list': recent_items, # NOT NEEDED? ----------------------------------------
             'title': title,
             'filters': filters,
             'items': items,
