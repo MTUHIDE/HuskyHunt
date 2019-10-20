@@ -50,7 +50,11 @@ def index(request):
 def deleteItem(request, pk):
   if request.user.is_authenticated:
     # delete item from database
-    CatalogItem.objects.filter(pk=pk).delete()
+    item = CatalogItem.objects.filter(pk=pk)
+
+    # delete only if this user owns the item, a precautionary measure
+    if item.get(pk=pk).username == request.user:
+      item.delete();
 
     # redirect to accountant page
     return HttpResponseRedirect('/accountant')
