@@ -60,8 +60,8 @@ def index(request):
             date_added__lte=timezone.now()
         ).order_by('-date_added')[:500]
 
-        # Paginator will show 8 items per page
-        paginator = Paginator(recent_items, 8, allow_empty_first_page=True)
+        # Paginator will show 16 items per page
+        paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
         page = request.GET.get('page') # Gets the page number to display
         items = paginator.get_page(page)
 
