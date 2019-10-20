@@ -47,3 +47,12 @@ def index(request):
    else:
       return HttpResponseRedirect('/')
 
+def deleteItem(request, pk):
+  if request.user.is_authenticated:
+    # delete item from database
+    CatalogItem.objects.filter(pk=pk).delete()
+
+    # redirect to accountant page
+    return HttpResponseRedirect('/accountant')
+  else:
+    return HttpResponseRedirect('/')
