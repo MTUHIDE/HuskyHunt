@@ -26,12 +26,16 @@
         </div>
         <br> <br>
         <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
-        
+
 {% if messages %}
     {% for message in messages %}
-      <p class="{{ message.tags }}">{{ message }}</p>
+      <!--<p class="alert closebtn">{{ message }}</p>-->
+      <div class="alert" style="background-color:#33cc33">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>{{message}}</strong> </br> Message sent successfully!
+      </div>
     {% endfor %}
-{% endif %}        
+{% endif %}
             <h6>Message {{item.first_name}}:</h6>
             <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
             <div class="row">
@@ -40,7 +44,7 @@
                     <input type="submit" class="btn btn-default" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
                     </form>
                 </div>
-                
+
                 <div class="col-lg-4">
                     <h6> Owner: {{item.first_name}} </h6>
                 </div>
