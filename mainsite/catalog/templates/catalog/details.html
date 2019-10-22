@@ -31,7 +31,11 @@
 
 {% if messages %}
     {% for message in messages %}
-      <p class="{{ message.tags }}">{{ message }}</p>
+      <!--<p class="alert closebtn">{{ message }}</p>-->
+      <div class="alert" style="background-color:#33cc33">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>{{message}}</strong> </br> Message sent successfully!
+      </div>
     {% endfor %}
 {% endif %}
             <h6>Message {{item.first_name}}:</h6>
