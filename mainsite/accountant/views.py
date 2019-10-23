@@ -34,7 +34,7 @@ def logout(request):
 def index(request):
    if request.user.is_authenticated:
       template = 'accountant/index.html'
-      defaultPicture= 'default-profile.gif'
+      defaultPicture= 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
       my_items = CatalogItem.objects.filter(username = request.user)
       filters = Category.objects.all()
       title = 'My items'
@@ -42,8 +42,22 @@ def index(request):
                   'item_list':my_items,
                   'title': title,
                   'filters': filters,
+                  'defaultPicture': defaultPicture,
         }
       return render(request, template, context)
    else:
       return HttpResponseRedirect('/')
 
+def deleteItem(request, pk):
+  if request.user.is_authenticated:
+    # delete item from database
+    item = CatalogItem.objects.filter(pk=pk)
+
+    # delete only if this user owns the item, a precautionary measure
+    if item.get(pk=pk).username == request.user:
+      item.delete();
+
+    # redirect to accountant page
+    return HttpResponseRedirect('/accountant')
+  else:
+    return HttpResponseRedirect('/')

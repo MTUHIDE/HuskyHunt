@@ -4,7 +4,7 @@
 
 <div class="row justify-content-center mt-2 mb-5">
     <div class='col-lg-1'>
-      <img src="{{defaultPicture}}" alt="Profile Picture">
+      <img style="width: 150px; height:150px; border-radius: 50%; vertical-align: middle; border: 2px solid black;" src="{{defaultPicture}}" alt="Profile Picture">
     </div>
     <div class='col-lg-3'>
       <h1 class="text-center">{{request.user.first_name}} {{request.user.last_name}}</h1>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="card-footer" style="background-color: black;"> <!--black-->
                         <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block ">View</a>
-                        <button type="button" class="btn btn-outline-warning btn-block">Delete</button>
+                        <a role="button" href="\accountant\{{item.id}}" class="btn btn-outline-warning btn-block ">Delete</a>
                     </div>
                 </div>
             </div>
