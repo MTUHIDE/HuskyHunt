@@ -13,36 +13,9 @@ from django.contrib.auth.models import User
 
 class AccountDetailView(DetailView):
     model = Account
-    context_object_name = "yeet"
-
-    '''def __init__(self, **kwargs):
-        try:
-            kwargs['pk'] = Account.objects.get(user = request.user)
-        except Account.DoesNotExist:
-            createDefaultAccount(request.user)
-            kwargs['pk'] = Account.objects.get(user = request.user)
-        super().__init__(kwargs)'''
-
-    '''def as_view(cls, **initkwargs):
-        view = super().as_view(cls, initkwargs)
-        def newview(request, *args, **kwargs):
-            for i in args:
-                print("a: " + i)
-            for i in kwargs:
-                print("k: " + i)
-            return view(request, args, kwargs)'''
+    context_object_name = "account"
 
     def get_object(self, queryset=None):
-        '''try:
-            self.kwargs['pk'] = Account.objects.get(user = self.request.user).pk
-        except Account.DoesNotExist:
-            createDefaultAccount(request.user)
-            self.kwargs['pk'] = Account.objects.get(user = self.request.user).pk
-
-        print("jfdsksjdkflsd" + str(self.kwargs['pk']))
-
-        return super().get_object(queryset=queryset)'''
-
         try:
             return Account.objects.get(user = self.request.user)
         except Account.DoesNotExist:
@@ -50,7 +23,6 @@ class AccountDetailView(DetailView):
             return Account.objects.get(user = self.request.user)
 
 def createDefaultAccount(user):
-    print("new boi")
     acct = Account(user = user)
     acct.save()
 

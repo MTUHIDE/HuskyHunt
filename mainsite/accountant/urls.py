@@ -5,7 +5,7 @@ from .views import AccountDetailView
 
 app_name = 'accountant'
 urlpatterns = [
-    path('edit/', AccountDetailView.as_view() ), #views.index, name='index'),
+    path('edit/', AccountDetailView.as_view(), name='edit' ),
     path('catalog/', views.catalogRedirect, name='authsuccess'),
     path('', views.index, name='index'),
     path('logout/', views.logout, name='logout'),
