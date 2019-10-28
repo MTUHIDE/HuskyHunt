@@ -8,20 +8,51 @@ from django.contrib import auth
 from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
 
-# Create your views here.
-#class AccountListView(ListView):
-#    model = Account
-#    contex_object_name = 'obj'
-#
-#class AccountCreateView(CreateView):
-#    model = Account
-#    fields = ('item_title', 'item_description', 'item_price', 'category')
-#    success_url = reverse_lazy('index')
-#
-#class AccountUpdateView(UpdateView):
-#    model = Account
-#    fields = ('item_title', 'item_description', 'item_price', 'category')
-#    success_url = reverse_lazy('index')
+from django.views.generic import DetailView
+from django.contrib.auth.models import User
+
+class AccountDetailView(DetailView):
+    model = Account
+    context_object_name = "yeet"
+
+    '''def __init__(self, **kwargs):
+        try:
+            kwargs['pk'] = Account.objects.get(user = request.user)
+        except Account.DoesNotExist:
+            createDefaultAccount(request.user)
+            kwargs['pk'] = Account.objects.get(user = request.user)
+        super().__init__(kwargs)'''
+
+    '''def as_view(cls, **initkwargs):
+        view = super().as_view(cls, initkwargs)
+        def newview(request, *args, **kwargs):
+            for i in args:
+                print("a: " + i)
+            for i in kwargs:
+                print("k: " + i)
+            return view(request, args, kwargs)'''
+
+    def get_object(self, queryset=None):
+        '''try:
+            self.kwargs['pk'] = Account.objects.get(user = self.request.user).pk
+        except Account.DoesNotExist:
+            createDefaultAccount(request.user)
+            self.kwargs['pk'] = Account.objects.get(user = self.request.user).pk
+
+        print("jfdsksjdkflsd" + str(self.kwargs['pk']))
+
+        return super().get_object(queryset=queryset)'''
+
+        try:
+            return Account.objects.get(user = self.request.user)
+        except Account.DoesNotExist:
+            createDefaultAccount(request.user)
+            return Account.objects.get(user = self.request.user)
+
+def createDefaultAccount(user):
+    print("new boi")
+    acct = Account(user = user)
+    acct.save()
 
 
 def catalogRedirect(request):
