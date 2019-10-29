@@ -65,10 +65,21 @@ style="position: absolute;
 	  <br><br>
   <h1 style="text-decoration: underline; color: black;">Welcome to HuskyHunt!</h1>
 <br>
+
     <div style="text-align: center; color: black;">
       Use your MTU account to sign in:</div>
     <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="/static/mainsite/gauth.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%; "></a><br><br>
     </div>
+  </div>
+  </div>
+
+  <div class="row justify-content-md-center">
+  <div class="col-auto" style="color: white;">
+         {% if messages %}
+            {% for message in messages %}
+               <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+         {% endif %}
   </div>
   </div>
 

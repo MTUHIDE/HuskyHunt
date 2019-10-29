@@ -5,6 +5,8 @@ from django.http import HttpResponseRedirect
 from .forms import AccountForm
 from .models import Account
 from django.contrib import auth
+from catalog.models import CatalogItem, Category, SubCategory
+from django.utils import timezone
 
 # Create your views here.
 #class AccountListView(ListView):
@@ -30,19 +32,32 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def index(request):
-    template = 'accountant/index.html'
-    user = None
-    if request.method == 'POST':
-        form = AccountForm(request.POST, instance=request.user)
-        if form.is_valid():
-            user = request.user
-            zipcode = form.cleaned_data['zipcode']
-            return redirect('index')
+   if request.user.is_authenticated:
+      template = 'accountant/index.html'
+      defaultPicture= 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
+      my_items = CatalogItem.objects.filter(username = request.user)
+      filters = Category.objects.all()
+      title = 'My items'
+      context = {
+                  'item_list':my_items,
+                  'title': title,
+                  'filters': filters,
+                  'defaultPicture': defaultPicture,
+        }
+      return render(request, template, context)
+   else:
+      return HttpResponseRedirect('/')
 
-    else:
-        form = AccountForm()
-    context = {
-            'form': form,
-            'user': user,
-            }
-    return render(request, template, context)
+def deleteItem(request, pk):
+  if request.user.is_authenticated:
+    # delete item from database
+    item = CatalogItem.objects.filter(pk=pk)
+
+    # delete only if this user owns the item, a precautionary measure
+    if item.get(pk=pk).username == request.user:
+      item.delete();
+
+    # redirect to accountant page
+    return HttpResponseRedirect('/accountant')
+  else:
+    return HttpResponseRedirect('/')
