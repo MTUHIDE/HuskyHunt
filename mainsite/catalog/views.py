@@ -196,37 +196,41 @@ def detail(request, pk):
 
 
 #This function allows a user to choose from a dropdown
-#what category of items they want to see
+#what category/ies of items they want to see
 #param: request - array passed throughout a website, kinda like global variables
-#param: category - variable that contains the category name the user clicked on
-#returns: render function that changes the items the user sees based on the category
-def filter(request, category):
+#returns: render function that changes the items the user sees based on the category/ies
+def filter(request):
+  #The CSS code for this function can be found here
+  template = 'catalog/index.html'
 
-    #The CSS for this function can be found here
-    template = 'catalog/index.html'
-    #The title of the webpage
-    title = "MTU Catalog"
+    #The title for the webpage
+  title = 'MTU Catalog'
 
-    #Checks if the user is logged in
-    if request.user.is_authenticated:
+    #Checks to make sure the user has logged in
+  if request.user.is_authenticated:
+       #Uses the filter function to get the data of the searched items based on filters
+    recent_items = CatalogItem.objects.all()
+    for filt in request.GET.getlist('filter'):
+      recent_items = recent_items.filter(
+        category__category_name=filt
+      )
 
-        #Gets the category to be filtered by from the database
-        #Finds the desired category from the passed in argument
-        recent_items = CatalogItem.objects.filter(category__category_name=category)
-        #Keeps the filters dropdown containing all the categories (need to get a default category)
-        filters = Category.objects.all()
+        #Gets all the different categories
+    filters = Category.objects.all()
+    curFilter = request.GET['filter']
+        #Puts all the data to be displayed into context
+    context = {
+      'items': recent_items,
+      'title': title,
+      'filters': filters,
+      'curFilter': curFilter
+    }
 
-        context = {
-            'items': recent_items,
-            'title': title,
-            'filters': filters,
-        }
+    addErrorOnEmpty(context, 'FilterFail')
 
-        addErrorOnEmpty(context, 'FilterFail')
+        #Returns a render function call to display onto the website for the user to see
+    return render(request, template, context)
 
-        #Displays the new view with items only in the desired category
-        return render(request, template, context)
-
-    #If the user is not logged in then they are sent to the Husky Statue
-    else:
-        return HttpResponseRedirect('/')
+    #If the user is not logged in then they get redirected to the HuskyStatue screen
+  else:
+    return HttpResponseRedirect('/')

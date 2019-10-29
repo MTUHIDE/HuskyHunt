@@ -19,3 +19,4 @@ width: 300px;
 .closebtn:hover {
   color: black;
 }
+
