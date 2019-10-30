@@ -2,6 +2,29 @@
 
 {% block content %}
 
-{{ account }}
+<h1> {{ account.username }} </h1>
+
+<form action="{% url 'accountant:edit' %}" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<!--
+Bio: <textarea name="bio" id="bio" cols="40" rows="5">{{ account.bio }}</textarea><br>
+Street Address: <input type="text" name="street" id="street" value="{{ account.street_address }}"><br>
+City: <input type="text" name="city" id="city" value="{{ account.city }}"><br>
+Zip Code: <input type="text" name="zip" id="zip" value="{{ account.zipcode }}"><br>   <!-- Should be numerical-limited -->
+
+<!--
+Common Destination Zip Code: <input type="text" name="cdzip" id="cdzip" value="{{ account.common_destination_zipcode }}"><br>
+Rating: {{ account.rating }} <br>
+Picture:
+<img id="pic_preview" src="{{ account.picture.url }}" alt="User Image" />
+<input type="file" name="pic_upload" id="pic" accept="image/*">
+
+<!---->
+
+{{ form }}
+
+<input type="submit" value="Save Changes">
+
+</form>
 
 {% endblock %}
