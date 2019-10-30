@@ -7,6 +7,9 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
+from accountant.models import user_profile
+from django.db.models import Q
+from django.contrib.auth.models import User
 
 # Create your views here.
 #class AccountListView(ListView):
@@ -38,11 +41,16 @@ def index(request):
       my_items = CatalogItem.objects.filter(username = request.user)
       filters = Category.objects.all()
       title = 'My items'
+
+      u = User.objects.get(username=request.user)
+      preferred_name = u.user_profile.preferred_name
+
       context = {
                   'item_list':my_items,
                   'title': title,
                   'filters': filters,
                   'defaultPicture': defaultPicture,
+                  'preferred_name': preferred_name
         }
       return render(request, template, context)
    else:
