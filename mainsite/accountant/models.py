@@ -34,10 +34,13 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 #     def is_authenticated(self):
 #         return True
 
-
 class user_profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    preferred_name = models.CharField(max_length=50, default='Carlito')
+    preferred_name = models.CharField(max_length=50, blank = True, null=True)
+    home_city = models.CharField(max_length=50, blank = True, null=True)
+    home_state = models.CharField(max_length=50, blank = True, null=True)
+    zipcode = models.IntegerField(blank = True, null=True)
+    picture = picture = models.ImageField(upload_to='account/profilepics/', height_field=None, width_field=None, blank = True, null=True)
 
 @receiver(post_save, sender=get_user_model())
 def create_user_profile(sender, instance, created, **kwargs):
