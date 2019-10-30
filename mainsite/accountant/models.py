@@ -28,3 +28,4 @@ from django.contrib.auth.models import User
 
 #     def is_authenticated(self):
 #         return True
+
