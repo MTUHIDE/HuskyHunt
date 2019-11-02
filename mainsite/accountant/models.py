@@ -9,8 +9,8 @@ class Account(models.Model):
     bio = models.TextField(blank=True)
     street_address = models.CharField(max_length=200, blank=True)
     city = models.CharField(max_length=100, blank=True)
-    zipcode = models.IntegerField(default=0, blank=True)
-    common_destination_zipcode = models.IntegerField(default=0, blank=True)
+    zipcode = models.IntegerField(default=0, blank=True, null=True)
+    common_destination_zipcode = models.IntegerField(default=0, blank=True, null=True)
     picture = models.ImageField(upload_to='account/profilepics/', height_field=None, width_field=None, blank=True, null=True)
     rating = models.IntegerField(default=0)
 

@@ -19,7 +19,7 @@ from django.forms import ModelForm
 class EditModelForm(ModelForm):
     class Meta:
         model = Account
-        fields = ['bio', 'street_address', 'city', 'zipcode', 'common_destination_zipcode', 'rating']
+        fields = ['bio', 'street_address', 'city', 'zipcode', 'common_destination_zipcode', 'picture']
 
 def edit(request):
     try:
@@ -29,49 +29,13 @@ def edit(request):
         currentUser = Account.objects.get(user = request.user)
 
     if request.method == "POST":
-        form = EditModelForm(request.POST, instance = currentUser)
-        form.save()
-
-        return HttpResponseRedirect(reverse('accountant:index'))
-
-    #else # request.method == "GET"
-    form = EditModelForm(instance = currentUser)
+        form = EditModelForm(request.POST, request.FILES, instance = currentUser)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('accountant:index'))
+    else: # request.method == "GET"
+        form = EditModelForm(instance = currentUser)
     return render(request, 'accountant/account_detail.html', {'form': form})
-
-# class AccountDetailView(DetailView):
-#     model = Account
-#     context_object_name = "account"
-#
-#     def get_object(self, queryset=None):
-#         try:
-#             return Account.objects.get(user = self.request.user)
-#         except Account.DoesNotExist:
-#             createDefaultAccount(request.user)
-#             return Account.objects.get(user = self.request.user)
-#
-# def createDefaultAccount(user):
-#     acct = Account(user = user)
-#     acct.save()
-#
-# def setEdit(request):
-#     userAccount = Account.objects.get(user = request.user)
-#
-#     if 'bio' in request.POST:
-#         userAccount.bio = request.POST['bio']
-#     if 'street' in request.POST:
-#         userAccount.street_address = request.POST['street']
-#     if 'city' in request.POST:
-#         userAccount.city = request.POST['city']
-#     if 'zip' in request.POST:
-#         userAccount.zipcode = request.POST['zip']
-#     if 'cdzip' in request.POST:
-#         userAccount.common_destination_zipcode = request.POST['cdzip']
-#     if 'pic_upload' in request.FILES:
-#         uploadedFile = request.FILES['pic_upload']
-#
-#    userAccount.save()
-#
-#    return HttpResponseRedirect(reverse('accountant:index'))
 
 
 def catalogRedirect(request):
