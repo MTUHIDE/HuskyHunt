@@ -7,15 +7,14 @@
 <form action="{% url 'accountant:edit' %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 
-{{ form }}
 
+<table>
+{{ form.as_table }}
+</table>
+
+<br>
 <input type="submit" value="Save Changes">
 
 </form>
-
-<br><br>
-<div>
-<img src="{{ form.picture.value.url }}" alt="Hi">
-</div>
 
 {% endblock %}
