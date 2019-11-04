@@ -17,10 +17,17 @@
         <form role="form" method="post" enctype="multipart/form-data" style='border: 2xp;'> 
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button disabled class="btn btn-primary" type=button id="fakeButton" style="display: none"><span class="glyphicon glyphicon-refresh"></span>Submit</button>  
+            <button type="submit" class="btn btn-primary" name="realButton" id="btnRealButton">Submit</button>
         </form>
     </div>
     <div class='col-md-3'>
     </div>
 </div>
 {% endblock %}
+
+<script type="text/javascript">
+function checkinput {
+    $("#btnRealButton").hide(); <= real submit button will be hidden
+    $("#fakeButton").show(); <= fake submit button gets visible}
+</script>
