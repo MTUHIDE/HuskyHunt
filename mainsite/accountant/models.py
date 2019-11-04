@@ -15,7 +15,7 @@ class user_profile(models.Model):
     home_city = models.CharField(max_length=50, blank = True, null=True)
     home_state = models.CharField(max_length=50, blank = True, null=True)
     zipcode = models.IntegerField(blank = True, null=True)
-    picture = picture = models.ImageField(upload_to='account/profilepics/', height_field=None, width_field=None, blank = True, null=True)
+    picture = models.ImageField(upload_to='account/profilepics/', height_field=None, width_field=None, blank = True, null=True)
 
 @receiver(post_save, sender=get_user_model())
 def create_user_profile(sender, instance, created, **kwargs):

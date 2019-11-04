@@ -3,3 +3,10 @@ my.cnf
 mainsite/*/__pycache__/
 mainsite/*/*/__pycache__/
 .DS_Store
+
+
+# Database Stuff
+
+mainsite/huskydb
+mainsite/uploads/account/profilepics/*
+
