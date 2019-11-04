@@ -15,7 +15,7 @@ from django.core.files.storage import FileSystemStorage
 
 from django.forms import ModelForm
 
-from django.forms.widgets import ClearableFileInput, TextInput
+from django.forms.widgets import ClearableFileInput, TextInput, Textarea
 from django.template import loader
 from django.utils.safestring import mark_safe
 
@@ -80,6 +80,7 @@ class EditModelForm(ModelForm):
         model = Account
         fields = ['bio', 'street_address', 'city', 'zipcode', 'common_destination_zipcode', 'picture']
         widgets = {
+            'bio': Textarea(attrs={'rows': 5}),
             'picture': PreviewImageWidget()
         }
 
