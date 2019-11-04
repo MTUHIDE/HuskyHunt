@@ -31,6 +31,10 @@ class PreviewImageWidget(ClearableFileInput):
         return name + '-preview'
     def preview_image_id(self, name):
         return name + '_id'
+    def reset_check_name(self, name):
+        return name + '-reset'
+    def reset_check_id(self, name):
+        return name + '_id'
     #def format_value:
 
     def get_context(self, name, value, attrs):
@@ -41,6 +45,8 @@ class PreviewImageWidget(ClearableFileInput):
         button_id = self.clear_button_id(button_name)
         preview_name = self.preview_image_name(name)
         preview_id = self.preview_image_id(preview_name)
+        reset_check_name = self.reset_check_name(name)
+        reset_check_id = self.reset_check_id(reset_check_name)
 
         context = super().get_context(name, value, attrs)
         some_unneeded_fields = ['checkbox_name', 'checkbox_id', 'clear_button_label', 'is_initial', 'initial_text']
@@ -54,6 +60,9 @@ class PreviewImageWidget(ClearableFileInput):
             'button_name': button_name,
             'button_id': button_id,
             'clear_button_label': self.clear_button_label,
+
+            'reset_check_id': reset_check_id,
+            'reset_check_name': reset_check_name,
 
             #name, attrs -- inherited
             'id': (name + '_id'),
@@ -69,6 +78,9 @@ class PreviewImageWidget(ClearableFileInput):
     def value_from_datadict(self, data, files, name):
         return files.get(name)
 
+# The HTML Form that's submitted on the Edit Account page
+#   the ModelForm is used for data validation and automatic HTML production
+
 class EditModelForm(ModelForm):
     class Meta:
         model = user_profile
@@ -78,19 +90,25 @@ class EditModelForm(ModelForm):
             'picture': PreviewImageWidget()
         }
 
+# Handles both GET and POST requests for the user account edit page
 def edit(request):
     currentUser = user_profile.objects.get(user = request.user)
 
     if request.method == "POST":
-        if request.FILES.get('picture') is None:
+        # Check if the user clicked the 'reset' button last; if so, reset their picture
+        if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) is '1':
             currentUser.picture = None
+
+        # Validate the data submitted
         form = EditModelForm(request.POST, request.FILES, instance = currentUser)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('accountant:index'))
-    else: # request.method == "GET"
+
+    else: # ie request.method == "GET"
         form = EditModelForm(instance = currentUser)
 
+    # Either a GET or a failed POST end up here
     return render(request, 'accountant/account_detail.html', {'form': form})
 
 # Redirect to main catalog page
@@ -109,7 +127,7 @@ def index(request):
         currentUser = user_profile.objects.get(user = request.user)
         template = 'accountant/index.html'
         defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
-        my_items = CatalogItem.objects.filter(username = str(request.user))
+        my_items = CatalogItem.objects.filter(username = request.user)
         filters = Category.objects.all()
         title = 'My items'
 

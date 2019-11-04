@@ -30,6 +30,7 @@
   onclick="
     document.getElementById('{{ widget.id }}').value = '';
     document.getElementById('{{ widget.preview_id }}').src = '{{ widget.defaultPictureURL }}';
+    document.getElementById('{{ widget.reset_check_id }}').value = '1';
   "
 >{{ widget.clear_button_label }}</button> <!--<label for="{{ widget.button_id }}"></label>-->
 
@@ -47,10 +48,14 @@
     };
 
     reader.readAsDataURL(this.files[0]);
+
+    document.getElementById('{{ widget.reset_check_id }}').value = '0';
   "
 
   {% for name, value in widget.attrs.items %}{% if value is not False %} {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}<!---->
 
 <img src="{% if widget.value %}{{ widget.value.url }}{% else %}{{ widget.defaultPictureURL }}{% endif %}" alt="{{ widget.preview_text }}" id="{{ widget.preview_id }}" width="{{ widget.preview_width }}" height="{{ widget.preview_height }}">
+
+<input type="hidden" id="{{ widget.reset_check_id }}" name="{{ widget.reset_check_name }}" value="0">
 
 </span>
