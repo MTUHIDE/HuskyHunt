@@ -49,8 +49,7 @@ def index(request):
                   'item_list':my_items,
                   'title': title,
                   'filters': filters,
-                  'defaultPicture': defaultPicture,
-                  'preferred_name': preferred_name
+                  'defaultPicture': defaultPicture
         }
       return render(request, template, context)
    else:
