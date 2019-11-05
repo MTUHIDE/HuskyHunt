@@ -1,0 +1,58 @@
+<!-- https://github.com/django/django/blob/master/django/forms/templates/django/forms/widgets/clearable_file_input.html -->
+<!-- For preview img: https://stackoverflow.com/questions/14069421/show-an-image-preview-before-upload -->
+
+<!--
+  widget.value.url -- url to the image being stored
+  widget.value -- to_str of the image being stored
+  widget.defaultPictureURL -- server URL of the default Husky image
+
+  widget.button_name -- internal name of the reset button
+  widget.button_id -- internal id of the reset button
+  widget.clear_button_label -- "Reset" or somesuch, external label for the button
+
+  widget.name -- internal name of the file input
+  widget.id -- internal id of the file input
+
+  widget.preview_text -- alt text of preview image
+  widget.preview_id -- internal id of the preview img
+  widget.preview_width, widget.preview_height -- size of preview img
+
+  widget.attrs -- something something required by the docs
+-->
+
+<span>
+
+<button type="button" onclick="buttonClick()" name="{{ widget.button_name }}" id="{{ widget.button_id }}">
+  {{ widget.clear_button_label }}
+</button> <!--<label for="{{ widget.button_id }}"></label>-->
+
+<input type="file" accept="image/*" onchange="inputUpdate(this)" name="{{ widget.name }}" id="{{ widget.id }}" > <!---->
+
+<img src="{% if widget.value %}{{ widget.value.url }}{% else %}{{ widget.defaultPictureURL }}{% endif %}"
+id="{{ widget.preview_id }}" width="{{ widget.preview_width }}" height="{{ widget.preview_height }}" alt="{{ widget.preview_text }}" >
+
+<input type="hidden" id="{{ widget.reset_check_id }}" name="{{ widget.reset_check_name }}" value="0">
+
+</span>
+
+<script>
+function buttonClick() {
+  document.getElementById('{{ widget.id }}').value = '';
+  document.getElementById('{{ widget.preview_id }}').src = '{{ widget.defaultPictureURL }}';
+  document.getElementById('{{ widget.reset_check_id }}').value = '1';
+}
+</script>
+
+<script>
+function inputUpdate(thiis) {
+  var reader = new FileReader();
+
+  reader.onload = function (e) {
+      document.getElementById('{{ widget.preview_id }}').src = e.target.result;
+  };
+
+  reader.readAsDataURL(thiis.files[0]);
+
+  document.getElementById('{{ widget.reset_check_id }}').value = '0';
+}
+</script>
