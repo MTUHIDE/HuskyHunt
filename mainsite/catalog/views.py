@@ -210,6 +210,8 @@ def filter(request):
   if request.user.is_authenticated:
        #Uses the filter function to get the data of the searched items based on filters
     recent_items = CatalogItem.objects.all()
+    if not request.GET.getlist('filter'):
+      return HttpResponseRedirect('/catalog')
     for filt in request.GET.getlist('filter'):
       recent_items = recent_items.filter(
         category__category_name=filt
@@ -217,13 +219,13 @@ def filter(request):
 
         #Gets all the different categories
     filters = Category.objects.all()
-    curFilter = request.GET['filter']
+    curFilters = request.GET.getlist('filter')
         #Puts all the data to be displayed into context
     context = {
       'items': recent_items,
       'title': title,
       'filters': filters,
-      'curFilter': curFilter
+      'curFilters': curFilters
     }
 
     addErrorOnEmpty(context, 'FilterFail')
