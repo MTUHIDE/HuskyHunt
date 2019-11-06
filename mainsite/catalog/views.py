@@ -124,9 +124,9 @@ def email(request, pk):
         message = (request.user.get_short_name() +
                   ' has messaged you about an item you posted on HuskyHunt!\n\n' +
                   request.user.get_short_name() + ': ' + request.GET['message'] +
-                  '\n\nReply at: ' + request.user.email +
-                  '\n*Do not reply to this email. Your reply will be forever ' +
-                  'lost in the interweb and your will be sad')
+                  '\n\nYou can reply to: ' + request.user.email +
+                  '\n\n*Do not reply to this email. Your reply will be forever ' +
+                  'lost in the interweb and you will be sad')
 
         #The email that this message is sent from
         from_email = 'admin@huskyhunt.com'
