@@ -14,13 +14,24 @@ from django.urls import reverse
 #param: context - the context that's normally passed to the catalog pages;
 #         it's modified appropriately during this function to contain recent items
 #param: type - one of 'SearchFail', 'FilterFail', 'PageNotFoundFail', etc.
-#param: num_pages - The number of recent items displayed, default is 4 most recent
+#param: num_items - The number of recent items displayed, default is 4 most recent
 #returns: boolean whether or not
-def addErrorOnEmpty(context, type, num_pages = 4):
+def addErrorOnEmpty(context, type, num_items = 4):
     context['failed_search'] = None
     if context['items'].paginator.count == 0:
+
+        #Gets num_items most recent items from the database and sorts by date added
+        recent_items = CatalogItem.objects.filter(
+            date_added__lte=timezone.now()
+        ).order_by('-date_added')[:num_items]
+
+        # Paginator will show up to num_items items. Always one page long.
+        paginator = Paginator(recent_items, num_items, allow_empty_first_page=True)
+        items = paginator.get_page(1)
+
+
         context['failed_search'] = type
-        context['items'] = CatalogItem.objects.order_by('-date_added')[0:num_pages];
+        context['items'] = items
         return True
     return False
 
@@ -42,14 +53,16 @@ def search(request):
     recent_items = CatalogItem.objects.filter(
       Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
     )
+    num_items = recent_items.count()
+    if num_items <= 0:
+        num_items = 1
 
     #Gets all the different categories
     filters = Category.objects.all()
 
-    # Paginator will show 16 items per page
-    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
-    page = request.GET.get('page') # Gets the page number to display
-    items = paginator.get_page(page)
+    # Paginator will show num_items items per page (all items in the search)
+    paginator = Paginator(recent_items, num_items, allow_empty_first_page=True)
+    items = paginator.get_page(1)
 
     #Puts all the data to be displayed into context
     context = {
