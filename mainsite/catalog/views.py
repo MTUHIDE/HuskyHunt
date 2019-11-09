@@ -41,44 +41,44 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #returns: all items in the database that contain the string
 #from the search text field in their name or description
 def search(request):
-  #The CSS code for this function can be found here
-  template = 'catalog/index.html'
+    #The CSS code for this function can be found here
+    template = 'catalog/index.html'
 
     #The title for the webpage
-  title = 'MTU Catalog'
+    title = 'MTU Catalog'
+
+    # Maximum number of items displayed in the search
+    max_items = 50
 
     #Checks to make sure the user has logged in
-  if request.user.is_authenticated:
+    if request.user.is_authenticated:
         #Uses the filter function to get the data of the searched items
-    recent_items = CatalogItem.objects.filter(
-      Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
-    )
-    num_items = recent_items.count()
-    if num_items <= 0:
-        num_items = 1
+        recent_items = CatalogItem.objects.filter(
+            Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
+        )[:max_items]
 
-    #Gets all the different categories
-    filters = Category.objects.all()
+        #Gets all the different categories
+        filters = Category.objects.all()
 
-    # Paginator will show num_items items per page (all items in the search)
-    paginator = Paginator(recent_items, num_items, allow_empty_first_page=True)
-    items = paginator.get_page(1)
+        # Paginator will show up to max_items on a single page
+        paginator = Paginator(recent_items, max_items, allow_empty_first_page=True)
+        items = paginator.get_page(1)
 
-    #Puts all the data to be displayed into context
-    context = {
-      'items': items,
-      'title': title,
-      'filters': filters,
-    }
+        #Puts all the data to be displayed into context
+        context = {
+          'items': items,
+          'title': title,
+          'filters': filters,
+        }
 
-    addErrorOnEmpty(context, 'SearchFail')
+        addErrorOnEmpty(context, 'SearchFail')
 
         #Returns a render function call to display onto the website for the user to see
-    return render(request, template, context)
+        return render(request, template, context)
 
     #If the user is not logged in then they get redirected to the HuskyStatue screen
-  else:
-    return HttpResponseRedirect('/')
+    else:
+        return HttpResponseRedirect('/')
 
 
 #This function gets all the items from the database
