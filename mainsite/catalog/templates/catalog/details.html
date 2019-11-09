@@ -42,8 +42,8 @@
             <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
             <div class="row">
                 <div class="col-lg-4">
-                <form action="/catalog/{{item.id}}/email" method="get" id="emailform">
-                    <input type="submit" class="btn btn-default" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
+                <form action="/catalog/{{item.id}}/email" method="get" onsubmit="sendButton.disabled = true" id="emailform">
+                    <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
                     </form>
                 </div>
 
@@ -61,3 +61,7 @@
 {% endfor %}
 {% endif %}
 {% endblock %}
+
+<script type="text/javascript">
+   
+</script>
