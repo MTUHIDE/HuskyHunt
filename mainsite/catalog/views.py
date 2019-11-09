@@ -18,7 +18,7 @@ from django.urls import reverse
 #returns: boolean whether or not
 def addErrorOnEmpty(context, type, num_pages = 4):
     context['failed_search'] = None
-    if context['items'].count() == 0:
+    if context['items'].paginator.count == 0:
         context['failed_search'] = type
         context['items'] = CatalogItem.objects.order_by('-date_added')[0:num_pages];
         return True
@@ -43,12 +43,17 @@ def search(request):
       Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
     )
 
-        #Gets all the different categories
+    #Gets all the different categories
     filters = Category.objects.all()
 
-        #Puts all the data to be displayed into context
+    # Paginator will show 16 items per page
+    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
+    page = request.GET.get('page') # Gets the page number to display
+    items = paginator.get_page(page)
+
+    #Puts all the data to be displayed into context
     context = {
-      'items': recent_items,
+      'items': items,
       'title': title,
       'filters': filters,
     }
