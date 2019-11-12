@@ -17,7 +17,7 @@ urlpatterns = [
   	path('search/', views.search, name='search'),
 
     #...filter/a category/ then execute the filter method in views
-  	path('filter/<category>/', views.filter, name='filter'),
+  	path('filter/', views.filter, name='filter'),
 
     #...an integer followed by /email then execute the email method in views
     path('<int:pk>/email/', views.email, name='email'),

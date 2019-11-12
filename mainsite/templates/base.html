@@ -13,6 +13,55 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <title>HuskyHunt</title>
+    
+    <!-- filtering functions -->
+    <script>
+   function appendToUrl(value)
+   {
+     var url = new URL(window.location.href.toString());
+     url.searchParams.append('filter', value);
+     window.location.replace(url.toString());
+   }
+
+   function removeFromUrl(value)
+   {
+     var j = 0;
+     var url = new URL(window.location.href.toString());
+     for(var i of url.searchParams.values()){
+      if(i == value){
+        var newUrl = url.toString().replace(("filter=" + value.replace(" ", "+")), "");
+        var n;
+        if(j == 0){
+          n = newUrl.indexOf("&");
+        }
+        else if(url.searchParams.values().next().done){
+          n = newUrl.indexOf("&&");
+        }
+        else{
+          n = newUrl.lastIndexOf("&");
+        }
+        
+        if(n+1 != newUrl.length){
+         newUrl = newUrl.slice(0, n) + newUrl.slice(n+1);
+        }
+        else {
+         newUrl = newUrl.slice(0, n);
+        }
+        url = new URL(newUrl);
+        if(url.searchParams.values().next().done){
+         window.location.replace("/catalog");
+        }
+        else{
+         window.location.replace(url.toString());
+        }
+      }
+      j++;
+     }
+   }
+
+</script>
+
+    
   </head>
   <body style="background-color: #c3c3c3; padding-left: 0px; padding-right: 20px;">
     <!-- Implement NavBar -->
