@@ -9,4 +9,5 @@ urlpatterns = [
 
     #...blank then execute the index methon in views
     path('', views.index, name='index'),
+    path('create', views.RideCreate.as_view(), name='ride_create')
 ]
