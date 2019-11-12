@@ -1,29 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<script>
-  function appendToUrl(value)
-  {
-     var url = new URL(window.location.href.toString());
-     url.searchParams.append('filter', value);
-     window.location.replace(url.toString());
-  }
-</script>
-
-<script>
-  function removeFromUrl(value)
-  {
-     var url = new URL(window.location.href.toString());
-     for(var i of url.searchParams.values()){
-      if(i == value){
-        var newUrl = url.toString().replace("filter=" + value, "");
-        url = new URL(newUrl);
-        window.location.replace(url.toString());
-      }
-     }
-  }
-</script>
-
 <div class="row">
   <div class="col-lg-2 col-md-3 col-sm-4">
 
@@ -32,12 +9,16 @@
       <h1 class="my-4" style="color: #ffcd00; text-align: center;">Catalog</h1>
       <div style="display: inline-block;">
        {% for filter in filters %}
-          {% if filter.category_name in curFilters %}
+          {% if not curFilters %}
+            <form action="/catalog/filter/" method="get">
+          {% elif filter.category_name in curFilters %}
             <form action="/catalog/filter/">   
           {% else %}
             <form action="/catalog/filter/">  
           {% endif %}
-          {% if filter.category_name in curFilters %}
+          {% if not curFilters %}
+            <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+          {% elif filter.category_name in curFilters %}
              <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color:#ffcd00; color:black;" onclick="removeFromUrl('{{filter.category_name}}')">{{filter.category_name}}</button>
           {% else %}
              <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" onclick="appendToUrl('{{filter.category_name}}')">{{filter.category_name}}</button>

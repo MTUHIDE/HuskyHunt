@@ -14,7 +14,52 @@
 
     <title>HuskyHunt</title>
     
-    <!-- filtering function -->
+    <!-- filtering functions -->
+    <script>
+   function appendToUrl(value)
+   {
+     var url = new URL(window.location.href.toString());
+     url.searchParams.append('filter', value);
+     window.location.replace(url.toString());
+   }
+
+   function removeFromUrl(value)
+   {
+     var j = 0;
+     var url = new URL(window.location.href.toString());
+     for(var i of url.searchParams.values()){
+      if(i == value){
+        var newUrl = url.toString().replace("filter=" + value, "");
+        var n;
+        if(j == 0){
+          n = newUrl.indexOf("&");
+        }
+        else if(url.searchParams.values().next().done){
+          n = newUrl.indexOf("&&");
+        }
+        else{
+          n = newUrl.lastIndexOf("&");
+        }
+        
+        if(n+1 != newUrl.length){
+         newUrl = newUrl.slice(0, n) + newUrl.slice(n+1);
+        }
+        else {
+         newUrl = newUrl.slice(0, n);
+        }
+        url = new URL(newUrl);
+        if(url.searchParams.values().next().done){
+         window.location.replace("/catalog");
+        }
+        else{
+         window.location.replace(url.toString());
+        }
+      }
+      j++;
+     }
+   }
+
+</script>
 
     
   </head>
