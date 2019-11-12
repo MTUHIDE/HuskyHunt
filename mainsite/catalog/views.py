@@ -14,13 +14,24 @@ from django.urls import reverse
 #param: context - the context that's normally passed to the catalog pages;
 #         it's modified appropriately during this function to contain recent items
 #param: type - one of 'SearchFail', 'FilterFail', 'PageNotFoundFail', etc.
-#param: num_pages - The number of recent items displayed, default is 4 most recent
+#param: num_items - The number of recent items displayed, default is 4 most recent
 #returns: boolean whether or not
-def addErrorOnEmpty(context, type, num_pages = 4):
+def addErrorOnEmpty(context, type, num_items = 4):
     context['failed_search'] = None
-    if context['items'].count() == 0:
+    if context['items'].paginator.count == 0:
+
+        #Gets num_items most recent items from the database and sorts by date added
+        recent_items = CatalogItem.objects.filter(
+            date_added__lte=timezone.now()
+        ).order_by('-date_added')[:num_items]
+
+        # Paginator will show up to num_items items. Always one page long.
+        paginator = Paginator(recent_items, num_items, allow_empty_first_page=True)
+        items = paginator.get_page(1)
+
+
         context['failed_search'] = type
-        context['items'] = CatalogItem.objects.order_by('-date_added')[0:num_pages];
+        context['items'] = items
         return True
     return False
 
@@ -30,37 +41,44 @@ def addErrorOnEmpty(context, type, num_pages = 4):
 #returns: all items in the database that contain the string
 #from the search text field in their name or description
 def search(request):
-  #The CSS code for this function can be found here
-  template = 'catalog/index.html'
+    #The CSS code for this function can be found here
+    template = 'catalog/index.html'
 
     #The title for the webpage
-  title = 'MTU Catalog'
+    title = 'MTU Catalog'
+
+    # Maximum number of items displayed in the search
+    max_items = 50
 
     #Checks to make sure the user has logged in
-  if request.user.is_authenticated:
+    if request.user.is_authenticated:
         #Uses the filter function to get the data of the searched items
-    recent_items = CatalogItem.objects.filter(
-      Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
-    )
+        recent_items = CatalogItem.objects.filter(
+            Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
+        )[:max_items]
 
         #Gets all the different categories
-    filters = Category.objects.all()
+        filters = Category.objects.all()
+
+        # Paginator will show up to max_items on a single page
+        paginator = Paginator(recent_items, max_items, allow_empty_first_page=True)
+        items = paginator.get_page(1)
 
         #Puts all the data to be displayed into context
-    context = {
-      'items': recent_items,
-      'title': title,
-      'filters': filters,
-    }
+        context = {
+          'items': items,
+          'title': title,
+          'filters': filters,
+        }
 
-    addErrorOnEmpty(context, 'SearchFail')
+        addErrorOnEmpty(context, 'SearchFail')
 
         #Returns a render function call to display onto the website for the user to see
-    return render(request, template, context)
+        return render(request, template, context)
 
     #If the user is not logged in then they get redirected to the HuskyStatue screen
-  else:
-    return HttpResponseRedirect('/')
+    else:
+        return HttpResponseRedirect('/')
 
 
 #This function gets all the items from the database
