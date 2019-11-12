@@ -29,7 +29,7 @@
      var url = new URL(window.location.href.toString());
      for(var i of url.searchParams.values()){
       if(i == value){
-        var newUrl = url.toString().replace("filter=" + value, "");
+        var newUrl = url.toString().replace(("filter=" + value.replace(" ", "+")), "");
         var n;
         if(j == 0){
           n = newUrl.indexOf("&");
