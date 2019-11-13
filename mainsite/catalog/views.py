@@ -236,7 +236,7 @@ def filter(request):
       )
 
     # Paginator will show 16 items per page
-    paginator = Paginator(recent_items, 1, allow_empty_first_page=True)
+    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
     page = request.GET.get('page') # Gets the page number to display
     items = paginator.get_page(page)  
 
