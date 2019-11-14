@@ -3,7 +3,37 @@
 <head>
 	<title>Ridesharing</title>
 </head>
-<body>
-	<h2>This is the ridesharing page</h2>
-</body>
+
+<div>
+	<div class="row">
+            {% if rides %}
+            {% for ride in rides %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100"  style="border: 2px solid black; width: auto;">
+                    <div class="card-body">
+                        <h4 class="card-title" style="color: black;">
+                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black;">
+                                <a href="\catalog\{{ride.id}}" style="color: black; line-height: normal;">{{ ride.destination_city }}</a>
+                            </div>
+                        </h4>
+                        <h6>{{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
+                        <h6>{{ ride.destination_city }} {{ ride.destination_state }}  {{ ride.destination_zipcode }}</h6>
+
+                        <h6>Leaving Date: {{ ride.date_leaving }}</h6>
+                        <h6>RoundTrip: {{ ride.round_trip }}</h6>
+                        <h6>Return Date: {{ ride.return_date }}</h6>
+                        <h6>Spots: {{ ride.spots }}</h6>
+                        <h6>Driver: {{ ride.driver }}</h6>
+                        <h6>Notes: {{ ride.notes }}</h6>
+                        <h6>Price: {{ ride.price }}</h6>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+
 {% endblock %}
