@@ -33,7 +33,28 @@
         {% endfor %}
         {% endif %}
     </div>
+
+    {% if rides.paginator.num_pages > 1 %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if rides.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ rides.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ rides.number }} of {{ rides.paginator.num_pages }}.
+            </span>
+
+            {% if rides.has_next %}
+            <a href="?page={{ rides.next_page_number }}">next</a>
+            <a href="?page={{ rides.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
 </div>
+
 
 
 {% endblock %}
