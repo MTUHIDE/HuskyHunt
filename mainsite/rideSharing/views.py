@@ -60,7 +60,16 @@ class RideCreate(CreateView):
 
     def setup(self, request, *args, **kwargs):
         self._this_user = user_profile.objects.get(user = request.user)
-        self.initial['driver'] = self._this_user.preferred_name
+        self.initial['destination_city'] = self._this_user.home_city
+        self.initial['destination_state'] = self._this_user.home_state
+        self.initial['destination_zipcode'] = self._this_user.zipcode
+
+
+        if self._this_user.preferred_name:
+            # use user's preferred name if exists
+            self.initial['driver'] = self._this_user.preferred_name
+        else:
+            self.initial['driver'] = request.user.get_short_name();
 
         super().setup(request, args, kwargs)
 
