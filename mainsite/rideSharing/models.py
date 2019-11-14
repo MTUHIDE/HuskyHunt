@@ -42,7 +42,7 @@ class RideItem(models.Model):
     round_trip = models.BooleanField(default=False)
 
    	# Date returning - OPTIONAL
-    return_date = models.DateField(auto_now=False, auto_now_add=False, blank=True)
+    return_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
 
     # How many spots are available
     spots = models.IntegerField()
