@@ -2,12 +2,14 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # Create your models here.
+
+upload_directory = 'account/profilepics/'
 
 class user_profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -15,7 +17,17 @@ class user_profile(models.Model):
     home_city = models.CharField(max_length=50, blank = True, null=True)
     home_state = models.CharField(max_length=50, blank = True, null=True)
     zipcode = models.IntegerField(blank = True, null=True)
-    picture = models.ImageField(upload_to='account/profilepics/', height_field=None, width_field=None, blank = True, null=True)
+    picture = models.ImageField(upload_to=upload_directory, height_field=None, width_field=None, blank = True, null=True)
+
+@receiver(pre_save, sender=user_profile)
+def delete_changed_photos(sender, instance, **kwargs):
+    try:
+        user = user_profile.objects.get(pk=instance.pk)
+    except user_profile.DoesNotExist:
+        pass #
+    if not instance.picture == user.picture:
+        user.picture.delete(save=False)
+
 
 @receiver(post_save, sender=get_user_model())
 def create_user_profile(sender, instance, created, **kwargs):
