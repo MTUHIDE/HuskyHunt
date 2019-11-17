@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -24,9 +24,15 @@ def delete_changed_photos(sender, instance, **kwargs):
     try:
         user = user_profile.objects.get(pk=instance.pk)
     except user_profile.DoesNotExist:
-        pass #
+        return #
     if not instance.picture == user.picture:
         user.picture.delete(save=False)
+
+#Below is untested because, at the time of this comment, we have no deleting users (I think?)
+@receiver(post_delete, sender=user_profile)
+def delete_ondelete_photos(sender, instance, **kwargs):
+    if instance.picture:
+        instance.picture.delete(save=False)
 
 
 @receiver(post_save, sender=get_user_model())
