@@ -11,6 +11,8 @@ from rideSharing.models import RideItem
 from django.views.generic.edit import CreateView
 from accountant.models import user_profile
 from django.urls import reverse
+from django import forms
+from django.forms import TextInput
 
 def index(request):
 
@@ -28,10 +30,16 @@ def index(request):
         return HttpResponseRedirect('/')
 
 
+class RideForm(ModelForm):
+    class Meta:
+        model = RideItem
+        fields = ['start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
+        widgets = {'driver': TextInput(attrs={'readonly': 'readonly'})}
+
 class RideCreate(CreateView):
     model = RideItem
-    fields = ['start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
-    #fields left out: username, views, date_added
+    form_class = RideForm
+
     initial = {'start_city': "Houghton", 'start_state': "Michigan", 'start_zipcode': 49931}
     success_url = ''
 
