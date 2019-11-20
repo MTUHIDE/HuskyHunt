@@ -16,10 +16,22 @@
     
     <!-- filtering functions -->
     <script>
-   function appendToUrl(value)
+   function appendToUrl(param, value)
    {
      var url = new URL(window.location.href.toString());
-     url.searchParams.append('filter', value);
+
+     // replace the page query if it exists (prevents stacking of &page=)
+     if (param == "page" && url.toString().includes("page=")) {
+      var query_string = url.search;
+      var search_params = new URLSearchParams(query_string);
+      search_params.set('page', value);
+      url.search = search_params.toString();
+
+     } else {
+      url.searchParams.append(param, value);
+     }
+
+
      window.location.replace(url.toString());
    }
 
