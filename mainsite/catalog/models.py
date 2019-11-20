@@ -2,6 +2,8 @@ from django.contrib.auth.models import User # imports the user table
 from django.db import models
 from django.conf import settings
 from accountant.models import user_profile
+from django.dispatch import receiver
+from django.db.models.signals import post_delete, pre_save
 
 
 #Defines a table of categories
@@ -91,3 +93,19 @@ class CatalogItem(models.Model):
 
     def __getName__(self):
         return self.username.first_name
+
+@receiver(post_delete, sender=CatalogItem)
+def delete_ondelete_photos(sender, instance, **kwargs):
+    if instance.item_picture:
+        instance.item_picture.delete(save=False)
+
+#Below is untested because, at the time of this comment, we have no 'edit item' form
+@receiver(pre_save, sender=CatalogItem)
+def delete_changed_photos(sender, instance, **kwargs):
+    try:
+        item = CatalogItem.objects.get(pk=instance.pk)
+    except CatalogItem.DoesNotExist:
+        return #
+    if not instance.item_picture == item.item_picture:
+        item.item_picture.delete(save=False)
+

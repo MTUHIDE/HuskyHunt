@@ -235,12 +235,18 @@ def filter(request):
         category__category_name=filt
       )
 
-        #Gets all the different categories
+    # Paginator will show 16 items per page
+    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
+    page = request.GET.get('page') # Gets the page number to display
+    items = paginator.get_page(page)  
+
+
+    #Gets all the different categories
     filters = Category.objects.all()
     curFilters = request.GET.getlist('filter')
         #Puts all the data to be displayed into context
     context = {
-      'items': recent_items,
+      'items': items,
       'title': title,
       'filters': filters,
       'curFilters': curFilters
