@@ -5,25 +5,21 @@ from django.shortcuts import render
 from datetime import datetime
 
 from .forms import SellingForm
-from catalog.models import CatalogItem 
+from catalog.models import CatalogItem
 
-# Create your views here.
-#class SellingListView(ListView):
-#    model = CatalogItem 
-#    contex_object_name = 'obj'
-#
-#class SellingCreateView(CreateView):
-#    model = CatalogItem 
-#    fields = ('item_title', 'item_description', 'item_price', 'category')
-#    success_url = reverse_lazy('index')
-#
-#class SellingUpdateView(UpdateView):
-#    model = CatalogItem 
-#    fields = ('item_title', 'item_description', 'item_price', 'category')
-#    success_url = reverse_lazy('index')
+from django.urls import reverse
+from django.views.generic.edit import CreateView
+from .forms import RideForm
+from rideSharing.models import RideItem
+from accountant.models import user_profile
 
 
-def index(request):
+# -------------------------------------------------------------
+# Catalog view
+# -------------------------------------------------------------
+
+
+def catalog_item_form(request):
     template = 'selling/index.html'
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -34,19 +30,52 @@ def index(request):
                 item_price = form.cleaned_data['item_price']
                 item_title = form.cleaned_data['item_title']
                 username = request.user
-                first_name = request.user.get_short_name()
-                # Use username if first_name is empty (null)
-                if not first_name:
-                    first_name = username
                 item_picture = form.cleaned_data['item_picture']
-                catalogItem_instance = CatalogItem.objects.create(username=username, first_name=first_name, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
+                catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
                 catalogItem_instance.save()
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect(reverse('catalog:index'))
 
         else:
             form = SellingForm()
         context = {'form': form,}
-        return render(request, template, context) 
+        return render(request, template, context)
     else:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(reverse('catalog:index'))
 
+# -------------------------------------------------------------
+# Ridesharing view
+# -------------------------------------------------------------
+
+
+class RideCreate(CreateView):
+    model = RideItem
+    form_class = RideForm
+
+    initial = {'start_city': "Houghton", 'start_state': "Michigan", 'start_zipcode': 49931}
+    success_url = ''
+
+    _this_user = None
+
+    def setup(self, request, *args, **kwargs):
+        self._this_user = user_profile.objects.get(user = request.user)
+        self.initial['destination_city'] = self._this_user.home_city
+        self.initial['destination_state'] = self._this_user.home_state
+        self.initial['destination_zipcode'] = self._this_user.zipcode
+
+
+        if self._this_user.preferred_name:
+            # use user's preferred name if exists
+            self.initial['driver'] = self._this_user.preferred_name
+        else:
+            self.initial['driver'] = request.user.get_short_name();
+
+        super().setup(request, args, kwargs)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.username = self._this_user.user
+        self.object.views = 0
+
+        self.object.save()
+
+        return HttpResponseRedirect(reverse('rideSharing:index'))
