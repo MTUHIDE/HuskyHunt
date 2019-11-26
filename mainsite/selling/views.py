@@ -14,68 +14,56 @@ from rideSharing.models import RideItem
 from accountant.models import user_profile
 
 
-# -------------------------------------------------------------
-# Catalog view
-# -------------------------------------------------------------
-
-
-def catalog_item_form(request):
-    template = 'selling/index.html'
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            form = SellingForm(request.POST, request.FILES)
-            if form.is_valid():
-                category = form.cleaned_data['category']
-                item_description = form.cleaned_data['item_description']
-                item_price = form.cleaned_data['item_price']
-                item_title = form.cleaned_data['item_title']
-                username = request.user
-                item_picture = form.cleaned_data['item_picture']
-                catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
-                catalogItem_instance.save()
-                return HttpResponseRedirect(reverse('catalog:index'))
-
-        else:
-            form = SellingForm()
-        context = {'form': form,}
-        return render(request, template, context)
-    else:
+def index(request):
+    if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('catalog:index'))
 
-# -------------------------------------------------------------
-# Ridesharing view
-# -------------------------------------------------------------
+    template = "selling/combine.html"
+    catalog_form = None
+    ride_form = None
 
+    if request.method == 'POST':
+        post_request = request.POST.copy() #make it not immutable
+        submission_type = post_request.pop('submission_type', None)
+        if submission_type == ['ride']:
+            ride_form = RideForm(post_request, request.FILES)
+            if ride_form.is_valid():
+                ride_item = ride_form.save(commit=False)
+                ride_item.username = request.user
+                ride_item.views = 0
+                ride_item.save()       #error?
+                # check for failure cases! what happens with invalid data?
+                return HttpResponseRedirect(reverse('rideSharing:index'))
+        elif submission_type == ['ctlg']:
+            catalog_form = SellingForm(post_request, request.FILES)
+            if catalog_form.is_valid():
+                category = catalog_form.cleaned_data['category']
+                item_description = catalog_form.cleaned_data['item_description']
+                item_price = catalog_form.cleaned_data['item_price']
+                item_title = catalog_form.cleaned_data['item_title']
+                username = request.user
+                item_picture = catalog_form.cleaned_data['item_picture']
+                catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
+                catalogItem_instance.save()
 
-class RideCreate(CreateView):
-    model = RideItem
-    form_class = RideForm
-
-    initial = {'start_city': "Houghton", 'start_state': "Michigan", 'start_zipcode': 49931}
-    success_url = ''
-
-    _this_user = None
-
-    def setup(self, request, *args, **kwargs):
-        self._this_user = user_profile.objects.get(user = request.user)
-        self.initial['destination_city'] = self._this_user.home_city
-        self.initial['destination_state'] = self._this_user.home_state
-        self.initial['destination_zipcode'] = self._this_user.zipcode
-
-
-        if self._this_user.preferred_name:
-            # use user's preferred name if exists
-            self.initial['driver'] = self._this_user.preferred_name
+                return HttpResponseRedirect(reverse('catalog:index'))
         else:
-            self.initial['driver'] = request.user.get_short_name();
-
-        super().setup(request, args, kwargs)
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.username = self._this_user.user
-        self.object.views = 0
-
-        self.object.save()
-
-        return HttpResponseRedirect(reverse('rideSharing:index'))
+            pass #this should never happen
+    if catalog_form is None:
+        catalog_form = SellingForm()
+    if ride_form is None:
+        curr_user = user_profile.objects.get(user = request.user)
+        ride_form = RideForm(initial = {
+            'start_city': "Houghton",
+            'start_state': "Michigan",
+            'start_zipcode': 49931,
+            'destination_city': curr_user.home_city,
+            'destination_state': curr_user.home_state,
+            'destination_zipcode': curr_user.zipcode,
+            'driver': curr_user.preferred_name if curr_user.preferred_name else request.user.get_short_name()
+        })
+    context = {
+        'catalog_form': catalog_form,
+        'ride_form': ride_form,
+    }
+    return render(request, template, context)
