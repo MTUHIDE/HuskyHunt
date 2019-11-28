@@ -46,7 +46,29 @@
                 </div>
                 <div class="card-footer" style="background-color: black;"> <!--black-->
                     <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block ">View</a>
-                    <button role="button" class="btn btn-outline-warning btn-block" onclick="deleteItemConfirmation({{item.id}})">Delete</button>
+                    <button role="button" class="btn btn-outline-warning btn-block" onclick="deleteItemConfirmation({{item.id}}, 'item')">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+        {% endif %}
+
+        {% if ride_list %}
+        {% for ride in ride_list %}
+        <div class="col-lg-2 col-md-4 mb-4">
+            <div class="card"  style="border: 2px solid black;">
+                <!-- <a href="\catalog\{{item.id}}"><img class="product-icon" style="height:100px;" src="{{ item.item_picture.url }}" alt=""> -->
+                <div class="card-body">
+                    <h4 class="card-title" style="color: black;">
+                        <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black; line-height: normal;">
+                            {{ ride.destination_city }}
+                        </div>
+                    </h4>
+                </div>
+                <div class="card-footer" style="background-color: black;"> <!--black-->
+                   <!--  <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block ">View</a> -->
+                    <button role="button" class="btn btn-outline-warning btn-block" onclick="deleteItemConfirmation({{ride.id}}, 'ride')">Delete</button>
                 </div>
             </div>
         </div>
@@ -60,10 +82,17 @@
 
 <!-- Delete confirmation -->
 <script type="text/javascript">
-    function deleteItemConfirmation(id) {
-        userConfirmed = confirm("Are you sure you want to delete this item?");
-        if (userConfirmed) {
+    function deleteItemConfirmation(id, type) {
+        if (type == 'ride') {
+          userConfirmed = confirm("Are you sure you want to remove this ride?");
+        } else {
+          userConfirmed = confirm("Are you sure you want to remove this item?");
+        }
+        
+        if (userConfirmed && type=='item') {
             window.location.href = "/accountant/" + id
+        } else if (userConfirmed && type=='ride') {
+          window.location.href = "/accountant/ride/" + id
         }
     }
 </script>
