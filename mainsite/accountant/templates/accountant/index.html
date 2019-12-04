@@ -3,15 +3,15 @@
 {% block content %}
 
 <div class="row justify-content-center mt-2 mb-5">
-    <div class='col-lg-1'>
-      <img style="width: 150px; height:150px; border-radius: 50%; vertical-align: middle; border: 2px solid black;" src="{{defaultPicture}}" alt="Profile Picture">
+    <div class='col*-lg-auto'>
+      <img style="width: 150px; height:150px; border-radius: 50%; border: 2px solid black;" src="{{defaultPicture}}" alt="Profile Picture">
     </div>
-    <div class='col-lg-3'>
+    <div class='col-lg-auto'>
       <h1 class="text-center">{{request.user.first_name}} {{request.user.last_name}}</h1>
       <h2 class="text-center">{{request.user.email}}</h2>
     </div>
     <div class="row align-items-end">
-    <div class="col-lg-1">
+    <div class="col-lg-auto">
       <button type="button" class="btn btn-warning">Edit Account</button>
     </div>
   </div>
@@ -24,11 +24,12 @@
   </div>
 </div>
      <!-- /.col-lg-3 -->
-    <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
-        <div class="row justify-content-center align-end">
+  <div class="row justify-content-center">
+    <div class="col" align="center" style="position: static;">
+        <div class="row justify-content-center">
             {% if item_list %}
             {% for item in item_list %}
-            <div class="col-lg-2 col-md-4 mb-4">
+            <div class="col-lg-3 col-md-3 col-sm-6">
                 <div class="card"  style="border: 2px solid black;">
                     <img class="product-icon" style="height:100px;" src="{{ item.item_picture.url }}" alt="">
                     <div class="card-body">
@@ -52,8 +53,9 @@
             {% endfor %}
             {% endif %}
         </div>
-    <!-- /.row -->
 
-<!-- /.col-lg-9 -->
+
+
+    </div>
 </div>
 {% endblock %}
