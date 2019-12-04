@@ -5,48 +5,65 @@ from django.shortcuts import render
 from datetime import datetime
 
 from .forms import SellingForm
-from catalog.models import CatalogItem 
+from catalog.models import CatalogItem
 
-# Create your views here.
-#class SellingListView(ListView):
-#    model = CatalogItem 
-#    contex_object_name = 'obj'
-#
-#class SellingCreateView(CreateView):
-#    model = CatalogItem 
-#    fields = ('item_title', 'item_description', 'item_price', 'category')
-#    success_url = reverse_lazy('index')
-#
-#class SellingUpdateView(UpdateView):
-#    model = CatalogItem 
-#    fields = ('item_title', 'item_description', 'item_price', 'category')
-#    success_url = reverse_lazy('index')
+from django.urls import reverse
+from django.views.generic.edit import CreateView
+from .forms import RideForm
+from rideSharing.models import RideItem
+from accountant.models import user_profile
 
 
 def index(request):
-    template = 'selling/index.html'
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            form = SellingForm(request.POST, request.FILES)
-            if form.is_valid():
-                category = form.cleaned_data['category']
-                item_description = form.cleaned_data['item_description']
-                item_price = form.cleaned_data['item_price']
-                item_title = form.cleaned_data['item_title']
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('catalog:index'))
+
+    template = "selling/combine.html"
+    catalog_form = None
+    ride_form = None
+
+    if request.method == 'POST':
+        post_request = request.POST.copy() #make it not immutable
+        submission_type = post_request.pop('submission_type', None)
+        if submission_type == ['ride']:
+            ride_form = RideForm(post_request, request.FILES)
+            if ride_form.is_valid():
+                ride_item = ride_form.save(commit=False)
+                ride_item.username = request.user
+                ride_item.views = 0
+                ride_item.save()       #error?
+                # check for failure cases! what happens with invalid data?
+                return HttpResponseRedirect(reverse('rideSharing:index'))
+        elif submission_type == ['ctlg']:
+            catalog_form = SellingForm(post_request, request.FILES)
+            if catalog_form.is_valid():
+                category = catalog_form.cleaned_data['category']
+                item_description = catalog_form.cleaned_data['item_description']
+                item_price = catalog_form.cleaned_data['item_price']
+                item_title = catalog_form.cleaned_data['item_title']
                 username = request.user
-                first_name = request.user.get_short_name()
-                # Use username if first_name is empty (null)
-                if not first_name:
-                    first_name = username
-                item_picture = form.cleaned_data['item_picture']
-                catalogItem_instance = CatalogItem.objects.create(username=username, first_name=first_name, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
+                item_picture = catalog_form.cleaned_data['item_picture']
+                catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
                 catalogItem_instance.save()
-                return HttpResponseRedirect('/')
 
+                return HttpResponseRedirect(reverse('catalog:index'))
         else:
-            form = SellingForm()
-        context = {'form': form,}
-        return render(request, template, context) 
-    else:
-        return HttpResponseRedirect('/')
-
+            pass #this should never happen
+    if catalog_form is None:
+        catalog_form = SellingForm()
+    if ride_form is None:
+        curr_user = user_profile.objects.get(user = request.user)
+        ride_form = RideForm(initial = {
+            'start_city': "Houghton",
+            'start_state': "Michigan",
+            'start_zipcode': 49931,
+            'destination_city': curr_user.home_city,
+            'destination_state': curr_user.home_state,
+            'destination_zipcode': curr_user.zipcode,
+            'driver': curr_user.preferred_name if curr_user.preferred_name else request.user.get_short_name()
+        })
+    context = {
+        'catalog_form': catalog_form,
+        'ride_form': ride_form,
+    }
+    return render(request, template, context)
