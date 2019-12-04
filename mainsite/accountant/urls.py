@@ -12,4 +12,7 @@ urlpatterns = [
 
     # used for deleting an item
     path('<int:pk>/', views.deleteItem, name='deleteItem'),
+
+    # used for deleting a ride
+    path('ride/<int:pk>/', views.deleteRide, name='deleteRide'),
 ]

@@ -47,22 +47,20 @@ def search(request):
     #The title for the webpage
     title = 'MTU Catalog'
 
-    # Maximum number of items displayed in the search
-    max_items = 50
-
     #Checks to make sure the user has logged in
     if request.user.is_authenticated:
         #Uses the filter function to get the data of the searched items
         recent_items = CatalogItem.objects.filter(
             Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
-        )[:max_items]
+        )[:500]
 
         #Gets all the different categories
         filters = Category.objects.all()
 
-        # Paginator will show up to max_items on a single page
-        paginator = Paginator(recent_items, max_items, allow_empty_first_page=True)
-        items = paginator.get_page(1)
+        # Paginator will show 16 items per page
+        paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
+        page = request.GET.get('page') # Gets the page number to display
+        items = paginator.get_page(page)  
 
         #Puts all the data to be displayed into context
         context = {

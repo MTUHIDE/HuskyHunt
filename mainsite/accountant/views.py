@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from catalog.models import CatalogItem, Category, SubCategory
+from rideSharing.models import RideItem
 from django.utils import timezone
 
 from accountant.models import user_profile
@@ -63,13 +64,17 @@ def index(request):
         currentUser = user_profile.objects.get(user = request.user)
         template = 'accountant/index.html'
         defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
+
+        # load items and rides
         my_items = CatalogItem.objects.filter(username = request.user)
+        ride_items = RideItem.objects.filter(username = request.user)
         filters = Category.objects.all()
         title = 'My items'
 
       # Put data in context to be accessed from template
         context = {
             'item_list':my_items,
+            'ride_list':ride_items,
             'title': title,
             'filters': filters,
             'defaultPicture': currentUser.picture.url if currentUser.picture else defaultPicture,
@@ -83,6 +88,21 @@ def deleteItem(request, pk):
   if request.user.is_authenticated:
     # delete item from database
     item = CatalogItem.objects.filter(pk=pk)
+
+    # delete only if this user owns the item, a precautionary measure
+    if item.get(pk=pk).username == request.user:
+      item.delete();
+
+    # redirect to accountant page
+    return HttpResponseRedirect('/accountant')
+  else:
+    return HttpResponseRedirect('/')
+
+# Used as an intermediate function to delete an item
+def deleteRide(request, pk):
+  if request.user.is_authenticated:
+    # delete item from database
+    item = RideItem.objects.filter(pk=pk)
 
     # delete only if this user owns the item, a precautionary measure
     if item.get(pk=pk).username == request.user:
