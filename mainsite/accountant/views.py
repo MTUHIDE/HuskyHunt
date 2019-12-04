@@ -65,7 +65,7 @@ def index(request):
         template = 'accountant/index.html'
         defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
 
-        # load items and union them
+        # load items and rides
         my_items = CatalogItem.objects.filter(username = request.user)
         ride_items = RideItem.objects.filter(username = request.user)
         filters = Category.objects.all()
