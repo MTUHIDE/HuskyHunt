@@ -50,7 +50,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'accountant.pipeline.verify_scope'    
+    'accountant.pipeline.verify_scope'
 )
 
 INSTALLED_APPS = [
@@ -188,6 +188,5 @@ EMAIL_HOST_USER = 'admin@huskyhunt.com'
 EMAIL_HOST_PASSWORD = 'BrKXYJcN3vvA'
 EMAIL_PORT = 587
 
-
-
-
+#For images uploaded for items/etc
+MAX_UPLOAD_SIZE = 5242880

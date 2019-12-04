@@ -59,22 +59,20 @@ style="position: absolute;
 
 <!-- Page Title -->
 <br><br><br>
-<div class="row justify-content-md-center">
-      <div class="col-auto">
+<div class="container-fluid">
+  <div class="row justify-content-md-center">
+      <div class="col-auto" style="background-color: #ffcd00bf; border-radius: 16px;">
 	  <br><br>
-  <h1 style="text-align: center; text-decoration: underline; color: white;">Welcome</h1>
-      </div></div>
+  <h1 style="text-decoration: underline; color: black;">Welcome to HuskyHunt!</h1>
 <br>
-<!-- Google login section -->
-<div class="row justify-content-md-center">
-    <div class="col-auto" style="color: white;">
-      Sign in with MTU Account:</div>
-      </div>
-    <div class="row justify-content-md-center">
-    <div class="col-auto"><br>
-    <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="/static/mainsite/gauth.png"></a><br><br>
+
+    <div style="text-align: center; color: black;">
+      Use your MTU account to sign in:</div>
+    <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="/static/mainsite/gauth.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%; "></a><br><br>
     </div>
   </div>
+  </div>
+
   <div class="row justify-content-md-center">
   <div class="col-auto" style="color: white;">
          {% if messages %}
@@ -82,25 +80,15 @@ style="position: absolute;
                <p class="{{ message.tags }}">{{ message }}</p>
             {% endfor %}
          {% endif %}
-      </div>
-      </div>
+  </div>
+  </div>
 
-<!-- Development login section
 <div class="row justify-content-md-center fixed-bottom">
-    <div id="loginAuth" class="col-2" style="background-color: white; opacity: 0.8; text-align: center">
-      Development Login:
-        <form action="/?next=/catalog/" method="post" id="devLogin">
-            {% csrf_token %}
-            <div>
-                <input type="username" class="form-control" name="inputEmail" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
-            </div>
-            <div>
-                <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Password">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        Removed <a href="{% url 'landing:signup' %}">Sign Up</a> as it isn't used -->
-
+    <div class="col-12" style="background-image: linear-gradient(#ffffff40, #fffffff3);">
+      <img width="70px" src="http://huskyhunt.com/hide.png">      <img width="70px" src="http://huskyhunt.com/stc.png">
+      HuskyHunt site built by HIDE Enterprise in collaboration with STC Student Chapter.
+    </div>
+</div>
 
 <!-- Video background player script -->
         <script src="video.js"></script>
@@ -110,8 +98,6 @@ style="position: absolute;
         player.play();
         </script>
         <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
-        </div>
-        </div>
 
 <!-- Google Sign-In Script -->
             <script>

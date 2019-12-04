@@ -2,35 +2,34 @@
 {% block content %}
 
 <div class="row">
-  <div class="col align-center" style="-ms-flex: 0 0 230px; flex: 0 0 230px;">
+ <div class="col align-center" style="-ms-flex: 0 0 230px; flex: 0 0 230px;">
   <div class="wrapper">
     <div id="sidebar" style="text-align: center;background-color: black; height: 100%;width:220px; position: fixed; top: 50px; padding-right: 10px;">
       <div class="sidebar-header">
         <h1 class="my-4" style="color: #ffcd00; text-align: center;">Catalog</h1>
       </div>
-      <div class="" style="">
-        <ul class="btn-group-vertical list-unstyled" style="display: inline-block;">
-
-          <button type="button" name="bookButton" class="btn btn-outline-warning" style="">Books</button>
-
-          <button type="button" name="bookButton" class="btn btn-outline-warning" style="">Household</button>
-
-          <button type="button" name="bookButton" class="btn btn-outline-warning" style="">Electronics</button>
-
-          <button type="button" name="bookButton" class="btn btn-outline-warning" style="">Sporting Goods</button>
-
-          <button type="button" name="bookButton" class="btn btn-outline-warning" style="">Educational</button>
-
-        </ul>
-
-      </div>
-        <!--{% for filter in filters %}
-          <a href='\catalog\filter\{{ filter.category_name }}' class='dropdown-item'>{{ filter.category_name }}</a>
-          {% endfor %} <!---->
+      <div style="display: inline-block;">
+       {% for filter in filters %}
+          {% if not curFilters %}
+            <form action="/catalog/filter/" method="get">
+          {% elif filter.category_name in curFilters %}
+            <form action="/catalog/filter/">   
+          {% else %}
+            <form action="/catalog/filter/">  
+          {% endif %}
+          {% if not curFilters %}
+            <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+          {% elif filter.category_name in curFilters %}
+             <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color:#ffcd00; color:black;" onclick="removeFromUrl('{{filter.category_name}}')">{{filter.category_name}}</button>
+          {% else %}
+             <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" onclick="appendToUrl('filter', '{{filter.category_name}}')">{{filter.category_name}}</button>
+          {% endif %}
+           </form>
+        {% endfor %}
       </div>
     </div>
   </div>
-
+</div>
 
 
     <!-- /.col-lg-3 -->
@@ -66,7 +65,7 @@
                     <div class="card-body">
                         <h4 class="card-title" style="color: black;">
                             <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black;">
-                                <a href="\catalog\{{item.id}}" style="color: black;">{{ item.item_title }}</a>
+                                <a href="\catalog\{{item.id}}" style="color: black; line-height: normal;">{{ item.item_title }}</a>
                             </div>
                         </h4>
                         <h6>${{ item.item_price }}</h6>
@@ -87,11 +86,17 @@
         {% endif %}
     </div>
 
+{% if items.paginator.num_pages > 1 %}
     <div class="pagination">
         <span class="step-links">
             {% if items.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ items.previous_page_number }}">previous</a>
+            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '1')">
+            &laquo; first
+            </button>
+
+            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.previous_page_number }}')">
+            previous
+            </button>
             {% endif %}
 
             <span class="current">
@@ -99,11 +104,18 @@
             </span>
 
             {% if items.has_next %}
-            <a href="?page={{ items.next_page_number }}">next</a>
-            <a href="?page={{ items.paginator.num_pages }}">last &raquo;</a>
+            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.next_page_number }}')">
+            next
+            </button>
+
+            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.paginator.num_pages }}')">
+            last &raquo;
+            </button>
+
             {% endif %}
         </span>
     </div>
+{% endif %}
 
 
   </div>

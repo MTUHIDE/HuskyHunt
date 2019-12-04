@@ -14,13 +14,24 @@ from django.urls import reverse
 #param: context - the context that's normally passed to the catalog pages;
 #         it's modified appropriately during this function to contain recent items
 #param: type - one of 'SearchFail', 'FilterFail', 'PageNotFoundFail', etc.
-#param: num_pages - The number of recent items displayed, default is 4 most recent
+#param: num_items - The number of recent items displayed, default is 4 most recent
 #returns: boolean whether or not
-def addErrorOnEmpty(context, type, num_pages = 4):
+def addErrorOnEmpty(context, type, num_items = 4):
     context['failed_search'] = None
-    if context['items'].count() == 0:
+    if context['items'].paginator.count == 0:
+
+        #Gets num_items most recent items from the database and sorts by date added
+        recent_items = CatalogItem.objects.filter(
+            date_added__lte=timezone.now()
+        ).order_by('-date_added')[:num_items]
+
+        # Paginator will show up to num_items items. Always one page long.
+        paginator = Paginator(recent_items, num_items, allow_empty_first_page=True)
+        items = paginator.get_page(1)
+
+
         context['failed_search'] = type
-        context['items'] = CatalogItem.objects.order_by('-date_added')[0:num_pages];
+        context['items'] = items
         return True
     return False
 
@@ -30,37 +41,42 @@ def addErrorOnEmpty(context, type, num_pages = 4):
 #returns: all items in the database that contain the string
 #from the search text field in their name or description
 def search(request):
-  #The CSS code for this function can be found here
-  template = 'catalog/index.html'
+    #The CSS code for this function can be found here
+    template = 'catalog/index.html'
 
     #The title for the webpage
-  title = 'MTU Catalog'
+    title = 'MTU Catalog'
 
     #Checks to make sure the user has logged in
-  if request.user.is_authenticated:
+    if request.user.is_authenticated:
         #Uses the filter function to get the data of the searched items
-    recent_items = CatalogItem.objects.filter(
-      Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
-    )
+        recent_items = CatalogItem.objects.filter(
+            Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
+        )[:500]
 
         #Gets all the different categories
-    filters = Category.objects.all()
+        filters = Category.objects.all()
+
+        # Paginator will show 16 items per page
+        paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
+        page = request.GET.get('page') # Gets the page number to display
+        items = paginator.get_page(page)  
 
         #Puts all the data to be displayed into context
-    context = {
-      'items': recent_items,
-      'title': title,
-      'filters': filters,
-    }
+        context = {
+          'items': items,
+          'title': title,
+          'filters': filters,
+        }
 
-    addErrorOnEmpty(context, 'SearchFail')
+        addErrorOnEmpty(context, 'SearchFail')
 
         #Returns a render function call to display onto the website for the user to see
-    return render(request, template, context)
+        return render(request, template, context)
 
     #If the user is not logged in then they get redirected to the HuskyStatue screen
-  else:
-    return HttpResponseRedirect('/')
+    else:
+        return HttpResponseRedirect('/')
 
 
 #This function gets all the items from the database
@@ -124,9 +140,9 @@ def email(request, pk):
         message = (request.user.get_short_name() +
                   ' has messaged you about an item you posted on HuskyHunt!\n\n' +
                   request.user.get_short_name() + ': ' + request.GET['message'] +
-                  '\n\nReply at: ' + request.user.email +
-                  '\n*Do not reply to this email. Your reply will be forever ' +
-                  'lost in the interweb and your will be sad')
+                  '\n\nYou can reply to: ' + request.user.email +
+                  '\n\n*Do not reply to this email. Your reply will be forever ' +
+                  'lost in the interweb and you will be sad')
 
         #The email that this message is sent from
         from_email = 'admin@huskyhunt.com'
@@ -196,37 +212,49 @@ def detail(request, pk):
 
 
 #This function allows a user to choose from a dropdown
-#what category of items they want to see
+#what category/ies of items they want to see
 #param: request - array passed throughout a website, kinda like global variables
-#param: category - variable that contains the category name the user clicked on
-#returns: render function that changes the items the user sees based on the category
-def filter(request, category):
+#returns: render function that changes the items the user sees based on the category/ies
+def filter(request):
+  #The CSS code for this function can be found here
+  template = 'catalog/index.html'
 
-    #The CSS for this function can be found here
-    template = 'catalog/index.html'
-    #The title of the webpage
-    title = "MTU Catalog"
+    #The title for the webpage
+  title = 'MTU Catalog'
 
-    #Checks if the user is logged in
-    if request.user.is_authenticated:
+    #Checks to make sure the user has logged in
+  if request.user.is_authenticated:
+       #Uses the filter function to get the data of the searched items based on filters
+    recent_items = CatalogItem.objects.all()
+    if not request.GET.getlist('filter'):
+      return HttpResponseRedirect('/catalog')
+    for filt in request.GET.getlist('filter'):
+      recent_items = recent_items.filter(
+        category__category_name=filt
+      )
 
-        #Gets the category to be filtered by from the database
-        #Finds the desired category from the passed in argument
-        recent_items = CatalogItem.objects.filter(category__category_name=category)
-        #Keeps the filters dropdown containing all the categories (need to get a default category)
-        filters = Category.objects.all()
+    # Paginator will show 16 items per page
+    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
+    page = request.GET.get('page') # Gets the page number to display
+    items = paginator.get_page(page)  
 
-        context = {
-            'items': recent_items,
-            'title': title,
-            'filters': filters,
-        }
 
-        addErrorOnEmpty(context, 'FilterFail')
+    #Gets all the different categories
+    filters = Category.objects.all()
+    curFilters = request.GET.getlist('filter')
+        #Puts all the data to be displayed into context
+    context = {
+      'items': items,
+      'title': title,
+      'filters': filters,
+      'curFilters': curFilters
+    }
 
-        #Displays the new view with items only in the desired category
-        return render(request, template, context)
+    addErrorOnEmpty(context, 'FilterFail')
 
-    #If the user is not logged in then they are sent to the Husky Statue
-    else:
-        return HttpResponseRedirect('/')
+        #Returns a render function call to display onto the website for the user to see
+    return render(request, template, context)
+
+    #If the user is not logged in then they get redirected to the HuskyStatue screen
+  else:
+    return HttpResponseRedirect('/')
