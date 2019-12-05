@@ -231,7 +231,7 @@ def filter(request):
     for filt in request.GET.getlist('filter'):
       recent_items = recent_items.filter(
         category__category_name=filt
-      )
+      ).order_by('-date_added')
 
     # Paginator will show 16 items per page
     paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
