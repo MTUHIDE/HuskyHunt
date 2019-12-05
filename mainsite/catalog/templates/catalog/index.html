@@ -2,11 +2,12 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-lg-2 col-md-3 col-sm-4">
-
-  </div>
-  <div style="background-color: black; border: 2px solid black; width: 14%; height: 96%; position: fixed; top: 50px; text-align: center;">
-      <h1 class="my-4" style="color: #ffcd00; text-align: center;">Catalog</h1>
+ <div class="col align-center" style="-ms-flex: 0 0 230px; flex: 0 0 230px;">
+  <div class="wrapper">
+    <div id="sidebar" style="text-align: center;background-color: black; height: 100%;width:220px; position: fixed; top: 50px; padding-right: 10px;">
+      <div class="sidebar-header">
+        <h1 class="my-4" style="color: #ffcd00; text-align: center;">Catalog</h1>
+      </div>
       <div style="display: inline-block;">
        {% for filter in filters %}
           {% if not curFilters %}
@@ -27,10 +28,12 @@
         {% endfor %}
       </div>
     </div>
+  </div>
+</div>
 
 
     <!-- /.col-lg-3 -->
-    <div class="col-lg-10 col-md-9 col-sm-8" style="position: static;">
+    <div class="col" style="position: static;">
 
 
       {% if failed_search %}
@@ -114,8 +117,10 @@
     </div>
 {% endif %}
 
-    <!-- /.row -->
+
+  </div>
+
+
 </div>
-<!-- /.col-lg-9 -->
-</div>
+
 {% endblock %}
