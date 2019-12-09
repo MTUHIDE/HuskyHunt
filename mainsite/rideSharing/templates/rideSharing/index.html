@@ -1,32 +1,66 @@
 {% extends 'base.html' %}
 {% block content %}
-<head>
-	<title>Ridesharing</title>
-</head>
 
-<div>
-	<div class="row">
-            {% if rides %}
-            {% for ride in rides %}
+<div class="row">
+  <div class="col-lg-2 col-md-3 col-sm-4">
+
+  </div>
+  <div style="background-color: black; border: 2px solid black; width: 14%; height: 96%; position: fixed; top: 50px; text-align: center;">
+      <h1 class="my-4" style="color: #ffcd00; text-align: center;">Ride Sharing</h1>
+      <div style="display: inline-block;">
+				<!--filters on sidebar-->
+        <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">Books</button>
+      </div>
+  </div>
+
+
+    <!-- /.col-lg-3 -->
+    <div class="col-lg-10 col-md-9 col-sm-8" style="position: static;">
+
+
+      {% if failed_search %}
+        <div style="background-color: black; border: 2px solid black; border-spacing: 10px; text-align: center; margin-bottom: 20px; margin-top: 10px;">
+            <h1 style="color: #ffcd00; margin-top: 3px; margin-bottom: 1.5px;">Oops!</h1>
+            <h6 style="color: #ffcd00; margin-top: 1.5px; margin-bottom: 3px;">
+
+              {% if failed_search == 'FilterFail' %}
+              Looks like no items have been uploaded for that category. But here are some recently-uploaded items instead!
+              {% elif failed_search == 'PageNotFoundFail' %}
+              Looks like that item couldn't be found. But here are some recently-uploaded items instead!
+              {% elif failed_search == 'SearchFail' %}
+              Looks like no items could be found for your search. But here are some recently-uploaded items instead!
+              {% else %}
+              Looks like something went wrong. Please contact MTU HuskyHunt if this error persists.
+              {% endif %}
+
+            </h6>
+        </div>
+      {% endif %}
+      <!-- -->
+
+        <div class="row">
+            {% if items %}
+            {% for item in items %}
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card h-100"  style="border: 2px solid black; width: auto;">
+                    <a href="\rideSharing\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
                     <div class="card-body">
                         <h4 class="card-title" style="color: black;">
                             <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black;">
-                                <a href="\catalog\{{ride.id}}" style="color: black; line-height: normal;">{{ ride.destination_city }}</a>
+                                <a href="\catalog\{{item.id}}" style="color: black;">{{ item.item_title }}</a>
                             </div>
                         </h4>
-                        <h6>{{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
-                        <h6>{{ ride.destination_city }} {{ ride.destination_state }}  {{ ride.destination_zipcode }}</h6>
-
-                        <h6>Leaving Date: {{ ride.date_leaving }}</h6>
-                        <h6>RoundTrip: {{ ride.round_trip }}</h6>
-                        <h6>Return Date: {{ ride.return_date }}</h6>
-                        <h6>Spots: {{ ride.spots }}</h6>
-                        <h6>Driver: {{ ride.driver }}</h6>
-                        <h6>Notes: {{ ride.notes }}</h6>
-                        <h6>Price: {{ ride.price }}</h6>
-
+                        <h6>${{ item.item_price }}</h6>
+                        <!--
+                        <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                            <p class="card-text">{{ item.item_description }}</p>
+                        </div>
+                    -->
+                </div>
+                <div class="card-footer" style="background-color: black;"> <!--black-->
+                    <div style="text-align: center; width: auto;">
+                        <h5 class="card-text" style="color: #ffcd00;">{{ item.first_name }}</h5>
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,27 +68,26 @@
         {% endif %}
     </div>
 
-    {% if rides.paginator.num_pages > 1 %}
     <div class="pagination">
         <span class="step-links">
-            {% if rides.has_previous %}
+            {% if items.has_previous %}
             <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ rides.previous_page_number }}">previous</a>
+            <a href="?page={{ items.previous_page_number }}">previous</a>
             {% endif %}
 
             <span class="current">
-                Page {{ rides.number }} of {{ rides.paginator.num_pages }}.
+                Page {{ items.number }} of {{ items.paginator.num_pages }}.
             </span>
 
-            {% if rides.has_next %}
-            <a href="?page={{ rides.next_page_number }}">next</a>
-            <a href="?page={{ rides.paginator.num_pages }}">last &raquo;</a>
+            {% if items.has_next %}
+            <a href="?page={{ items.next_page_number }}">next</a>
+            <a href="?page={{ items.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
     </div>
-    {% endif %}
+
+    <!-- /.row -->
 </div>
-
-
-
+<!-- /.col-lg-9 -->
+</div>
 {% endblock %}
