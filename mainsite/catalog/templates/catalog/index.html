@@ -13,9 +13,9 @@
           {% if not curFilters %}
             <form action="/catalog/filter/" method="get">
           {% elif filter.category_name in curFilters %}
-            <form action="/catalog/filter/">   
+            <form action="/catalog/filter/">
           {% else %}
-            <form action="/catalog/filter/">  
+            <form action="/catalog/filter/">
           {% endif %}
           {% if not curFilters %}
             <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
@@ -41,8 +41,11 @@
             <h1 style="color: #ffcd00; margin-top: 3px; margin-bottom: 1.5px;">Oops!</h1>
             <h6 style="color: #ffcd00; margin-top: 1.5px; margin-bottom: 3px;">
 
-              {% if failed_search == 'FilterFail' %}
-              Looks like no items have been uploaded for that category. But here are some recently-uploaded items instead!
+              {% if failed_search == 'MisformedFilterFail' %}
+              Seems like one of your filters isn't valid, so we couldn't find any results.
+              <br>Please <a href="{% url 'catalog:index' %}" >return to</a> the catalog, then select filters from the sidebar.
+              {% elif failed_search == 'FilterFail' %}
+              Looks like no items have been uploaded for {% if curFilters|length > 1 %} those categories{% else %}that category{% endif %}. But here are some recently-uploaded items instead!
               {% elif failed_search == 'PageNotFoundFail' %}
               Looks like that item couldn't be found. But here are some recently-uploaded items instead!
               {% elif failed_search == 'SearchFail' %}
