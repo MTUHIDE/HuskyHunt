@@ -17,10 +17,8 @@
   Catalog Form
   ----------------------------------->
    <div role="tabpanel" class="tab-pane active" id="ctlg">
-     <div class='row'>
-         <div class='col-md-3'>
-         </div>
-         <div class='col-md-6'>
+     <div class='row justify-content-center'>
+         <div class='col-lg-5'>
              {% if catalog_form.errors %}
                  <div class="alert alert-danger" role="alert">
                      <strong>{{ catalog_form.errors }}</strong>
@@ -31,12 +29,10 @@
                  {% csrf_token %}
                  <input type="hidden" name="submission_type" value="ctlg">
 
-                 {{ catalog_form.as_p }}
+                 {{ catalog_form.as_p}}
                  <button disabled class="btn btn-primary" type=button id="fakeButton" style="display: none"><span class="glyphicon glyphicon-refresh"></span>Submit</button>
                  <button type="submit" class="btn btn-primary" name="realButton" id="btnRealButton">Submit</button>
              </form>
-         </div>
-         <div class='col-md-3'>
          </div>
      </div>
    </div>
