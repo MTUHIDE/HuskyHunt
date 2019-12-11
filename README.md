@@ -80,7 +80,7 @@ virtualenv 16.0.0
 ... Run `pip install pillow` in command line.
 
 3. You also will need to install __Social-auth-app-django__.
-... Run `pip install soacial-auth-app-django` in command line.
+... Run `pip install social-auth-app-django` in command line.
 
 4. You will need to migrate the database.
 ... Run `python manage.py migrate`
