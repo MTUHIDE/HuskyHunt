@@ -31,6 +31,8 @@ def index(request):
                 ride_item = ride_form.save(commit=False)
                 ride_item.username = request.user
                 ride_item.views = 0
+                if (ride_item.price < 0):
+                    ride_item.price = 0
                 ride_item.save()       #error?
                 # check for failure cases! what happens with invalid data?
                 return HttpResponseRedirect(reverse('rideSharing:index'))
@@ -40,6 +42,8 @@ def index(request):
                 category = catalog_form.cleaned_data['category']
                 item_description = catalog_form.cleaned_data['item_description']
                 item_price = catalog_form.cleaned_data['item_price']
+                if item_price < 0:
+                    item_price = 0
                 item_title = catalog_form.cleaned_data['item_title']
                 username = request.user
                 item_picture = catalog_form.cleaned_data['item_picture']

@@ -1,60 +1,142 @@
 {% extends 'base.html' %}
 {% block content %}
-<head>
-	<title>Ridesharing</title>
-</head>
 
-<div>
-	<div class="row">
+<div class="row">
+  <div class="col-lg-2 col-md-3 col-sm-4">
+
+  </div>
+  <div style="background-color: black; border: 2px solid black; width: 14%; height: 96%; position: fixed; top: 50px; text-align: center;">
+      <h1 class="my-4" style="color: #ffcd00; text-align: center;">Ride Sharing</h1>
+      <div style="display: inline-block;">
+				<!--filters on sidebar-->
+        <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">Books</button>
+      </div>
+  </div>
+
+
+    <!-- /.col-lg-3 -->
+    <div class="col-lg-10 col-md-9 col-sm-8" style="position: static;">
+
+
+      {% if failed_search %}
+        <div style="background-color: black; border: 2px solid black; border-spacing: 10px; text-align: center; margin-bottom: 20px; margin-top: 10px;">
+            <h1 style="color: #ffcd00; margin-top: 3px; margin-bottom: 1.5px;">Oops!</h1>
+            <h6 style="color: #ffcd00; margin-top: 1.5px; margin-bottom: 3px;">
+
+              {% if failed_search == 'FilterFail' %}
+              Looks like no items have been uploaded for that category. But here are some recently-uploaded items instead!
+              {% elif failed_search == 'PageNotFoundFail' %}
+              Looks like that item couldn't be found. But here are some recently-uploaded items instead!
+              {% elif failed_search == 'SearchFail' %}
+              Looks like no items could be found for your search. But here are some recently-uploaded items instead!
+              {% else %}
+              Looks like something went wrong. Please contact MTU HuskyHunt if this error persists.
+              {% endif %}
+
+            </h6>
+        </div>
+      {% endif %}
+      <!-- -->
+
+      <head>
+      	<title>Ridesharing</title>
+      </head>
+
+        <div class="row">
             {% if rides %}
             {% for ride in rides %}
             <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100"  style="border: 2px solid black; width: auto;">
+                <div class="card h-100"  style="border: 2px solid black; width: auto;" data-toggle="modal" data-target="#rideModal{{ride.pk}}">
                     <div class="card-body">
                         <h4 class="card-title" style="color: black;">
-                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black;">
-                                <a href="\catalog\{{ride.id}}" style="color: black; line-height: normal;">{{ ride.destination_city }}</a>
+                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black; text-align: center;">
+                                {{ ride.destination_city }},&nbsp{{ ride.destination_state }}
                             </div>
                         </h4>
-                        <h6>{{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
-                        <h6>{{ ride.destination_city }} {{ ride.destination_state }}  {{ ride.destination_zipcode }}</h6>
-
-                        <h6>Leaving Date: {{ ride.date_leaving }}</h6>
-                        <h6>RoundTrip: {{ ride.round_trip }}</h6>
-                        <h6>Return Date: {{ ride.return_date }}</h6>
-                        <h6>Spots: {{ ride.spots }}</h6>
-                        <h6>Driver: {{ ride.driver }}</h6>
-                        <h6>Notes: {{ ride.notes }}</h6>
-                        <h6>Price: {{ ride.price }}</h6>
-
                 </div>
+                <div class="card-footer" style="background-color: black;"> <!--black-->
+                    <div style="text-align: center; width: auto;">
+                        <h5 class="card-text" style="color: #ffcd00;">{{ ride.driver }}</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div id="rideModal{{ride.pk}}" class="modal fade" role="dialog">
+              <div class="modal-dialog modal-lg">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header" style="background-color:black;"> <!-- style="justify-content:center;" this centers title in modal-->
+                    <h4 class="" style="color:#ffcd00;">{{ ride.destination_city }},&nbsp{{ ride.destination_state }}</h4>
+                    {% if ride.round_trip %}
+                    <h6 class="text-success" style="float:right;">This ride is a round trip!</h6>
+                    {% else %}
+                    <h6 class="text-danger" style="float:right;">This ride is not a round trip!</h6>
+                    {% endif %}
+                  </div>
+                  <div class="modal-body">
+                    <div class="col-lg-6">
+                      <label class="label">Basic Information</label>
+                      <hr style="margin-bottom: 1%;margin-top: 1%;">
+                      <h6>Start: {{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
+                      <h6>Destination: {{ ride.destination_city }} {{ ride.destination_state }}  {{ ride.destination_zipcode }}</h6>
+                      <h6>Leaving Date: {{ ride.date_leaving }}</h6>
+                      <br>
+
+                      {% if ride.round_trip %}
+                      <label class="label">Round trip Information</label>
+                      <hr style="margin-bottom: 1%;margin-top: 1%;">
+
+                      <h6>Return Date: {{ ride.return_date }}</h6>
+                      <br>
+                      {% endif %}
+
+                      <label class="label">Travel Information</label>
+                      <hr style="margin-bottom: 1%;margin-top: 1%;">
+                      <h6>Driver: {{ ride.driver }}</h6>
+                      <h6>Spots: {{ ride.spots }}</h6>
+                      <h6>Price: ${{ ride.price }}</h6>
+                      <h6>Notes: {{ ride.notes }}</h6>
+                      <br>
+                      <div class="text-right">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Send</button>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
         </div>
         {% endfor %}
         {% endif %}
     </div>
 
-    {% if rides.paginator.num_pages > 1 %}
+    {% if items.paginator.num_pages > 1 %}
     <div class="pagination">
         <span class="step-links">
-            {% if rides.has_previous %}
+            {% if items.has_previous %}
             <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ rides.previous_page_number }}">previous</a>
+            <a href="?page={{ items.previous_page_number }}">previous</a>
             {% endif %}
 
             <span class="current">
-                Page {{ rides.number }} of {{ rides.paginator.num_pages }}.
+                Page {{ items.number }} of {{ items.paginator.num_pages }}.
             </span>
 
-            {% if rides.has_next %}
-            <a href="?page={{ rides.next_page_number }}">next</a>
-            <a href="?page={{ rides.paginator.num_pages }}">last &raquo;</a>
+            {% if items.has_next %}
+            <a href="?page={{ items.next_page_number }}">next</a>
+            <a href="?page={{ items.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
     </div>
     {% endif %}
+
+    <!-- /.row -->
 </div>
-
-
-
+<!-- /.col-lg-9 -->
+</div>
 {% endblock %}
