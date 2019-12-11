@@ -60,7 +60,7 @@ def search(request):
         # Paginator will show 16 items per page
         paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
         page = request.GET.get('page') # Gets the page number to display
-        items = paginator.get_page(page)  
+        items = paginator.get_page(page)
 
         #Puts all the data to be displayed into context
         context = {
@@ -107,7 +107,7 @@ def index(request):
         paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
         page = request.GET.get('page') # Gets the page number to display
         items = paginator.get_page(page)
-        
+
         #The filters dropdown containing all the categories (need to get a default category)
         filters = Category.objects.all()
 
@@ -224,11 +224,18 @@ def filter(request):
 
     #Checks to make sure the user has logged in
   if request.user.is_authenticated:
+    filters = Category.objects.all()
+    misform = False
+    failed_search = None
+
+
        #Uses the filter function to get the data of the searched items based on filters
     recent_items = CatalogItem.objects.all()
     if not request.GET.getlist('filter'):
       return HttpResponseRedirect('/catalog')
     for filt in request.GET.getlist('filter'):
+      if len([x for x in filters if x.category_name == filt]) == 0:
+        misform = True
       recent_items = recent_items.filter(
         category__category_name=filt
       ).order_by('-date_added')
@@ -236,21 +243,23 @@ def filter(request):
     # Paginator will show 16 items per page
     paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
     page = request.GET.get('page') # Gets the page number to display
-    items = paginator.get_page(page)  
+    items = paginator.get_page(page)
 
 
     #Gets all the different categories
-    filters = Category.objects.all()
     curFilters = request.GET.getlist('filter')
         #Puts all the data to be displayed into context
     context = {
       'items': items,
       'title': title,
       'filters': filters,
-      'curFilters': curFilters
+      'curFilters': curFilters,
+      'failed_search': failed_search
     }
 
     addErrorOnEmpty(context, 'FilterFail')
+    if misform:
+        context['failed_search'] = "MisformedFilterFail"
 
         #Returns a render function call to display onto the website for the user to see
     return render(request, template, context)
