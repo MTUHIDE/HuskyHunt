@@ -47,7 +47,34 @@
                 </div>
                 <div class="card-footer" style="background-color: black;"> <!--black-->
                     <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block ">View</a>
-                    <button role="button" class="btn btn-outline-warning btn-block" onclick="deleteItemConfirmation({{item.id}}, 'item')">Delete</button>
+                    <button role="button" class="btn btn-outline-warning btn-block" data-toggle="modal" data-target="#deleteItemModal{{item.pk}}">Delete</button>
+                </div>
+
+                <!-- Modal -->
+                <div id="deleteItemModal{{item.pk}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+
+                     <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color:black;"> <!-- style="justify-content:center;" this centers title in modal-->
+                                <h4 class="" style="color:#ffcd00;">Delete {{ item.item_title }}</h4>
+                                <button type="button" class="close" style="color:#ffcd00;" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="col-lg-6">
+                                    <h5>Are you sure you want to delete this item?</h5>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            <a type="button" class="btn btn-primary" href="/accountant/{{ item.pk }}">Delete</a>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,7 +96,34 @@
                 </div>
                 <div class="card-footer" style="background-color: black;"> <!--black-->
                    <!--  <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block ">View</a> -->
-                    <button role="button" class="btn btn-outline-warning btn-block" onclick="deleteItemConfirmation({{ride.id}}, 'ride')">Delete</button>
+                    <button role="button" class="btn btn-outline-warning btn-block" data-toggle="modal" data-target="#deleteRideModal{{ride.pk}}">Delete</button>
+                </div>
+
+                 <!-- Modal -->
+                <div id="deleteRideModal{{ride.pk}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+
+                     <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color:black;"> <!-- style="justify-content:center;" this centers title in modal-->
+                                <h4 class="" style="color:#ffcd00;">Delete Ride to {{ ride.destination_city }}</h4>
+                                <button type="button" class="close" style="color:#ffcd00;" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="col-lg-6">
+                                    <h5>Are you sure you want to delete this ride?</h5>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            <a type="button" class="btn btn-primary" href="/accountant/ride/{{ ride.pk }}">Delete</a>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,22 +137,5 @@
 </div>
 <!-- /.row -->
 <!-- /.col-lg-9 -->
-
-<!-- Delete confirmation -->
-<script type="text/javascript">
-    function deleteItemConfirmation(id, type) {
-        if (type == 'ride') {
-          userConfirmed = confirm("Are you sure you want to remove this ride?");
-        } else {
-          userConfirmed = confirm("Are you sure you want to remove this item?");
-        }
-        
-        if (userConfirmed && type=='item') {
-            window.location.href = "/accountant/" + id
-        } else if (userConfirmed && type=='ride') {
-          window.location.href = "/accountant/ride/" + id
-        }
-    }
-</script>
 
 {% endblock %}
