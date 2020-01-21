@@ -56,7 +56,7 @@
                 </div>
                 <div class="card-footer" style="background-color: black;"> <!--black-->
                     <div style="text-align: center; width: auto;">
-                        <h5 class="card-text" style="color: #ffcd00;">{{ ride.driver }}</h5>
+                        <h5 class="card-text" style="color: #ffcd00;">{{ ride.first_name }}</h5>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
 
                       <label class="label">Travel Information</label>
                       <hr style="margin-bottom: 1%;margin-top: 1%;">
-                      <h6>Driver: {{ ride.driver }}</h6>
+                      <h6>Driver: {{ ride.first_name }}</h6>
                       <h6>Spots: {{ ride.spots }}</h6>
                       <h6>Price: ${{ ride.price }}</h6>
                       <h6>Notes: {{ ride.notes }}</h6>
