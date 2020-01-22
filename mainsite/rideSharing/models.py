@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from accountant.models import user_profile
 from django.db import models
 from django.conf import settings
 
@@ -8,6 +9,19 @@ class RideItem(models.Model):
     # The username is automatically set to the user that added the item
     # and the item is deleted if the user is deleted
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    #The preferred name of the item in question;
+    # note, I'm unsure of the performance implications of making this query all the time
+    def get_preferred_first_name(self):
+        try:
+            user = user_profile.objects.get(user=self.username)
+        except user_profile.DoesNotExist:
+            return self.username
+        name = user.preferred_name
+        if not name or name == "":
+            name = self.username.first_name
+        return name
+    first_name = property(get_preferred_first_name)
 
     #An integer identifying the ride, auto increments
     views = models.IntegerField(default=0)
