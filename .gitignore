@@ -2,6 +2,7 @@
 my.cnf
 mainsite/*/__pycache__/
 mainsite/*/*/__pycache__/
+mainsite/mainsite/settings.py
 .DS_Store
 
 
