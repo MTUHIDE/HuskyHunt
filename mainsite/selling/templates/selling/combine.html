@@ -21,7 +21,11 @@
          <div class='col-lg-5'>
              {% if catalog_form.errors %}
                  <div class="alert alert-danger" role="alert">
-                     <strong>{{ catalog_form.errors }}</strong>
+                      {% for field in catalog_form %}
+                        {% if field.errors %}
+                          <strong>{{ field.label }}: {{ field.errors|striptags }}</strong>
+                        {% endif %}
+                      {% endfor %}
                  </div>
              {% endif %}
 
