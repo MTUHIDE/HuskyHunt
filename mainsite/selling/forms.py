@@ -6,6 +6,7 @@ from django.forms import TextInput
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 import math
+from datetime import date, timedelta
 
 #Defines the form to create an item
 class SellingForm(forms.ModelForm):
@@ -47,3 +48,39 @@ class RideForm(ModelForm):
         model = RideItem
         fields = ['start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
         widgets = {'driver': TextInput(attrs={'readonly': 'readonly'})}
+
+    def clean_price(self):
+        price = self.cleaned_data['price']
+        if price < 0:
+            raise forms.ValidationError(_('Price cannot be negative!'))
+        return price
+
+    def clean_spots(self):
+        spots = self.cleaned_data['spots']
+        if spots <= 0:
+            raise forms.ValidationError(_('You must offer at least one spot!'))
+        return spots
+
+    def clean_date_leaving(self):
+        leaveDate = self.cleaned_data['date_leaving']
+        today = date.today()
+
+        if leaveDate < today:
+            raise forms.ValidationError(_('You must leave today or in the future!'))
+
+        return leaveDate
+
+    def clean_return_date(self):
+        returnDate = self.cleaned_data['return_date']
+        today = date.today()
+
+        # Add 1 month from leave date
+        maxDate = self.cleaned_data['date_leaving'] + timedelta(days=31)
+
+        if returnDate > maxDate:
+            raise forms.ValidationError(_('You must offer a return date within 31 days!'))
+
+        if returnDate < today:
+            raise forms.ValidationError(_('You must return today or in the future!'))
+
+        return returnDate

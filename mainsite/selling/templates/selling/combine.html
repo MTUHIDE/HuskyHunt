@@ -19,11 +19,12 @@
    <div role="tabpanel" class="tab-pane active" id="ctlg">
      <div class='row justify-content-center'>
          <div class='col-lg-5'>
+            <!-- Catalog Form Errors -->
              {% if catalog_form.errors %}
                  <div class="alert alert-danger" role="alert">
                       {% for field in catalog_form %}
                         {% if field.errors %}
-                          <strong>{{ field.label }}: {{ field.errors|striptags }}</strong>
+                          <strong>{{ field.label }}: {{ field.errors|striptags }}<br></strong>
                         {% endif %}
                       {% endfor %}
                  </div>
@@ -49,6 +50,18 @@
        {% csrf_token %}
        <input type="hidden" name="submission_type" value="ride">
        <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
+
+        <!-- Ride Form Errors -->
+        {% if ride_form.errors %}
+        <div class="alert alert-danger" role="alert">
+          {% for field in ride_form %}
+            {% if field.errors %}
+              <strong>{{ field.label }}: {{ field.errors|striptags }}<br></strong>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+
          <div class="row justify-content-center align-end">
            <table>
              {{ ride_form.as_table }}
