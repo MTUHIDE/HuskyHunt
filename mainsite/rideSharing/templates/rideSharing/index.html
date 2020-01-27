@@ -2,20 +2,20 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-lg-2 col-md-3 col-sm-4">
-
-  </div>
-  <div style="background-color: black; border: 2px solid black; width: 14%; height: 96%; position: fixed; top: 50px; text-align: center;">
+  <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
+  <div class="col align-center" style="-ms-flex: 0 0 250px; flex: 0 0 250px;">
+    <!--Fixes the size of the side bar so it doent grow or shink. The width is 10 px less so then there margin between the start of the rides. -->
+  <div style="text-align: center;background-color: black; height: 100%;width:240px; position: fixed; top: 50px; ">
       <h1 class="my-4" style="color: #ffcd00; text-align: center;">Ride Sharing</h1>
       <div style="display: inline-block;">
 				<!--filters on sidebar-->
-        <button type="button" name="bookButton" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">Books</button>
       </div>
+    </div>
   </div>
 
 
     <!-- /.col-lg-3 -->
-    <div class="col-lg-10 col-md-9 col-sm-8" style="position: static;">
+    <div class="col" style="position: static;">
 
 
       {% if failed_search %}

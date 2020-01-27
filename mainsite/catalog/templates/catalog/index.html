@@ -2,13 +2,16 @@
 {% block content %}
 
 <div class="row">
+  <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
  <div class="col align-center" style="-ms-flex: 0 0 230px; flex: 0 0 230px;">
   <div class="wrapper">
-    <div id="sidebar" style="text-align: center;background-color: black; height: 100%;width:220px; position: fixed; top: 50px; padding-right: 10px;">
+    <!--Fixes the size of the side bar so it doent grow or shink. -->
+    <div id="sidebar" style="text-align: center;background-color: black; height: 100%;width:230px; position: fixed; top: 50px;">
       <div class="sidebar-header">
         <h1 class="my-4" style="color: #ffcd00; text-align: center;">Catalog</h1>
       </div>
       <div style="display: inline-block;">
+
        {% for filter in filters %}
           {% if not curFilters %}
             <form action="/catalog/filter/" method="get">
@@ -33,11 +36,11 @@
 
 
     <!-- /.col-lg-3 -->
-    <div class="col" style="position: static;">
+    <div class="col " style="position: static;height: 100%;">
 
 
       {% if failed_search %}
-        <div style="background-color: black; border: 2px solid black; border-spacing: 10px; text-align: center; margin-bottom: 20px; margin-top: 10px;">
+        <div style="background-color: black; border: 2px solid black; border-spacing: 10px; text-align: center; margin-bottom: 300px; margin-top: 10px;">
             <h1 style="color: #ffcd00; margin-top: 3px; margin-bottom: 1.5px;">Oops!</h1>
             <h6 style="color: #ffcd00; margin-top: 1.5px; margin-bottom: 3px;">
 
@@ -62,8 +65,8 @@
         <div class="row">
             {% if items %}
             {% for item in items %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100"  style="border: 2px solid black; width: auto;">
+            <div class="col col-lg-3 col-md-6 ">
+                <div class="card h-100"  style="border: 2px solid black; width: auto; margin: 7px;">
                     <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
                     <div class="card-body">
                         <h4 class="card-title" style="color: black;">
