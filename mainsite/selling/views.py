@@ -24,6 +24,8 @@ def index(request):
 
     if request.method == 'POST':
         post_request = request.POST.copy() #make it not immutable
+
+        # Ride Form
         submission_type = post_request.pop('submission_type', None)
         if submission_type == ['ride']:
             ride_form = RideForm(post_request, request.FILES)
@@ -36,6 +38,8 @@ def index(request):
                 ride_item.save()       #error?
                 # check for failure cases! what happens with invalid data?
                 return HttpResponseRedirect(reverse('rideSharing:index'))
+
+        # Catalog Form
         elif submission_type == ['ctlg']:
             catalog_form = SellingForm(post_request, request.FILES)
             if catalog_form.is_valid():
@@ -53,6 +57,7 @@ def index(request):
                 return HttpResponseRedirect(reverse('catalog:index'))
         else:
             pass #this should never happen
+            
     if catalog_form is None:
         catalog_form = SellingForm()
     if ride_form is None:

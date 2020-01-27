@@ -35,6 +35,12 @@ class SellingForm(forms.ModelForm):
             params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
         return pic
 
+    def clean_item_price(self):
+        price = self.cleaned_data['item_price']
+        if price < 0:
+            raise forms.ValidationError(_('Price cannot be negative!'))
+        return price
+
 
 class RideForm(ModelForm):
     class Meta:
