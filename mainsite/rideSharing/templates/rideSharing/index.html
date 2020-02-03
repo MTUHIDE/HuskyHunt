@@ -46,7 +46,7 @@
             {% if rides %}
             {% for ride in rides %}
             <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100"  style="border: 2px solid black; width: auto;" data-toggle="modal" data-target="#rideModal{{ride.pk}}">
+                <div class="card h-100"  style="border: 2px solid black; width: auto;" data-toggle="modal" data-target="#rideModal{{ride.pk}}" onclick="modalcard_onclick({{ride.pk}})" >
                     <div class="card-body">
                         <h4 class="card-title" style="color: black;">
                             <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black; text-align: center; line-height: normal;">
@@ -75,36 +75,41 @@
                     {% endif %}
                   </div>
                   <div class="modal-body">
-                    <div class="col-lg-6">
-                      <label class="label">Basic Information</label>
-                      <hr style="margin-bottom: 1%;margin-top: 1%;">
-                      <h6>Start: {{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
-                      <h6>Destination: {{ ride.destination_city }} {{ ride.destination_state }}  {{ ride.destination_zipcode }}</h6>
-                      <h6>Leaving Date: {{ ride.date_leaving }}</h6>
-                      <br>
+                    <div class="row">
 
-                      {% if ride.round_trip %}
-                      <label class="label">Round trip Information</label>
-                      <hr style="margin-bottom: 1%;margin-top: 1%;">
+                        <div class="col-lg-6">
+                          <label class="label">Basic Information</label>
+                          <hr style="margin-bottom: 1%;margin-top: 1%;">
+                          <h6>Start: {{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
+                          <h6>Destination: {{ ride.destination_city }} {{ ride.destination_state }}  {{ ride.destination_zipcode }}</h6>
+                          <h6>Leaving Date: {{ ride.date_leaving }}</h6>
+                          <br>
 
-                      <h6>Return Date: {{ ride.return_date }}</h6>
-                      <br>
-                      {% endif %}
+                          {% if ride.round_trip %}
+                          <label class="label">Round trip Information</label>
+                          <hr style="margin-bottom: 1%;margin-top: 1%;">
 
-                      <label class="label">Travel Information</label>
-                      <hr style="margin-bottom: 1%;margin-top: 1%;">
-                      <h6>Driver: {{ ride.first_name }}</h6>
-                      <h6>Spots: {{ ride.spots }}</h6>
-                      <h6>Price: ${{ ride.price }}</h6>
-                      <h6>Notes: {{ ride.notes }}</h6>
-                      <br>
-                      <div class="text-right">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Send</button>
+                          <h6>Return Date: {{ ride.return_date }}</h6>
+                          <br>
+                          {% endif %}
+
+                          <label class="label">Travel Information</label>
+                          <hr style="margin-bottom: 1%;margin-top: 1%;">
+                          <h6>Driver: {{ ride.first_name }}</h6>
+                          <h6>Spots: {{ ride.spots }}</h6>
+                          <h6>Price: ${{ ride.price }}</h6>
+                          <h6>Notes: {{ ride.notes }}</h6>
+                          <br>
+                          <div class="text-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Send</button>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div id="mapid_{{ride.pk}}" name="mapid" style="height: 80%" >
+                        </div>
+
                       </div>
-                    </div>
-                    <div class="col-lg-6">
-
-                    </div>
                   </div>
                 </div>
 
@@ -139,4 +144,24 @@
 </div>
 <!-- /.col-lg-9 -->
 </div>
+
+<script>
+
+document.getElementsByName("mapid").forEach(element => {
+    var mymap = L.map(element.id).setView([46.6275, -85.0375 ], 6);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        accessToken: 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
+    }).addTo(mymap);
+})
+
+function modalcard_onclick(ride_pk) {
+    document.getElementsById("mapid_" + ride_pk).setView([46.6275, -85.0375 ], 6);
+}
+
+</script>
+
+
 {% endblock %}
