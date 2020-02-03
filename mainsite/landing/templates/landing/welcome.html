@@ -46,10 +46,10 @@
             margin-top: 20px;
         }
         
-        .item .img-placeholder {
-            width: 100px;
+        .item img {
+            /* width: 100px; */
             height: 100px;
-            background-color: aquamarine;
+            background-color: white;
         }
         /* unvisited link */
         
@@ -74,21 +74,21 @@
 <div class="main">
     <a href="{% url 'catalog:index' %}">
         <div class="item">
-            <div class="img-placeholder"></div>
+            <img src="{% static "mainsite/Graphics-02.png" %}">
             <h2>Item Catalog</h2>
             <p>Some information about the item catalog.</p>
         </div>
     </a>
     <a href="{% url 'rideSharing:index' %}">
         <div class="item">
-            <div class="img-placeholder"></div>
+            <img src="{% static "mainsite/Graphics-01.png" %}">
             <h2>Ridesharing</h2>
             <p>Some information about the ridesharing section.</p>
         </div>
     </a>
     <a href="{% url 'selling:index' %}">
         <div class="item">
-            <div class="img-placeholder"></div>
+            <img src="{% static "mainsite/Graphics-03.png" %}">
             <h2>Add Listing</h2>
             <p>Some information about adding a listing.</p>
         </div>
