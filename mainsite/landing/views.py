@@ -13,7 +13,7 @@ def index(request):
     template = 'landing/index.html'
     context = {}
     if request.user.is_authenticated:
-        return HttpResponseRedirect('/catalog/')
+        return HttpResponseRedirect('/welcome/')
 
     #if request.POST:
     #    username = request.POST['inputEmail']

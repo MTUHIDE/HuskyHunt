@@ -48,9 +48,9 @@ def edit(request):
     # Either a GET or a failed POST end up here
     return render(request, 'accountant/account_detail.html', {'form': form})
 
-# Redirect to main catalog page
+# Redirect to the welcome page (this used to be the catalog)
 def catalogRedirect(request):
-    return HttpResponseRedirect('/catalog')
+    return HttpResponseRedirect('/welcome')
 
 # Logout link
 def logout(request):
