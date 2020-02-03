@@ -9,4 +9,7 @@ urlpatterns = [
 
     #...blank then execute the index methon in views
     path('', views.index, name='index'),
+
+    #...search/ then execute the search method in views
+  	path('search/', views.search, name='search'),
 ]
