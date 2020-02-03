@@ -13,7 +13,7 @@ def index(request):
     template = 'landing/index.html'
     context = {}
     if request.user.is_authenticated:
-        return HttpResponseRedirect('/catalog/')
+        return HttpResponseRedirect('/welcome/')
 
     #if request.POST:
     #    username = request.POST['inputEmail']
@@ -47,3 +47,9 @@ def passwordReset(email, from_email):
     template = 'registration/password_reset_email.html'
     form = PasswordResetForm({'email': email})
     return form.save(from_email=from_email, email_template_name=template)
+
+def welcome(request):
+    template = 'landing/welcome.html'
+    context = {}
+
+    return render(request, template, context)
