@@ -17,12 +17,23 @@
   </div>
 </div>
 
-
+{% if item_list %}
 <div class="row justify-content-center">
   <div class="col">
     <h1 class="text-center">Items Currently Listed</h1>
   </div>
 </div>
+{% else %}
+<div class="row justify-content-center">
+  <div class="col">
+    <h1 class="text-center">No Items Listed</h1>
+    <div class="text-center">
+      <a class="btn btn-warning" href="{% url 'selling:index' %}">Click Here to Get Started!</a>
+    </div>
+  </div>
+</div>
+
+{% endif %}
 
   <div class="row justify-content-center">
     <div class="col" align="center" style="position: static;">
@@ -82,13 +93,23 @@
         {% endfor %}
         {% endif %}
 </div>
+{% if ride_list %}
 <div class="row justify-content-center">
   <div class="col">
     <h1 class="text-center">Rides Currently Listed</h1>
   </div>
 </div>
 <div class="row justify-content-center">
-
+{% else %}
+<div class="row justify-content-center">
+  <div class="col">
+    <h1 class="text-center">No rides found</h1>
+    <div class="text-center">
+      <a class="btn btn-warning" href="{% url 'selling:index' %}">Click Here to Get Started!</a>
+    </div>
+  </div>
+</div>
+{% endif %}
         {% if ride_list %}
         {% for ride in ride_list %}
         <div class="col-lg-2 col-md-4 mb-4">
