@@ -50,6 +50,33 @@ Instead we display our custom error message -->
                  {{ catalog_form.as_p}}
                  <button type="submit" onclick="ItemInput()" class="btn btn-primary" id="btnRealButton">Submit</button>
              </form>
+
+             <!-- General Form Formatting -->
+              {% for field in catalog_form %}
+                <script type="text/javascript">
+                  document.getElementById("{{field.id_for_label}}").classList.add('form-control');
+                </script>
+              {% endfor %}
+
+              <script type="text/javascript">
+                document.getElementById("id_item_field").classList.add('file-field');
+              </script>
+
+              <!-- Highlight Fields -->
+             {% if catalog_form.errors %}
+                {% for field in catalog_form %}
+                    {% if field.errors %}
+                      <script type="text/javascript">
+                        document.getElementById("{{field.id_for_label}}").classList.add('is-invalid');
+                      </script>
+                    {% else %}
+                      <script type="text/javascript">
+                        document.getElementById("{{field.id_for_label}}").classList.add('is-valid');
+                      </script>
+                    {% endif %}
+                {% endfor %}
+             {% endif %}
+
          </div>
      </div>
    </div>
@@ -84,6 +111,28 @@ Instead we display our custom error message -->
           <button type="submit" onclick="RideInput()" class="btn btn-primary" id="btnRealButtonRide" onclick="RideInput()">Submit</button>
        </div>
      </form>
+
+     <!-- General Form Formatting -->
+        {% for field in ride_form %}
+          <script type="text/javascript">
+            document.getElementById("{{field.id_for_label}}").classList.add('form-control');
+          </script>
+        {% endfor %}
+
+      <!-- Highlight Fields -->
+        {% if ride_form.errors %}
+          {% for field in ride_form %}
+            {% if field.errors %}
+              <script type="text/javascript">
+                document.getElementById("{{field.id_for_label}}").classList.add('is-invalid');
+              </script>
+            {% else %}
+              <script type="text/javascript">
+                document.getElementById("{{field.id_for_label}}").classList.add('is-valid');
+              </script>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
    </div>
 
 

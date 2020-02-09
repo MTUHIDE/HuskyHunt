@@ -47,7 +47,10 @@ class RideForm(ModelForm):
     class Meta:
         model = RideItem
         fields = ['start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
-        widgets = {'driver': TextInput(attrs={'readonly': 'readonly'})}
+        widgets = {
+            'driver': TextInput(attrs={'readonly': 'readonly'}), 
+            'notes': forms.Textarea(attrs={'cols': 80, 'rows': 10}),
+            }
 
     def clean_price(self):
         price = self.cleaned_data['price']
