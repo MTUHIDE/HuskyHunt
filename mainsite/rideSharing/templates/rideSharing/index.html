@@ -150,6 +150,10 @@
 var map_dict = {}
 
 document.getElementsByName("mapid").forEach(element => {
+    access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
+    starting_coord = [ -88.5625, 47.117222 ];
+    ending_coord = [  -86.1, 42.783333 ];
+
     let mymap = L.map(element.id).setView([46.6275, -85.0375 ], 6);
     let tileLayuer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -159,23 +163,38 @@ document.getElementsByName("mapid").forEach(element => {
     });
     tileLayuer.addTo(mymap);
 
-    let latlngs = [
-        new L.LatLng(47.117222, -88.5625),
-        new L.LatLng(45.861111, -84.630556 ),
-        new L.LatLng(42.783333, -86.1 )
-    ];
-    let polyline = new L.polyline(latlngs, {color: 'red', weight: 4});
-    polyline.addTo(mymap);
-    mymap.fitBounds(polyline.getBounds());
+    url = "https://api.mapbox.com/directions/v5/mapbox/driving/"
+    + starting_coord[0] + "," + starting_coord[1] + ";"
+    + ending_coord[0] + "," + ending_coord[1]
+    + "?geometries=geojson&access_token="
+    + access_token;
 
-    var marker = L.marker([46.5, -85.5]).addTo(mymap);
+    var req = new XMLHttpRequest();
+    req.open('GET', url, true);
+    req.onload = function() {
+        let json = JSON.parse(req.response)
+        let data = json.routes[0];
+        let route = data.geometry.coordinates;
 
-    var circle = L.circle([46.5, -85.5], {
-        color: 'red',
-        fillColor: '#0f3',
-        fillOpacity: 0.8,
-        radius: 5000
-    }).addTo(mymap);
+        let geojsonFeature = {
+            "type": "Feature",
+            "properties": {
+                "name": "Ridesharing trip"
+            },
+            "geometry": {
+              type: 'LineString',
+              coordinates: route
+            }
+        }
+
+        L.geoJSON(geojsonFeature, {
+            style: {
+                color: 'red',
+                weight: 4
+            }
+        }).addTo(mymap);
+    };
+    req.send();
 
     map_dict[element.id.substr(6)] = mymap;
 
@@ -190,6 +209,15 @@ document.getElementsByName("mapid").forEach(element => {
 function modalcard_onclick(ride_pk) {
 
 }
+
+/*var marker = L.marker([46.5, -85.5]).addTo(mymap);
+
+var circle = L.circle([46.5, -85.5], {
+    color: 'red',
+    fillColor: '#0f3',
+    fillOpacity: 0.8,
+    radius: 5000
+}).addTo(mymap);*/
 
 </script>
 
