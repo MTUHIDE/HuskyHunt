@@ -63,7 +63,7 @@ class RideForm(ModelForm):
         if spots <= 0:
             raise forms.ValidationError(_('You must offer at least one spot!'))
         if spots > 8:
-            raise forms.ValidationError(_('Please offer 8 or less rides!'))
+            raise forms.ValidationError(_('Please offer 8 or less spots!'))
         return spots
 
     def clean_date_leaving(self):
