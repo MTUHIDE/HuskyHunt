@@ -37,3 +37,7 @@ label{
 .nav-tabs{
   border-color: transparent;
 }
+.nav-tabs .nav-link:hover{
+  border-color: #1c1c21;
+  border-size:5px;
+}
