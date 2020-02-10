@@ -23,9 +23,19 @@
             background-position: 34% 10%;
         }
         
+        .main {
+            background-color: #ffcd00de;
+            height: 350px;
+            color: black;
+        }
+        
         h1 {
             text-decoration: underline;
             color: black;
+        }
+        
+        p {
+            font-size: 24px;
         }
     </style>
 
@@ -47,6 +57,18 @@
             <div style="text-align: center; color: black;">
                 Use your MTU account to sign in:</div>
             <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="/static/mainsite/gauth.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%; "></a><br><br>
+        </div>
+    </div>
+    <div class="main row align-items-center">
+        <div class="col-md-6">
+            <p style="max-width: 80%; margin-left: 40px;">
+                HuskyHunt allows you to sell your used stuff, as well as carpool services, to the Michigan Tech community.
+            </p>
+        </div>
+        <div class="col-md-2">
+            <p>
+                Image of site
+            </p>
         </div>
     </div>
 </div>
