@@ -81,7 +81,7 @@
                           <label class="label">Basic Information</label>
                           <hr style="margin-bottom: 1%;margin-top: 1%;">
                           <h6>Start: {{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
-                          <h6>Destination: {{ ride.destination_city }} {{ ride.destination_state }}  {{ ride.destination_zipcode }}</h6>
+                          <h6>Destination: <span id="destSpan_destination_city_{{ ride.pk }}">{{ ride.destination_city }}</span> <span id="destSpan_destination_state_{{ ride.pk }}">{{ ride.destination_state }}</span> <span id="destSpan_destination_zipcode_{{ ride.pk }}">{{ ride.destination_zipcode }}</span></h6>
                           <h6>Leaving Date: {{ ride.date_leaving }}</h6>
                           <br>
 
@@ -150,65 +150,87 @@
 var map_dict = {}
 
 document.getElementsByName("mapid").forEach(element => {
+    // Mapbox access key
     access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
-    starting_coord = [ -88.5625, 47.117222 ];
-    ending_coord = [  -86.1, 42.783333 ];
 
-    let mymap = L.map(element.id).setView([46.6275, -85.0375 ], 6);
+    // Create the map object for each ticket
+    let mymap = L.map(element.id, { renderer: L.svg({ padding: 2 }) } );
     let tileLayuer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox/streets-v11',
-        accessToken: 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
-    });
+        accessToken: access_token
+    }); // Note for longer-term changes: to limit requests, this should really by on request and/or cache results
     tileLayuer.addTo(mymap);
 
-    url = "https://api.mapbox.com/directions/v5/mapbox/driving/"
-    + starting_coord[0] + "," + starting_coord[1] + ";"
-    + ending_coord[0] + "," + ending_coord[1]
-    + "?geometries=geojson&access_token="
-    + access_token;
+    // Store so the object can be accessed later; set size/location on modal being brought up
+    let ride_pk = element.id.substring(6);
+    map_dict[ride_pk] = mymap;
 
-    var req = new XMLHttpRequest();
-    req.open('GET', url, true);
-    req.onload = function() {
-        let json = JSON.parse(req.response)
-        let data = json.routes[0];
-        let route = data.geometry.coordinates;
-
-        let geojsonFeature = {
-            "type": "Feature",
-            "properties": {
-                "name": "Ridesharing trip"
-            },
-            "geometry": {
-              type: 'LineString',
-              coordinates: route
-            }
-        }
-
-        L.geoJSON(geojsonFeature, {
-            style: {
-                color: 'red',
-                weight: 4
-            }
-        }).addTo(mymap);
-    };
-    req.send();
-
-    map_dict[element.id.substr(6)] = mymap;
-
-    $('#rideModal' + element.id.substr(6)).on("shown.bs.modal", function() {
-        let mymap = map_dict[element.id.substr(6)];
+    $('#rideModal' + ride_pk).on("shown.bs.modal", function() {
+        let mymap = map_dict[ride_pk];
         mymap.setView([46.6275, -85.0375 ], 6);
-
+        // Incidentally, the above bit is why I needed access to jQuery; apparently the event's not exposed in vanilla
         mymap.invalidateSize();
     });
-})
 
-function modalcard_onclick(ride_pk) {
+    // Find the location from Mapbox servers
 
-}
+
+    let destination_city = document.getElementById('destSpan_destination_city_' + ride_pk).innerHTML;
+    let destination_state = document.getElementById('destSpan_destination_state_' + ride_pk).innerHTML;
+    let destination_zipcode = document.getElementById('destSpan_destination_zipcode_' + ride_pk).innerHTML;
+
+    let locate_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
+    + encodeURIComponent(destination_city.trim()) + "%20"
+    + encodeURIComponent(destination_state.trim()) + "%20"
+    + encodeURIComponent(destination_zipcode.trim()) + "%20"
+    + ".json?access_token="
+    + access_token;
+
+    let locate_req = new XMLHttpRequest();
+    locate_req.open('GET', locate_url, true);
+    locate_req.onload = function() {
+        let starting_coord = [ -88.5625, 47.117222 ];
+        let ending_coord = (JSON.parse(locate_req.response))["features"][0]["center"];
+
+        // Request the route from Mapbox servers
+        let route_url = "https://api.mapbox.com/directions/v5/mapbox/driving/"
+        + starting_coord[0] + "," + starting_coord[1] + ";"
+        + ending_coord[0] + "," + ending_coord[1]
+        + "?geometries=geojson&access_token="
+        + access_token;
+
+        let route_req = new XMLHttpRequest();
+        route_req.open('GET', route_url, true);
+        route_req.onload = function() {
+            let json = JSON.parse(route_req.response)
+            let data = json.routes[0];
+            let route = data.geometry.coordinates;
+
+            let geojsonFeature = {
+                "type": "Feature",
+                "properties": {
+                    "name": "Ridesharing trip"
+                },
+                "geometry": {
+                  type: 'LineString',
+                  coordinates: route
+                }
+            }
+
+            L.geoJSON(geojsonFeature, {
+                style: {
+                    color: 'red',
+                    weight: 4
+                }
+            }).addTo(mymap);
+        };
+        route_req.send();
+    };
+    locate_req.send();
+
+});
 
 /*var marker = L.marker([46.5, -85.5]).addTo(mymap);
 
@@ -218,6 +240,10 @@ var circle = L.circle([46.5, -85.5], {
     fillOpacity: 0.8,
     radius: 5000
 }).addTo(mymap);*/
+
+function modalcard_onclick(ride_pk) {
+
+}
 
 </script>
 
