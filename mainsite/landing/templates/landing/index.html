@@ -13,29 +13,42 @@
 
     <style type="text/css">
         body {
-            background-color: black;
-        }
-        
-        .header {
             background-image: url("/static/mainsite/images/header.jpg");
-            background-size: 180%;
-            padding: 60px 0;
-            background-position: 34% 10%;
-        }
-        
-        .main {
-            background-color: #ffcd00de;
-            height: 320px;
-            color: black;
+            background-size: cover;
+            overflow: hidden;
         }
         
         h1 {
             text-decoration: underline;
+            text-align: center;
             color: black;
         }
         
-        p {
-            font-size: 24px;
+        .main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cta-card {
+            background-color: #ffcd00;
+            border-radius: 16px;
+            border: 2px solid black;
+            padding: 36px;
+        }
+        
+        .desc {
+            font-size: 20px;
+            max-width: 700px;
+            text-align: center;
+            color: black;
+        }
+        
+        .login-btn {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 200px;
         }
     </style>
 
@@ -47,38 +60,25 @@
 </head>
 
 <!-- Page Title -->
-<div class="container-fluid">
-    <div class="header row justify-content-md-center">
-        <div class="col-auto" style="background-color: #ffcd00de; border-radius: 16px;">
-            <br><br>
+<div class="main container-fluid h-100">
+    <div class="row justify-content-center my-auto">
+        <div class="cta-card col-auto">
             <h1>Welcome to HuskyHunt!</h1>
             <br>
 
-            <div style="text-align: center; color: black;">
-                Use your MTU account to sign in:</div>
-            <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="/static/mainsite/gauth.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%; "></a><br><br>
-        </div>
-    </div>
-    <div class="main row align-items-center">
-        <div class="col-md-6">
-            <p style="max-width: 80%; margin-left: 40px;">
+            <div class="desc" style="">
                 HuskyHunt allows you to sell your used stuff, as well as carpool services, to the Michigan Tech community.
-            </p>
+                <br>
+                <br> Use your MTU account to sign in:</div>
+            <a href="{% url 'social:begin' 'google-oauth2' %}"><img class="login-btn" src="/static/mainsite/gauth.png"></a>
+            <div class="row justify-content-md-center">
+                <div class="col-auto text-center" style="color: red;">
+                    {% if messages %} <br>There was an error:<br> {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                    {% endfor %} {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="col-md-2">
-            <p>
-                Image of site
-            </p>
-        </div>
-    </div>
-    <b style="color: white">Continue content here...</b>
-</div>
-
-<div class="row justify-content-md-center">
-    <div class="col-auto" style="color: white;">
-        {% if messages %} {% for message in messages %}
-        <p class="{{ message.tags }}">{{ message }}</p>
-        {% endfor %} {% endif %}
     </div>
 </div>
 
