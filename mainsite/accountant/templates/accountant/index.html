@@ -7,8 +7,8 @@
       <img style="width: 150px; height:150px; border-radius: 50%; border: 2px solid black;" src="{{defaultPicture}}" alt="Profile Picture">
     </div>
     <div class='col-lg-auto'>
-      <h1 class="text-center">{{request.user.first_name}} {{request.user.last_name}}</h1>
-      <h2 class="text-center">{{request.user.email}}</h2>
+      <h1 class="text-center"style="color: #bfbfbf;">{{request.user.first_name}} {{request.user.last_name}}</h1>
+      <h2 class="text-center"style="color: #bfbfbf;">{{request.user.email}}</h2>
     </div>
     <div class="row align-items-end">
     <div class="col-lg-auto">
@@ -20,13 +20,13 @@
 {% if item_list %}
 <div class="row justify-content-center">
   <div class="col">
-    <h1 class="text-center">Items Currently Listed</h1>
+    <h1 class="text-center"style="color: #bfbfbf;">Items Currently Listed</h1>
   </div>
 </div>
 {% else %}
 <div class="row justify-content-center">
   <div class="col">
-    <h1 class="text-center">No Items Listed</h1>
+    <h1 class="text-center"style="color: #bfbfbf;">No Items Listed</h1>
     <div class="text-center">
       <a class="btn btn-warning" href="{% url 'selling:index' %}">Click Here to Get Started!</a>
     </div>
@@ -41,7 +41,7 @@
             {% if item_list %}
             {% for item in item_list %}
             <div class="col-xl-2 col-lg-3 col-md-3 col-sm-6">
-                <div class="card"  style="border: 2px solid black;">
+                <div class="card"  style="border: 2px solid black:background-color: #1c1c21;;">
                     <img class="product-icon" style="height:100px;" src="{{ item.item_picture.url }}" alt="">
                     <div class="card-body">
                         <h4 class="card-title" style="color: black;">
@@ -96,14 +96,14 @@
 {% if ride_list %}
 <div class="row justify-content-center">
   <div class="col">
-    <h1 class="text-center">Rides Currently Listed</h1>
+    <h1 class="text-center"style="color: #bfbfbf;">Rides Currently Listed</h1>
   </div>
 </div>
 <div class="row justify-content-center">
 {% else %}
 <div class="row justify-content-center">
   <div class="col">
-    <h1 class="text-center">No rides found</h1>
+    <h1 class="text-center"style="color: #bfbfbf;">No rides found</h1>
     <div class="text-center">
       <a class="btn btn-warning" href="{% url 'selling:index' %}">Click Here to Get Started!</a>
     </div>
@@ -113,7 +113,7 @@
         {% if ride_list %}
         {% for ride in ride_list %}
         <div class="col-lg-2 col-md-4 mb-4">
-            <div class="card"  style="border: 2px solid black;">
+            <div class="card"  style="border: 2px solid black;background-color: #1c1c21;">
                 <!-- <a href="\catalog\{{item.id}}"><img class="product-icon" style="height:100px;" src="{{ item.item_picture.url }}" alt=""> -->
                 <div class="card-body">
                     <h4 class="card-title" style="color: black;">

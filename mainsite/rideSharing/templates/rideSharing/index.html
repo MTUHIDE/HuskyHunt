@@ -46,10 +46,10 @@
             {% if rides %}
             {% for ride in rides %}
             <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100"  style="border: 2px solid black; width: auto;" data-toggle="modal" data-target="#rideModal{{ride.pk}}">
+                <div class="card h-100"  style="border: 2px solid black; width: auto;background-color: #1c1c21;" data-toggle="modal" data-target="#rideModal{{ride.pk}}">
                     <div class="card-body">
-                        <h4 class="card-title" style="color: black;">
-                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black; text-align: center; line-height: normal;">
+                        <h4 class="card-title" style="color: white;">
+                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: white; text-align: center; line-height: normal;">
                                 {{ ride.destination_city }},&nbsp{{ ride.destination_state }}
                             </div>
                         </h4>
@@ -65,7 +65,7 @@
               <div class="modal-dialog modal-lg">
 
                 <!-- Modal content-->
-                <div class="modal-content">
+                <div class="modal-content" style="background-color: #1c1c21;">
                   <div class="modal-header" style="background-color:black;"> <!-- style="justify-content:center;" this centers title in modal-->
                     <h4 class="" style="color:#ffcd00;">{{ ride.destination_city }},&nbsp{{ ride.destination_state }}</h4>
                     {% if ride.round_trip %}
@@ -74,8 +74,8 @@
                     <h6 class="text-danger" style="float:right;">This ride is not a round trip!</h6>
                     {% endif %}
                   </div>
-                  <div class="modal-body">
-                    <div class="col-lg-6">
+                  <div class="modal-body" >
+                    <div class="col-lg-6"sytle="background-color: #1c1c21;">
                       <label class="label">Basic Information</label>
                       <hr style="margin-bottom: 1%;margin-top: 1%;">
                       <h6>Start: {{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
