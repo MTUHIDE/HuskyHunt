@@ -1,24 +1,22 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Leaflet.js -->
+    <!-- Outside CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
 
-
+    <!-- Our CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'mainsite/css/base.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'mainsite/favicon.ico' %}"/>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- Outside JS -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -28,84 +26,83 @@
 
     <!-- filtering functions -->
     <script>
-   function appendToUrl(param, value)
-   {
-     var url = new URL(window.location.href.toString());
+        function appendToUrl(param, value) {
+            var url = new URL(window.location.href.toString());
 
-     // replace the page query if it exists (prevents stacking of &page=)
-     if (param == "page" && url.toString().includes("page=")) {
-      var query_string = url.search;
-      var search_params = new URLSearchParams(query_string);
-      search_params.set('page', value);
-      url.search = search_params.toString();
+            // replace the page query if it exists (prevents stacking of &page=)
+            if (param == "page" && url.toString().includes("page=")) {
+                var query_string = url.search;
+                var search_params = new URLSearchParams(query_string);
+                search_params.set('page', value);
+                url.search = search_params.toString();
 
-     } else {
-      url.searchParams.append(param, value);
-     }
+            } else {
+                url.searchParams.append(param, value);
+            }
 
 
-     window.location.replace(url.toString());
-   }
-
-   function removeFromUrl(value)
-   {
-     var j = 0;
-     var url = new URL(window.location.href.toString());
-     for(var i of url.searchParams.values()){
-      if(i == value){
-        var newUrl = url.toString().replace(("filter=" + value.replace(" ", "+")), "");
-        var n;
-        if(j == 0){
-          n = newUrl.indexOf("&");
-        }
-        else if(url.searchParams.values().next().done){
-          n = newUrl.indexOf("&&");
-        }
-        else{
-          n = newUrl.lastIndexOf("&");
+            window.location.replace(url.toString());
         }
 
-        if(n+1 != newUrl.length){
-         newUrl = newUrl.slice(0, n) + newUrl.slice(n+1);
-        }
-        else {
-         newUrl = newUrl.slice(0, n);
-        }
-        url = new URL(newUrl);
-        if(url.searchParams.values().next().done){
-         window.location.replace("/catalog");
-        }
-        else{
-         window.location.replace(url.toString());
-        }
-      }
-      j++;
-     }
-   }
+        function removeFromUrl(value) {
+            var j = 0;
+            var url = new URL(window.location.href.toString());
+            for (var i of url.searchParams.values()) {
+                if (i == value) {
+                    var newUrl = url.toString().replace(("filter=" + value.replace(" ", "+")), "");
+                    var n;
+                    if (j == 0) {
+                        n = newUrl.indexOf("&");
+                    } else if (url.searchParams.values().next().done) {
+                        n = newUrl.indexOf("&&");
+                    } else {
+                        n = newUrl.lastIndexOf("&");
+                    }
 
-</script>
+                    if (n + 1 != newUrl.length) {
+                        newUrl = newUrl.slice(0, n) + newUrl.slice(n + 1);
+                    } else {
+                        newUrl = newUrl.slice(0, n);
+                    }
+                    url = new URL(newUrl);
+                    if (url.searchParams.values().next().done) {
+                        window.location.replace("/catalog");
+                    } else {
+                        window.location.replace(url.toString());
+                    }
+                }
+                j++;
+            }
+        }
+    </script>
 
 
-  </head>
-  <body style="background-color: #c3c3c3; padding-left: 0px; padding-right: 20px;">
+</head>
+
+<body style="background-color: #575757; padding-left: 0px; padding-right: 20px;">
     <!-- Implement NavBar -->
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-expand-lg navbar-dark fixed-top" style="background-color: black;">
-      <div class="top-links">
-        <a class="navbar-brand" href="{% url 'catalog:index' %}">HuskyHunt</a>
-        <a class="link" href="{% url 'catalog:index' %}">Catalog</a>
-        <a class="link" href="{% url 'rideSharing:index' %}">Ridesharing</a>
-        <a class="link" href="{% url 'selling:index' %}">Selling</a>
-      </div>
+        <div class="top-links">
+            <a class="navbar-brand" href="{% url 'landing:welcome' %}">HuskyHunt</a> {% if request.path != '/welcome/' %}
+            <a class="link" href="{% url 'catalog:index' %}">Catalog</a>
+            <a class="link" href="{% url 'rideSharing:index' %}">Ridesharing</a>
+            <a class="link" href="{% url 'selling:index' %}">Selling</a> {% endif %}
+        </div>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse topnav-right" id="navbarResponsive">
+        <div class="collapse navbar-collapse topnav-right" id="navbarResponsive">
           <ul class="navbar-nav ml-auto" style="text-align: center;">
               <li class="nav-item active">
-                  <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+                  {% if 'ridesharing' in request.path %}
+                    <form class="form-inline my-2 my-lg-0" method="get" action="/ridesharing/search/">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search">
+                  {% else %}
+                    <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search/">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search Catalog" aria-label="Search" name="search">
+                  {% endif %}
                   <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
                   </form>
               </li>
@@ -117,18 +114,17 @@
                       <div class="dropdown-divider"></div>
                       <!--<a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
                       <a class="dropdown-item" href="{% url 'landing:index' %}">login</a>-->
-                  </div>
-          </ul>
-      </div>
-      <div class="logout">
-        <a class="link" href="{% url 'accountant:index' %}">My Account</a>
-        <a class="link" href="{% url 'accountant:logout' %}">Logout</a>
-      </div>
+                </div>
+            </ul>
+        </div>
+        <div class="logout">
+            <a class="link" href="{% url 'accountant:index' %}">My Account</a>
+            <a class="link" href="{% url 'accountant:logout' %}">Logout</a>
+        </div>
     </nav>
 
     <div style="padding-top: 65px;">
-        {% block content %}
-        {% endblock %}
+        {% block content %} {% endblock %}
     </div>
   </body>
 </html>
