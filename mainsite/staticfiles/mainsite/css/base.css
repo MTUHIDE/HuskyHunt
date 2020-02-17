@@ -40,3 +40,9 @@ label{
 .nav-tabs .nav-link:hover{
   border-color: #1c1c21;
 }
+.card{
+  background-color: #1c1c21;
+}
+.card.text{
+  color: #1c1c21;
+}
