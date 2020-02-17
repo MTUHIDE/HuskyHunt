@@ -20,12 +20,10 @@
           {% else %}
             <form action="/catalog/filter/">
           {% endif %}
-          {% if not curFilters %}
-            <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
-          {% elif filter.category_name in curFilters %}
-             <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color:#ffcd00; color:black;" onclick="removeFromUrl('{{filter.category_name}}')">{{filter.category_name}}</button>
+          {% if filter.category_name in curFilters %}
+          <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
           {% else %}
-             <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" onclick="appendToUrl('filter', '{{filter.category_name}}')">{{filter.category_name}}</button>
+          <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
           {% endif %}
            </form>
         {% endfor %}
