@@ -42,6 +42,10 @@
       	<title>Ridesharing</title>
       </head>
 
+      <div id="primary_map" name="primary_map" style="height: 300px" ></div>
+
+      <br>
+
         <div class="row">
             {% if rides %}
             {% for ride in rides %}
@@ -147,14 +151,11 @@
 
 <script>
 
-var map_dict = {}
+var access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
 
-document.getElementsByName("mapid").forEach(element => {
-    // Mapbox access key
-    access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
-
+function createMap(element_id) {
     // Create the map object for each ticket
-    let mymap = L.map(element.id, { renderer: L.svg({ padding: 2 }) } );
+    let mymap = L.map(element_id, { renderer: L.svg({ padding: 2 }) } );
     let tileLayuer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
@@ -162,6 +163,19 @@ document.getElementsByName("mapid").forEach(element => {
         accessToken: access_token
     }); // Note for longer-term changes: to limit requests, this should really by on request and/or cache results
     tileLayuer.addTo(mymap);
+
+    return mymap;
+};
+
+var primaryMap = createMap("primary_map");
+primaryMap.setView([43.597778, -84.7675], 6);
+
+
+var map_dict = {}
+
+document.getElementsByName("mapid").forEach(element => {
+
+    let mymap = createMap(element.id);
 
     // Store so the object can be accessed later; set size/location on modal being brought up
     let ride_pk = element.id.substring(6);
@@ -193,6 +207,14 @@ document.getElementsByName("mapid").forEach(element => {
     locate_req.onload = function() {
         let starting_coord = [ -88.5625, 47.117222 ];
         let ending_coord = (JSON.parse(locate_req.response))["features"][0]["center"];
+
+        // Add a marker to the primary_map for the ending location
+
+        let marker = L.marker([ending_coord[1], ending_coord[0]]).bindPopup(('\
+            Search for rides near:<br>\
+            <a href="http://localhost:8000/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</button>\
+        ').replace("[[1]]", encodeURIComponent(destination_city.trim())).replace("[[2]]", destination_city.trim()) )
+        .addTo(primaryMap);
 
         // Request the route from Mapbox servers
         let route_url = "https://api.mapbox.com/directions/v5/mapbox/driving/"
