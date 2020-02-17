@@ -3,6 +3,22 @@ from accountant.models import user_profile
 from django.db import models
 from django.conf import settings
 
+#Defines a table of categories
+class RideCategory(models.Model):
+    #Each category has a name, date the category was created, and date of last update
+
+    #The name can be up to 200 letters in length
+    category_name = models.CharField(max_length=200)
+
+    #The date created is automatically filled in with the current date
+    date_created = models.DateField(auto_now=False, auto_now_add=True)
+
+    #The date updated is automatically filled in with the current date and time
+    date_updated = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    def __str__(self):
+        return self.category_name
+
 #Defines a table of Items
 class RideItem(models.Model):
 	# Internal Fields:
