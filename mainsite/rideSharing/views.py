@@ -172,18 +172,18 @@ def filter(request):
     failed_search = None
 
     #Uses the filter function to get the data of the searched items based on filters
-    recent_items = RideItem.objects.all()
+    recent_rides = RideItem.objects.all()
     if not request.GET.getlist('filter'):
       return HttpResponseRedirect('/rideSharing')
     for filt in request.GET.getlist('filter'):
       if len([x for x in filters if x.category_name == filt]) == 0:
         misform = True
-      recent_items = recent_items.filter(
+      recent_rides = recent_rides.filter(
         ride_category__category_name=filt
       ).order_by('-date_added')
 
     # Paginator will show 16 items per page
-    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
+    paginator = Paginator(recent_rides, 16, allow_empty_first_page=True)
     page = request.GET.get('page') # Gets the page number to display
     rides = paginator.get_page(page)
 
