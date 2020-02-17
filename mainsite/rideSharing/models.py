@@ -45,6 +45,8 @@ class RideItem(models.Model):
     #The date added is automatically set to the current date and time, used for sorting purposes
     date_added = models.DateTimeField(auto_now=False, auto_now_add=True)
 
+    #The category is set by the user and the item is deleted if its category is deleted
+    category = models.ForeignKey(RideCategory, on_delete=models.CASCADE, null=True)
 
     # Ride Fields:
     # City leaving from
