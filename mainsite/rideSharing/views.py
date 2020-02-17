@@ -38,6 +38,7 @@ def index(request):
         context = {
             'title': title,
             'rides': rides,
+            'search': 0,
         }
 
         #Displays all the items from the database with repect to the CSS template
@@ -86,7 +87,7 @@ def search(request):
     if request.user.is_authenticated:
         #Uses the filter function to get the data of the searched items
         recent_items = RideItem.objects.filter(
-            Q(start_city__contains=request.GET['search']) | 
+            Q(start_city__contains=request.GET['search']) |
             Q(start_state__contains=request.GET['search']) |
             Q(start_zipcode__contains=request.GET['search']) |
             Q(destination_city__contains=request.GET['search']) |
@@ -104,6 +105,7 @@ def search(request):
         context = {
           'rides': rides,
           'title': title,
+          'search': request.GET['search'],
         }
 
         addErrorOnEmpty(context, 'SearchFail')

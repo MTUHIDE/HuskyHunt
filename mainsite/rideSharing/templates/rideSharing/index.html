@@ -42,6 +42,22 @@
       	<title>Ridesharing</title>
       </head>
 
+      {% if search %}
+      <div class="row">
+          <div class="col-1"></div>
+          <div class="col-3">
+              <a href="{% url 'rideSharing:index' %}" class="btn btn-light">Reset Search</a>
+          </div>
+          <div class="col-3">
+              You searched for:
+              <br>{{ search }}
+          </div>
+          <div class="col-5"></div>
+      </div>
+      {% endif %}
+
+      <br>
+
       <div id="primary_map" name="primary_map" style="height: 300px" ></div>
 
       <br>
@@ -212,7 +228,7 @@ document.getElementsByName("mapid").forEach(element => {
 
         let marker = L.marker([ending_coord[1], ending_coord[0]]).bindPopup(('\
             Search for rides near:<br>\
-            <a href="http://localhost:8000/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</button>\
+            <a href="http://localhost:8000/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</a>\
         ').replace("[[1]]", encodeURIComponent(destination_city.trim())).replace("[[2]]", destination_city.trim()) )
         .addTo(primaryMap);
 
