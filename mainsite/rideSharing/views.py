@@ -5,9 +5,34 @@ from django.db.models import Q
 from django.contrib import auth
 from django.core.mail import BadHeaderError, send_mail
 from django.contrib import messages
-from rideSharing.models import RideItem
+from rideSharing.models import RideItem, RideCategory
 from django import forms
 from django.core.paginator import Paginator
+
+#This small helper function adds an appropriate error message to the page
+#param: context - the context that's normally passed to the catalog pages;
+#         it's modified appropriately during this function to contain recent items
+#param: type - one of 'SearchFail', 'FilterFail', 'PageNotFoundFail', etc.
+#param: num_items - The number of recent items displayed, default is 4 most recent
+#returns: boolean whether or not
+def addErrorOnEmpty(context, type, num_items = 4):
+    context['failed_search'] = None
+    if context['rides'].paginator.count == 0:
+
+        #Gets num_items most recent items from the database and sorts by date added
+        recent_rides = RideItem.objects.filter(
+            date_added__lte=timezone.now()
+        ).order_by('-date_added')[:num_items]
+
+        # Paginator will show up to num_items items. Always one page long.
+        paginator = Paginator(recent_rides, num_items, allow_empty_first_page=True)
+        rides = paginator.get_page(1)
+
+
+        context['failed_search'] = type
+        context['rides'] = rides
+        return True
+    return False
 
 #This function gets all the items from the database
 #and displays them to the screen sorted by most recently added
@@ -20,6 +45,11 @@ def index(request):
     #The title for the webpage
     title = "MTU Ridesharing"
 
+    failed_search = None
+    if request.session.has_key('index_redirect_failed_search') and request.session['index_redirect_failed_search'] is not None:
+        failed_search = request.session['index_redirect_failed_search']
+        request.session['index_redirect_failed_search'] = None
+
     #Checks if the user is logged in
     if request.user.is_authenticated:
 
@@ -27,6 +57,9 @@ def index(request):
         recent_items = RideItem.objects.filter(
             date_added__lte=timezone.now()
         ).order_by('-date_added')[:500]
+
+        #The filters dropdown containing all the categories (need to get a default category)
+        filters = RideCategory.objects.all()
 
         # Paginator will show 16 items per page
         paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
@@ -38,6 +71,8 @@ def index(request):
         context = {
             'title': title,
             'rides': rides,
+            'filters': filters,
+            'failed_search': failed_search
         }
 
         #Displays all the items from the database with repect to the CSS template
@@ -95,6 +130,9 @@ def search(request):
             Q(notes__contains=request.GET['search'])
         )[:200]
 
+        #Gets all the different categories
+        filters = RideCategory.objects.all()
+
         # Paginator will show 16 items per page
         paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
         page = request.GET.get('page') # Gets the page number to display
@@ -104,6 +142,7 @@ def search(request):
         context = {
           'rides': rides,
           'title': title,
+          'filters': filters,
         }
 
         addErrorOnEmpty(context, 'SearchFail')
@@ -114,3 +153,59 @@ def search(request):
     #If the user is not logged in then they get redirected to the HuskyStatue screen
     else:
         return HttpResponseRedirect('/')
+
+#This function allows a user to choose from a dropdown
+#what category/ies of items they want to see
+#param: request - array passed throughout a website, kinda like global variables
+#returns: render function that changes the items the user sees based on the category/ies
+def filter(request):
+  #The CSS code for this function can be found here
+  template = 'rideSharing/index.html'
+
+    #The title for the webpage
+  title = 'MTU Ridesharing'
+
+    #Checks to make sure the user has logged in
+  if request.user.is_authenticated:
+    filters = RideCategory.objects.all()
+    misform = False
+    failed_search = None
+
+    #Uses the filter function to get the data of the searched items based on filters
+    recent_rides = RideItem.objects.all()
+    if not request.GET.getlist('filter'):
+      return HttpResponseRedirect('/rideSharing')
+    for filt in request.GET.getlist('filter'):
+      if len([x for x in filters if x.category_name == filt]) == 0:
+        misform = True
+      recent_rides = recent_rides.filter(
+        ride_category__category_name=filt
+      ).order_by('-date_added')
+
+    # Paginator will show 16 items per page
+    paginator = Paginator(recent_rides, 16, allow_empty_first_page=True)
+    page = request.GET.get('page') # Gets the page number to display
+    rides = paginator.get_page(page)
+
+
+    #Gets all the different categories
+    curFilters = request.GET.getlist('filter')
+        #Puts all the data to be displayed into context
+    context = {
+      'rides': rides,
+      'title': title,
+      'filters': filters,
+      'curFilters': curFilters,
+      'failed_search': failed_search
+    }
+
+    addErrorOnEmpty(context, 'FilterFail')
+    if misform:
+        context['failed_search'] = "MisformedFilterFail"
+
+        #Returns a render function call to display onto the website for the user to see
+    return render(request, template, context)
+
+    #If the user is not logged in then they get redirected to the HuskyStatue screen
+  else:
+    return HttpResponseRedirect('/')

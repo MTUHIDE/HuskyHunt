@@ -59,7 +59,12 @@
                     }
                     url = new URL(newUrl);
                     if (url.searchParams.values().next().done) {
-                        window.location.replace("/catalog");
+                        if(window.location.href.indexOf("catalog") > -1) {
+                            window.location.replace("/catalog");
+                        }
+                        else {
+                            window.location.replace("/ridesharing");
+                        }
                     } else {
                         window.location.replace(url.toString());
                     }

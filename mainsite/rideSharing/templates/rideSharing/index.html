@@ -9,6 +9,24 @@
       <h1 class="my-4" style="color: #ffcd00; text-align: center;">Ride Sharing</h1>
       <div style="display: inline-block;">
 				<!--filters on sidebar-->
+        {% for filter in filters %}
+          {% if not curFilters %}
+            <form action="/ridesharing/filter/" method="get">
+          {% elif filter.category_name in curFilters %}
+            <form action="/ridesharing/filter/">
+          {% else %}
+            <form action="/ridesharing/filter/">
+          {% endif %}
+          {% if not curFilters %}
+            <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+          {% elif filter.category_name in curFilters %}
+             <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color:#ffcd00; color:black;" onclick="removeFromUrl('{{filter.category_name}}')">{{filter.category_name}}</button>
+          {% else %}
+             <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" onclick="appendToUrl('filter', '{{filter.category_name}}')">{{filter.category_name}}</button>
+          {% endif %}
+           </form>
+        {% endfor %}
+        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'rideSharing:index' %}"">Clear Filters</a>
       </div>
     </div>
   </div>
@@ -24,11 +42,11 @@
             <h6 style="color: #ffcd00; margin-top: 1.5px; margin-bottom: 3px;">
 
               {% if failed_search == 'FilterFail' %}
-              Looks like no items have been uploaded for that category. But here are some recently-uploaded items instead!
+              Looks like no rides have been uploaded for that category. But here are some recently-uploaded rides instead!
               {% elif failed_search == 'PageNotFoundFail' %}
-              Looks like that item couldn't be found. But here are some recently-uploaded items instead!
+              Looks like that ride couldn't be found. But here are some recently-uploaded rides instead!
               {% elif failed_search == 'SearchFail' %}
-              Looks like no items could be found for your search. But here are some recently-uploaded items instead!
+              Looks like no rides could be found for your search. But here are some recently-uploaded rides instead!
               {% else %}
               Looks like something went wrong. Please contact MTU HuskyHunt if this error persists.
               {% endif %}
