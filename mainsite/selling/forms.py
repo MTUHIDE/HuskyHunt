@@ -43,7 +43,7 @@ class SellingForm(forms.ModelForm):
         return price
 
 
-class RideForm(ModelForm):
+class RideForm(forms.ModelForm):
     class Meta:
         #The table that the information will go into
         model = RideItem
@@ -55,6 +55,8 @@ class RideForm(ModelForm):
         widgets = {
             'driver': TextInput(attrs={'readonly': 'readonly'}), 
             'notes': forms.Textarea(attrs={'cols': 80, 'rows': 10}),
+            'date_leaving': forms.DateInput(attrs={'type': 'date'}),
+            'return_date': forms.DateInput(attrs={'type': 'date'})
             }
 
         def __init__(self, *args, **kwargs):
