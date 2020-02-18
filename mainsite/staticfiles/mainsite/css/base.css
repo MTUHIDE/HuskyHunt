@@ -30,15 +30,47 @@ color: #bfbfbf;
 label{
   color: #bfbfbf;
 }
+th {
+  font-weight: 400;
+}
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
-  background-color: #1c1c21;
-  border-color: #1c1c21;
+  background-color: #000000;
+  border-color: #FFCD00;
+  border-radius: 0rem;
 }
 .nav-tabs{
   border-color: transparent;
 }
 .nav-tabs .nav-link:hover{
-  border-color: #1c1c21;
+  border-color: #FFCD00;
+  border-radius: 0rem;
+}
+
+.husky-button-dark, .husky-button-light:hover {
+  color: #FFCD00;
+  background-color: #000000;
+  border-color: #FFCD00;
+}
+
+
+.husky-button-light, .husky-button-dark:hover {
+  color: #000000;
+  background-color: #FFCD00;
+  border-color: #000000;
+}
+
+.husky-card {
+  border-radius: calc(.25rem - 1px);
+  border: 1px solid #FFCD00;
+  width: 90%;
+  background-color: #000000;
+  margin: auto;
+  padding: 5px;
+}
+
+.husky-card-foot {
+  background-color: #1C1C21;
+  margin: 10px;
 }
 .card{
   background-color: #1c1c21;
