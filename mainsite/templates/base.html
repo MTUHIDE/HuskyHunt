@@ -117,6 +117,9 @@
         </div>
         <div class="logout">
             <a class="link" href="{% url 'accountant:index' %}">My Account</a>
+            {% if request.user.is_staff %}
+            <a class="link" href="{% url 'admin:index' %}">Admin</a>
+            {% endif %}
             <a class="link" href="{% url 'accountant:logout' %}">Logout</a>
         </div>
     </nav>
