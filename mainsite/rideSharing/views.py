@@ -1,3 +1,5 @@
+import re   #eeeeee
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
@@ -71,6 +73,7 @@ def index(request):
         context = {
             'title': title,
             'rides': rides,
+            'search': 0,
             'filters': filters,
             'failed_search': failed_search
         }
@@ -121,14 +124,30 @@ def search(request):
     if request.user.is_authenticated:
         #Uses the filter function to get the data of the searched items
         recent_items = RideItem.objects.filter(
-            Q(start_city__contains=request.GET['search']) | 
+            Q(start_city__contains=request.GET['search']) |
             Q(start_state__contains=request.GET['search']) |
             Q(start_zipcode__contains=request.GET['search']) |
             Q(destination_city__contains=request.GET['search']) |
             Q(destination_state__contains=request.GET['search']) |
             Q(destination_zipcode__contains=request.GET['search']) |
             Q(notes__contains=request.GET['search'])
-        )[:200]
+        )
+
+        radius = 1
+        crResults = re.match(r'\[\s*(\-?\d{1,3}(?:\.\d+)?)\s*\,\s*(\-?\d{1,3}(?:\.\d+)?)\s*\]', request.GET['search'])
+        if(crResults is not None):
+            lat = float(crResults.group(1))
+            lon = float(crResults.group(2))
+
+            close_items = RideItem.objects\
+            .filter(destination_coordinates_lat__lte=lat+radius)\
+            .filter(destination_coordinates_lat__gte=lat-radius)\
+            .filter(destination_coordinates_lon__lte=lon+radius)\
+            .filter(destination_coordinates_lon__gte=lon-radius)
+
+            recent_items = recent_items | close_items
+
+        recent_items = recent_items[:200]
 
         #Gets all the different categories
         filters = RideCategory.objects.all()
@@ -142,6 +161,7 @@ def search(request):
         context = {
           'rides': rides,
           'title': title,
+          'search': request.GET['search'],
           'filters': filters,
         }
 

@@ -1,3 +1,5 @@
+import requests
+
 from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -35,7 +37,11 @@ def index(request):
                 ride_item.views = 0
                 if (ride_item.price < 0):
                     ride_item.price = 0
+
+                ride_item.destination_coordinates_lat, ride_item.destination_coordinates_lon = getLocationByRequest(ride_item)
+
                 ride_item.save()       #error?
+
                 # check for failure cases! what happens with invalid data?
                 return HttpResponseRedirect(reverse('rideSharing:index'))
 
@@ -57,7 +63,7 @@ def index(request):
                 return HttpResponseRedirect(reverse('catalog:index'))
         else:
             pass #this should never happen
-            
+
     if catalog_form is None:
         catalog_form = SellingForm()
     if ride_form is None:
@@ -76,3 +82,22 @@ def index(request):
         'ride_form': ride_form,
     }
     return render(request, template, context)
+
+
+def getLocationByRequest(ride_item):
+        access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
+
+        destination_city = ride_item.destination_city
+        destination_state = ride_item.destination_state
+        destination_zipcode = ride_item.destination_zipcode
+
+        locate_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" \
+        + requests.utils.quote(destination_city.strip()) + "%20" \
+        + requests.utils.quote(destination_state.strip()) + "%20" \
+        + requests.utils.quote(destination_zipcode.strip()) + "%20" \
+        + ".json?access_token=" + access_token;
+
+        req = requests.get(locate_url)
+
+        lon, lat = (req.json())["features"][0]["center"]
+        return lat, lon;
