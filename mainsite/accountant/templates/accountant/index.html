@@ -24,9 +24,9 @@
   </div>
 </div>
 {% else %}
-<div class="row justify-content-center">
+<div class="row justify-content-center" style="margin-bottom: 32px;">
   <div class="col">
-    <h1 class="text-center"style="color: #bfbfbf;">No Items Listed</h1>
+    <h1 class="text-center"style="color: #bfbfbf;">No items listed</h1>
     <div class="text-center">
       <a class="btn btn-warning" href="{% url 'selling:index' %}">Click Here to Get Started!</a>
     </div>
@@ -41,11 +41,11 @@
             {% if item_list %}
             {% for item in item_list %}
             <div class="col-xl-2 col-lg-3 col-md-3 col-sm-6">
-                <div class="card"  style="border: 2px solid black:background-color: #1c1c21;;">
+                <div class="card"  style="border: 2px solid black;background-color: #1c1c21;;">
                     <img class="product-icon" style="height:100px;" src="{{ item.item_picture.url }}" alt="">
                     <div class="card-body">
                         <h4 class="card-title" style="color: black;">
-                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black; line-height: normal;">
+                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: #bfbfbf; line-height: normal;">
                                 {{ item.item_title }}
                             </div>
                         </h4>
@@ -117,7 +117,7 @@
                 <!-- <a href="\catalog\{{item.id}}"><img class="product-icon" style="height:100px;" src="{{ item.item_picture.url }}" alt=""> -->
                 <div class="card-body">
                     <h4 class="card-title" style="color: black;">
-                        <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: black; line-height: normal;">
+                        <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: #bfbfbf; line-height: normal;">
                             {{ ride.destination_city }}
                         </div>
                     </h4>

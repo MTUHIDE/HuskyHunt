@@ -66,7 +66,12 @@
                     }
                     url = new URL(newUrl);
                     if (url.searchParams.values().next().done) {
-                        window.location.replace("/catalog");
+                        if(window.location.href.indexOf("catalog") > -1) {
+                            window.location.replace("/catalog");
+                        }
+                        else {
+                            window.location.replace("/ridesharing");
+                        }
                     } else {
                         window.location.replace(url.toString());
                     }
@@ -79,7 +84,7 @@
 
 </head>
 
-<body style="background-color: #575757; padding-left: 0px; padding-right: 20px;">
+<body style="background-color: #1C1C21;">
     <!-- Implement NavBar -->
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-expand-lg navbar-dark fixed-top" style="background-color: black;">
@@ -119,6 +124,9 @@
         </div>
         <div class="logout">
             <a class="link" href="{% url 'accountant:index' %}">My Account</a>
+            {% if request.user.is_staff %}
+            <a class="link" href="{% url 'admin:index' %}">Admin</a>
+            {% endif %}
             <a class="link" href="{% url 'accountant:logout' %}">Logout</a>
         </div>
     </nav>

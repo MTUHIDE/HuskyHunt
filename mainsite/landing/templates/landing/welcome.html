@@ -16,7 +16,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgb(87, 87, 87);
+            background-color: #1C1C21;
             margin-top: -9px;
         }
         
@@ -29,12 +29,12 @@
         .item {
             width: 300px;
             height: 300px;
-            border: 10px solid #FFCD00;
+            border: 2px solid #FFCD00;
             display: flex;
             align-items: center;
             flex-direction: column;
             justify-content: center;
-            background-color: rgb(28, 28, 33);
+            background-color: black;
             color: rgb(191, 191, 191);
             text-align: center;
             margin: 40px;
@@ -61,7 +61,8 @@
             text-decoration: none;
         }
         
-        .item:hover {
+        .item:hover, 
+        .item:hover h2 {
             color: #ffffff;
         }
     </style>
@@ -76,21 +77,21 @@
         <div class="item">
             <img src="{% static "mainsite/Graphics-02.png" %}">
             <h2>Item Catalog</h2>
-            <p>Some information about the item catalog.</p>
+            <p>Browse a list of items (textbooks, furniture, etc.) up for sale by students at MTU.</p>
         </div>
     </a>
     <a href="{% url 'rideSharing:index' %}">
         <div class="item">
             <img src="{% static "mainsite/Graphics-03.png" %}">
             <h2>Ridesharing</h2>
-            <p>Some information about the ridesharing section.</p>
+            <p>See who's providing rides from Houghton to where you call home, or vice versa.</p>
         </div>
     </a>
     <a href="{% url 'selling:index' %}">
         <div class="item">
             <img src="{% static "mainsite/Graphics-01.png" %}">
             <h2>Add Listing</h2>
-            <p>Some information about adding a listing.</p>
+            <p>Want to add your carpool or cool item to be listed on the site? <br>Click here!</p>
         </div>
     </a>
 </div>

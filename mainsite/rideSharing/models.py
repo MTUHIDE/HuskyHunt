@@ -3,6 +3,22 @@ from accountant.models import user_profile
 from django.db import models
 from django.conf import settings
 
+#Defines a table of categories
+class RideCategory(models.Model):
+    #Each category has a name, date the category was created, and date of last update
+
+    #The name can be up to 200 letters in length
+    category_name = models.CharField(max_length=200)
+
+    #The date created is automatically filled in with the current date
+    date_created = models.DateField(auto_now=False, auto_now_add=True)
+
+    #The date updated is automatically filled in with the current date and time
+    date_updated = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    def __str__(self):
+        return self.category_name
+
 #Defines a table of Items
 class RideItem(models.Model):
 	# Internal Fields:
@@ -29,6 +45,8 @@ class RideItem(models.Model):
     #The date added is automatically set to the current date and time, used for sorting purposes
     date_added = models.DateTimeField(auto_now=False, auto_now_add=True)
 
+    #The category is set by the user and the item is deleted if its category is deleted
+    ride_category = models.ForeignKey(RideCategory, on_delete=models.CASCADE, null=True, blank=True)
 
     # Ride Fields:
     # City leaving from

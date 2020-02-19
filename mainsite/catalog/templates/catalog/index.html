@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="row">
+<div class="row" style="width: 100%;">
   <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
  <div class="col align-center" style="-ms-flex: 0 0 230px; flex: 0 0 230px;">
   <div class="wrapper">
@@ -20,12 +20,10 @@
           {% else %}
             <form action="/catalog/filter/">
           {% endif %}
-          {% if not curFilters %}
-            <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
-          {% elif filter.category_name in curFilters %}
-             <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color:#ffcd00; color:black;" onclick="removeFromUrl('{{filter.category_name}}')">{{filter.category_name}}</button>
+          {% if filter.category_name in curFilters %}
+          <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
           {% else %}
-             <button type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" onclick="appendToUrl('filter', '{{filter.category_name}}')">{{filter.category_name}}</button>
+          <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
           {% endif %}
            </form>
         {% endfor %}
@@ -63,11 +61,11 @@
       {% endif %}
       <!-- -->
 
-        <div class="row">
+        <div class="row" style="margin: 0px;">
             {% if items %}
             {% for item in items %}
-            <div class="col col-lg-3 col-md-6 ">
-                <div class="card h-100"  style="border: 2px solid black; width: auto; margin: 7px;background-color: #1c1c21; ">
+            <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 justify-content-center" style="margin: 5px 0px 5px 0px; padding: 0px;">
+                <div class="card h-100 husky-card">
                     <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
                     <div class="card-body">
                         <h4 class="card-title" style="color: black;">
@@ -82,7 +80,7 @@
                         </div>
                     -->
                 </div>
-                <div class="card-footer" style="background-color: black;"> <!--black-->
+                <div class="card-footer husky-card-foot"> <!--black-->
                     <div style="text-align: center; width: auto;">
                         <h5 class="card-text" style="color: #ffcd00;">{{ item.first_name }}</h5>
                     </div>

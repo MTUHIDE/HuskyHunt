@@ -12,4 +12,7 @@ urlpatterns = [
 
     #...search/ then execute the search method in views
   	path('search/', views.search, name='search'),
+
+  	#...filter/a category/ then execute the filter method in views
+  	path('filter/', views.filter, name='filter'),
 ]

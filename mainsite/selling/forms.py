@@ -1,7 +1,7 @@
 from django import forms
 from catalog.models import CatalogItem, Category, SubCategory
 from django.forms import ModelForm
-from rideSharing.models import RideItem
+from rideSharing.models import RideItem, RideCategory
 from django.forms import TextInput
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -43,14 +43,27 @@ class SellingForm(forms.ModelForm):
         return price
 
 
-class RideForm(ModelForm):
+class RideForm(forms.ModelForm):
     class Meta:
+        #The table that the information will go into
         model = RideItem
-        fields = ['start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
+
+        # The normal input areas
+        fields = ['ride_category', 'start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
+        
+        #The "special" input areas
         widgets = {
             'driver': TextInput(attrs={'readonly': 'readonly'}), 
             'notes': forms.Textarea(attrs={'cols': 80, 'rows': 10}),
+            'date_leaving': forms.DateInput(attrs={'type': 'date'}),
+            'return_date': forms.DateInput(attrs={'type': 'date'})
             }
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            #Gets all the available categories for the new item
+            self.fields['category'].queryset = RideCategory.objects.all()
 
     def clean_price(self):
         price = self.cleaned_data['price']
