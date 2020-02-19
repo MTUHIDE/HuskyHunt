@@ -1,3 +1,5 @@
+import re   #eeeeee
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
@@ -94,7 +96,23 @@ def search(request):
             Q(destination_state__contains=request.GET['search']) |
             Q(destination_zipcode__contains=request.GET['search']) |
             Q(notes__contains=request.GET['search'])
-        )[:200]
+        )
+
+        radius = 1
+        crResults = re.match(r'\[\s*(\-?\d{1,3}(?:\.\d+)?)\s*\,\s*(\-?\d{1,3}(?:\.\d+)?)\s*\]', request.GET['search'])
+        if(crResults is not None):
+            lat = float(crResults.group(1))
+            lon = float(crResults.group(2))
+
+            close_items = RideItem.objects\
+            .filter(destination_coordinates_lat__lte=lat+radius)\
+            .filter(destination_coordinates_lat__gte=lat-radius)\
+            .filter(destination_coordinates_lon__lte=lon+radius)\
+            .filter(destination_coordinates_lon__gte=lon-radius)
+
+            recent_items = recent_items | close_items
+
+        recent_items = recent_items[:200]
 
         # Paginator will show 16 items per page
         paginator = Paginator(recent_items, 16, allow_empty_first_page=True)

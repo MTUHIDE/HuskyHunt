@@ -49,6 +49,11 @@ class RideItem(models.Model):
     # Zipcode going to - OPTIONAL
     destination_zipcode = models.CharField(max_length=5, blank=True)
 
+    # Calculated based on the previous points
+    destination_coordinates_lat = models.DecimalField(decimal_places=6, max_digits=14, default=0.00)
+    destination_coordinates_lon = models.DecimalField(decimal_places=6, max_digits=14, default=0.00)
+
+
     # Date leaving
     date_leaving = models.DateField(auto_now=False, auto_now_add=False)
 
@@ -66,10 +71,10 @@ class RideItem(models.Model):
 
     #A description of the ride that can be 1000 letters long
     notes = models.CharField(max_length=1000)
-    
+
     #The price that the user wants to sell the ride at (per spot)
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
-    
+
 
     def __str__(self):
         return self.destination_city

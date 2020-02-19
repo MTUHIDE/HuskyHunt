@@ -102,7 +102,7 @@
                           <hr style="margin-bottom: 1%;margin-top: 1%;">
                           <h6>Start: {{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
                           <h6>Destination: <span id="destSpan_destination_city_{{ ride.pk }}">{{ ride.destination_city }}</span> <span id="destSpan_destination_state_{{ ride.pk }}">{{ ride.destination_state }}</span> <span id="destSpan_destination_zipcode_{{ ride.pk }}">{{ ride.destination_zipcode }}</span></h6>
-                          <h6>Leaving Date: {{ ride.date_leaving }}</h6>
+                          <h6>Leaving Date: {{ ride.date_leaving }}</h6> <span id="destSpan_destination_coordinates_lat_{{ ride.pk }}" hidden=true>{{ ride.destination_coordinates_lat}}</span><span id="destSpan_destination_coordinates_lon_{{ ride.pk }}" hidden=true>{{ ride.destination_coordinates_lon}}</span>
                           <br>
 
                           {% if ride.round_trip %}
@@ -204,80 +204,60 @@ document.getElementsByName("mapid").forEach(element => {
         mymap.invalidateSize();
     });
 
-    // Find the location from Mapbox servers
+    let destination_city = document.getElementById('destSpan_destination_city_' + ride_pk).innerHTML.trim();
+    let destination_state = document.getElementById('destSpan_destination_state_' + ride_pk).innerHTML.trim();
+    let destination_zipcode = document.getElementById('destSpan_destination_zipcode_' + ride_pk).innerHTML.trim();
+    let destination_coordinates_lat = document.getElementById("destSpan_destination_coordinates_lat_" + ride_pk).innerHTML.trim();
+    let destination_coordinates_lon = document.getElementById("destSpan_destination_coordinates_lon_" + ride_pk).innerHTML.trim();
 
+    let starting_coord = [ -88.5625, 47.117222 ];
+    let ending_coord = [destination_coordinates_lat, destination_coordinates_lon];
 
-    let destination_city = document.getElementById('destSpan_destination_city_' + ride_pk).innerHTML;
-    let destination_state = document.getElementById('destSpan_destination_state_' + ride_pk).innerHTML;
-    let destination_zipcode = document.getElementById('destSpan_destination_zipcode_' + ride_pk).innerHTML;
+    // Add a marker to the primary_map for the ending location
 
-    let locate_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
-    + encodeURIComponent(destination_city.trim()) + "%20"
-    + encodeURIComponent(destination_state.trim()) + "%20"
-    + encodeURIComponent(destination_zipcode.trim()) + "%20"
-    + ".json?access_token="
-    + access_token;
-
-    let locate_req = new XMLHttpRequest();
-    locate_req.open('GET', locate_url, true);
-    locate_req.onload = function() {
-        let starting_coord = [ -88.5625, 47.117222 ];
-        let ending_coord = (JSON.parse(locate_req.response))["features"][0]["center"];
-
-        // Add a marker to the primary_map for the ending location
-
-        let marker = L.marker([ending_coord[1], ending_coord[0]]).bindPopup(('\
+    let marker = L.marker(ending_coord).bindPopup(
+        ('\
             Search for rides near:<br>\
             <a href="http://localhost:8000/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</a>\
-        ').replace("[[1]]", encodeURIComponent(destination_city.trim())).replace("[[2]]", destination_city.trim()) )
-        .addTo(primaryMap);
+        ')
+        .replace("[[1]]", encodeURIComponent("[ " + destination_coordinates_lat + " , " + destination_coordinates_lon + " ]" ) )
+        .replace("[[2]]", destination_city.trim())
+    ).addTo(primaryMap);
 
-        // Request the route from Mapbox servers
-        let route_url = "https://api.mapbox.com/directions/v5/mapbox/driving/"
-        + starting_coord[0] + "," + starting_coord[1] + ";"
-        + ending_coord[0] + "," + ending_coord[1]
-        + "?geometries=geojson&access_token="
-        + access_token;
+    // Request the route from Mapbox servers
+    let route_url = "https://api.mapbox.com/directions/v5/mapbox/driving/"
+    + starting_coord[0] + "," + starting_coord[1] + ";"
+    + ending_coord[0] + "," + ending_coord[1]
+    + "?geometries=geojson&access_token="
+    + access_token;
 
-        let route_req = new XMLHttpRequest();
-        route_req.open('GET', route_url, true);
-        route_req.onload = function() {
-            let json = JSON.parse(route_req.response)
-            let data = json.routes[0];
-            let route = data.geometry.coordinates;
+    let route_req = new XMLHttpRequest();
+    route_req.open('GET', route_url, true);
+    route_req.onload = function() {
+        let json = JSON.parse(route_req.response)
+        let data = json.routes[0];
+        let route = data.geometry.coordinates;
 
-            let geojsonFeature = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Ridesharing trip"
-                },
-                "geometry": {
-                  type: 'LineString',
-                  coordinates: route
-                }
+        let geojsonFeature = {
+            "type": "Feature",
+            "properties": {
+                "name": "Ridesharing trip"
+            },
+            "geometry": {
+              type: 'LineString',
+              coordinates: route
             }
+        }
 
-            L.geoJSON(geojsonFeature, {
-                style: {
-                    color: 'red',
-                    weight: 4
-                }
-            }).addTo(mymap);
-        };
-        route_req.send();
+        L.geoJSON(geojsonFeature, {
+            style: {
+                color: 'red',
+                weight: 4
+            }
+        }).addTo(mymap);
     };
-    locate_req.send();
-
+    route_req.send();
 });
-
-/*var marker = L.marker([46.5, -85.5]).addTo(mymap);
-
-var circle = L.circle([46.5, -85.5], {
-    color: 'red',
-    fillColor: '#0f3',
-    fillOpacity: 0.8,
-    radius: 5000
-}).addTo(mymap);*/
 
 function modalcard_onclick(ride_pk) {
 
