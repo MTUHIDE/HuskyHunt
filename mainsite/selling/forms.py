@@ -89,16 +89,11 @@ class RideForm(forms.ModelForm):
         return leaveDate
 
     def clean_return_date(self):
+
+        # Return Date is Entered
         if (self.cleaned_data['return_date']):
             returnDate = self.cleaned_data['return_date']
             today = date.today()
-
-            # Add 1 month from leave date
-            maxDate = self.cleaned_data['date_leaving'] + timedelta(days=31)
-
-            # Check if return date is more than 1 month after leaving
-            if returnDate > maxDate:
-                raise forms.ValidationError(_('You must offer a return date within 31 days!'))
 
             # Check if return date is less than today
             if returnDate < today:
@@ -109,3 +104,25 @@ class RideForm(forms.ModelForm):
         # No date entered, check if this must be a round trip
         if (self.cleaned_data['round_trip'] == 1):
             raise forms.ValidationError(_('You must enter a valid return date for a round trip!'))
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Return date is entered and it is a round_trip
+        if (cleaned_data.get('return_date') and cleaned_data.get('round_trip') == 1):
+            returnDate = cleaned_data.get('return_date')
+            leaveDate = cleaned_data.get('date_leaving')
+            today = date.today()
+
+            # Add 5 weeks from leave date
+            maxDate = leaveDate + timedelta(days=35)
+
+            # Check if return date is more than 1 month after leaving
+            if returnDate > maxDate:
+                self.add_error('return_date', "You must return within 5 weeks after leaving!")
+
+            # Check if return date is before leave date
+            if returnDate < leaveDate:
+                self.add_error('return_date', "You must return on a date after leaving!")
+
+        return self.cleaned_data
