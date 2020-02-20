@@ -9,8 +9,8 @@ Instead we display our custom error message -->
 }
 </style>
 
-<!-- Show ride tab if errors exist -->
-{% if ride_form.errors %}
+<!-- Show ride tab if ride errors exist or it should load the ride form-->
+{% if ride_form.errors or request.get_full_path == "/selling/?ride"%}
   <body onload="showRides()"></body>
 {% endif %}
 
@@ -155,6 +155,10 @@ Instead we display our custom error message -->
 
 <script type="text/javascript">
   function showRides() {
+    // reset any url modifications
+    window.history.replaceState({id: "selling"}, "Selling", "/selling/");
+
+    // Move to ride page
     $('[href="#ride"]').tab('show');
   }
 </script>
