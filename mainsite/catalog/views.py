@@ -139,13 +139,12 @@ def email(request, pk):
         #The body of the email
         message = (request.user.get_short_name() +
                   ' has messaged you about an item you posted on HuskyHunt!\n\n' +
-                  request.user.get_short_name() + ': ' + request.GET['message'] +
-                  '\n\nYou can reply to: ' + request.user.email +
-                  '\n\n*Do not reply to this email. Your reply will be forever ' +
-                  'lost in the interweb and you will be sad')
+                  'Message from ' + request.user.get_short_name() + ': ' + request.GET['message'] +
+                  '\n\nYou can respond by replying to this email, or by contacting ' + 
+                  request.user.get_short_name() + ' directly: ' + request.user.email)
 
         #The email that this message is sent from
-        from_email = 'admin@huskyhunt.com'
+        from_email = request.user.get_short_name() + ' via HuskyHunt <' + request.user.email + '>'
         #Gets the item that is currently being viewed
         item_list = CatalogItem.objects.filter(pk=pk)
         #Creates a variable to later store the sellers email
