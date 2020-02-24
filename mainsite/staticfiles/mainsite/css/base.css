@@ -78,3 +78,8 @@ th {
 .card.text{
   color: #1c1c21;
 }
+
+.husky-modal{
+  background-color: #1C1C21;
+  border: none;
+}
