@@ -138,7 +138,7 @@ def search(request):
         if(crResults is not None):
             lat = float(crResults.group(1))
             lon = float(crResults.group(2))
-            if(len(crResults.groups()) >= 3):
+            if(crResults.group(3) is not None):
                 radius = float(crResults.group(3))
 
             # Note: this search region isn't a circle,
