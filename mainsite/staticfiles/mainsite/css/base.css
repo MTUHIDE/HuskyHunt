@@ -2,6 +2,11 @@
     background-image: url("images\mtu_logo_round.png");
 }
 
+:root {
+  --main-bg-color: #000000;
+  --main-txt-color: #bfbfbf;
+  --main-border-color: #FFCD00;
+}
 body {
     background: green;
 }
@@ -25,45 +30,45 @@ h3,
 h4,
 h5,
 h6 {
-color: #bfbfbf;
+color: var(--main-txt-color);
 }
 label{
-  color: #bfbfbf;
+  color: var(--main-txt-color);
 }
 th {
   font-weight: 400;
 }
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
-  background-color: #000000;
-  border-color: #FFCD00;
+  background-color: var(--main-bg-color);
+  border-color: var(--main-border-color);
   border-radius: 0rem;
 }
 .nav-tabs{
   border-color: transparent;
 }
 .nav-tabs .nav-link:hover{
-  border-color: #FFCD00;
+  border-color: var(--main-border-color);
   border-radius: 0rem;
 }
 
 .husky-button-dark, .husky-button-light:hover {
-  color: #FFCD00;
-  background-color: #000000;
-  border-color: #FFCD00;
+  color: var(--main-border-color);
+  background-color: var(--main-bg-color);
+  border-color: var(--main-border-color);
 }
 
 
 .husky-button-light, .husky-button-dark:hover {
-  color: #000000;
-  background-color: #FFCD00;
-  border-color: #000000;
+  color: var(--main-bg-color);
+  background-color: var(--main-border-color);
+  border-color: var(--main-bg-color);
 }
 
 .husky-card {
   border-radius: calc(.25rem - 1px);
-  border: 1px solid #FFCD00;
+  border: 1px solid var(--main-border-color);
   width: 90%;
-  background-color: #000000;
+  background-color: var(--main-bg-color);
   margin: auto;
   padding: 5px;
 }
