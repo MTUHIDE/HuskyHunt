@@ -64,7 +64,7 @@
           <div class="col-3">
               <a href="{% url 'rideSharing:index' %}" class="btn btn-light">Reset Search</a>
           </div>
-          <div class="col-3">
+          <div class="col-3" style="color: #ffcd00;">
               You searched for:
               <br>{{ search }}
           </div>
@@ -183,7 +183,7 @@
 
 <script>
 
-var access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
+var access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg';
 
 function createMap(element_id) {
     // Create the map object for each ticket
@@ -226,7 +226,7 @@ document.getElementsByName("mapid").forEach(element => {
     let destination_coordinates_lat = document.getElementById("destSpan_destination_coordinates_lat_" + ride_pk).innerHTML.trim();
     let destination_coordinates_lon = document.getElementById("destSpan_destination_coordinates_lon_" + ride_pk).innerHTML.trim();
 
-    let starting_coord = [ -88.5625, 47.117222 ];
+    let starting_coord = [ 47.117222, -88.5625 ];
     let ending_coord = [destination_coordinates_lat, destination_coordinates_lon];
 
     // Add a marker to the primary_map for the ending location
@@ -242,15 +242,15 @@ document.getElementsByName("mapid").forEach(element => {
 
     // Request the route from Mapbox servers
     let route_url = "https://api.mapbox.com/directions/v5/mapbox/driving/"
-    + starting_coord[0] + "," + starting_coord[1] + ";"
-    + ending_coord[0] + "," + ending_coord[1]
+    + starting_coord[1] + "," + starting_coord[0] + ";"
+    + ending_coord[1] + "," + ending_coord[0]
     + "?geometries=geojson&access_token="
     + access_token;
 
     let route_req = new XMLHttpRequest();
     route_req.open('GET', route_url, true);
     route_req.onload = function() {
-        let json = JSON.parse(route_req.response)
+        let json = JSON.parse(route_req.response);
         let data = json.routes[0];
         let route = data.geometry.coordinates;
 
