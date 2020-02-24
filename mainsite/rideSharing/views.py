@@ -133,17 +133,21 @@ def search(request):
             Q(notes__contains=request.GET['search'])
         )
 
-        radius = 1
-        crResults = re.match(r'\[\s*(\-?\d{1,3}(?:\.\d+)?)\s*\,\s*(\-?\d{1,3}(?:\.\d+)?)\s*\]', request.GET['search'])
+        radius = 69.0 # There are genuinely approximately 69 miles to a degree latitude
+        crResults = re.match(r'\[\s*(\-?\d{1,3}(?:\.\d+)?)\s*\,\s*(\-?\d{1,3}(?:\.\d+)?)\s*(?:\,\s*(\d+(?:\.\d+)?)\s*)?\]', request.GET['search'])
         if(crResults is not None):
             lat = float(crResults.group(1))
             lon = float(crResults.group(2))
+            if(len(crResults.groups()) >= 3):
+                radius = float(crResults.group(3))
 
+            # Note: this search region isn't a circle,
+            # it isn't even a square. It's a weird oblong trapezoid that gets less accurate as you get further north
             close_items = RideItem.objects\
-            .filter(destination_coordinates_lat__lte=lat+radius)\
-            .filter(destination_coordinates_lat__gte=lat-radius)\
-            .filter(destination_coordinates_lon__lte=lon+radius)\
-            .filter(destination_coordinates_lon__gte=lon-radius)
+            .filter(destination_coordinates_lat__lte=lat + radius / 69)\
+            .filter(destination_coordinates_lat__gte=lat - radius / 69 )\
+            .filter(destination_coordinates_lon__lte=lon + radius / 50)\
+            .filter(destination_coordinates_lon__gte=lon - radius / 50)
 
             recent_items = recent_items | close_items
 
