@@ -6,9 +6,9 @@
  <div class="col align-center" style="-ms-flex: 0 0 230px; flex: 0 0 230px;">
   <div class="wrapper">
     <!--Fixes the size of the side bar so it doent grow or shink. -->
-    <div id="sidebar" style="text-align: center;background-color: black; height: 100%;width:230px; position: fixed; top: 50px;">
+    <div id="sidebar" style="text-align: center; height: 100%;width:230px; position: fixed; top: 50px;">
       <div class="sidebar-header">
-        <h1 class="my-4" style="color: #ffcd00; text-align: center;">Catalog</h1>
+        <h1 id="title" class="my-4" style="text-align: center;">Catalog</h1>
       </div>
       <div style="display: inline-block;">
 
@@ -68,12 +68,12 @@
                 <div class="card h-100 husky-card">
                     <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
                     <div class="card-body">
-                        <h4 class="card-title" style="color: black;">
+                        <h4 class="card-title">
                             <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: white;">
-                                <a href="\catalog\{{item.id}}" style="color: white; line-height: normal;">{{ item.item_title }}</a>
+                                <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title }}</a>
                             </div>
                         </h4>
-                        <h6 style="color: #bfbfbf;">${{ item.item_price }}</h6>
+                        <h6>${{ item.item_price }}</h6>
                         <!--
                         <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
                             <p class="card-text">{{ item.item_description }}</p>
@@ -82,7 +82,7 @@
                 </div>
                 <div class="card-footer husky-card-foot"> <!--black-->
                     <div style="text-align: center; width: auto;">
-                        <h5 class="card-text" style="color: #ffcd00;">{{ item.first_name }}</h5>
+                        <h5 id="catalogName" class="card-text">{{ item.first_name }}</h5>
                     </div>
                 </div>
             </div>

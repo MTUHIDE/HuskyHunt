@@ -6,6 +6,10 @@
   --main-bg-color: #000000;
   --main-txt-color: #bfbfbf;
   --main-border-color: #FFCD00;
+  --main-catalogName-color:#ffcd00;
+  --main-itemTitle-color: white;
+  --main-title-color:#ffcd00;
+  --main-sidebarBackground-color:black;
 }
 
 body {
@@ -25,6 +29,19 @@ body {
     max-width:100%;
     padding-top: 10px;
 }
+#catalogName {
+  color: var(--main-catalogName-color);
+}
+#itemTitle {
+  color: var(--main-itemTitle-color);
+}
+#title {
+    color: var(--main-title-color);
+}
+#sidebar{
+  background-color: var(--main-sidebarBackground-color);
+}
+
 h1,
 h2,
 h3,
