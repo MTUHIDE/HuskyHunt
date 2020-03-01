@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib import auth
-from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import BadHeaderError, asend_mail
 from django.contrib import messages
 from rideSharing.models import RideItem, RideCategory
 from django import forms
