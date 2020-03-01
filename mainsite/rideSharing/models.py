@@ -87,12 +87,14 @@ class RideItem(models.Model):
     # The user's first (preferred) name
     driver = models.CharField(max_length=25)
 
-    #A description of the ride that can be 1000 letters long
+    # A description of the ride that can be 1000 letters long
     notes = models.CharField(max_length=1000)
 
-    #The price that the user wants to sell the ride at (per spot)
+    # The price that the user wants to sell the ride at (per spot)
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
 
+    # If the ride has been archived or not
+    archived = models.BooleanField(default=False)
 
     def __str__(self):
         return self.destination_city
