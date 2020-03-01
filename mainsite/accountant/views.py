@@ -91,7 +91,7 @@ def deleteItem(request, pk):
 
     # delete only if this user owns the item, a precautionary measure
     if item.get(pk=pk).username == request.user:
-      item.delete();
+      item.delete(); # Delete the item
 
     # redirect to accountant page
     return HttpResponseRedirect('/accountant')
@@ -101,14 +101,15 @@ def deleteItem(request, pk):
 # Used as an intermediate function to delete an item
 def deleteRide(request, pk):
   if request.user.is_authenticated:
-    # delete item from database
-    item = RideItem.objects.filter(pk=pk)
+    # delete ride from database
+    ride = RideItem.objects.get(pk=pk)
 
-    # delete only if this user owns the item, a precautionary measure
-    if item.get(pk=pk).username == request.user:
-      item.delete();
+    # delete only if this user owns the ride, a precautionary measure
+    if ride.username == request.user:
+      ride.archived = "True" # archive this ride
+      ride.save()
 
-    # redirect to accountant page
+    # redirect to accountant page (refresh)
     return HttpResponseRedirect('/accountant')
   else:
     return HttpResponseRedirect('/')
