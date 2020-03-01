@@ -67,7 +67,7 @@ def index(request):
 
         # load items and rides
         my_items = CatalogItem.objects.filter(username = request.user)
-        ride_items = RideItem.objects.filter(username = request.user)
+        ride_items = RideItem.objects.filter(username = request.user, archived='False')
         filters = Category.objects.all()
         title = 'My items'
 
