@@ -23,13 +23,13 @@ def addErrorOnEmpty(context, type, num_items = 4):
 
         #Gets num_items most recent items from the database and sorts by date added
         recent_rides = RideItem.objects.filter(
+            archived='False',
             date_added__lte=timezone.now()
         ).order_by('-date_added')[:num_items]
 
         # Paginator will show up to num_items items. Always one page long.
         paginator = Paginator(recent_rides, num_items, allow_empty_first_page=True)
         rides = paginator.get_page(1)
-
 
         context['failed_search'] = type
         context['rides'] = rides
@@ -57,6 +57,7 @@ def index(request):
 
         #Gets 500 most recent items from the database and sorts by date added
         recent_items = RideItem.objects.filter(
+            archived='False',
             date_added__lte=timezone.now()
         ).order_by('-date_added')[:500]
 
@@ -96,6 +97,7 @@ def addErrorOnEmpty(context, type, num_items = 4):
 
         #Gets num_items most recent items from the database and sorts by date added
         recent_items = RideItem.objects.filter(
+            archived='False',
             date_added__lte=timezone.now()
         ).order_by('-date_added')[:num_items]
 
@@ -130,7 +132,8 @@ def search(request):
             Q(destination_city__contains=request.GET['search']) |
             Q(destination_state__contains=request.GET['search']) |
             Q(destination_zipcode__contains=request.GET['search']) |
-            Q(notes__contains=request.GET['search'])
+            Q(notes__contains=request.GET['search']),
+            archived='False'
         )
 
         radius = 69.0 # There are genuinely approximately 69 miles to a degree latitude
@@ -203,6 +206,7 @@ def filter(request):
       if len([x for x in filters if x.category_name == filt]) == 0:
         misform = True
       recent_rides = recent_rides.filter(
+        archived='False',
         ride_category__category_name=filt
       ).order_by('-date_added')
 
