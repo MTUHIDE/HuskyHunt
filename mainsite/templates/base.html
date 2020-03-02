@@ -21,6 +21,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
+    <script>    // Fix via https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-150544739
+    (function () {
+      if (!L || !L.GridLayer || !L.GridLayer.prototype) return;
+      var originalInitTile = L.GridLayer.prototype._initTile;
+      L.GridLayer.include({
+        _initTile: function (tile) {
+          originalInitTile.call(this, tile);
+          var tileSize = this.getTileSize();
+          tile.style.width = tileSize.x + 1 + 'px';
+          tile.style.height = tileSize.y + 1 + 'px';
+        }
+      });
+    })();
+    </script>
 
     <title>HuskyHunt</title>
 
