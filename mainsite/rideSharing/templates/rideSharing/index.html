@@ -187,12 +187,16 @@ var access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzO
 
 function createMap(element_id) {
     // Create the map object for each ticket
-    let mymap = L.map(element_id, { renderer: L.svg({ padding: 2 }) } );
+    let mymap = L.map(element_id, {
+        renderer: L.svg({ padding: 2 }),
+        maxBounds: L.latLngBounds([77.078784, -156.796875],[0, -35.156250]),
+        minZoom: 3
+    } );
     let tileLayuer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox/streets-v11',
-        accessToken: access_token
+        accessToken: access_token,
     }); // Note for longer-term changes: to limit requests, this should really by on request and/or cache results
     tileLayuer.addTo(mymap);
 
@@ -201,6 +205,29 @@ function createMap(element_id) {
 
 var primaryMap = createMap("primary_map");
 primaryMap.setView([43.597778, -84.7675], 6);
+
+{% if search %}
+    let polylatlngs = [];
+
+    polylatlngs.push([[-90, -180],[-90, 180],[90, 180],[90, -180]]);
+
+    let search_split = {{search_split}} ;
+    search_split.forEach(query => {
+        polylatlngs.push([  [query[0] - query[2]/69, query[1] - query[2]/50],
+                            [query[0] + query[2]/69, query[1] - query[2]/50],
+                            [query[0] + query[2]/69, query[1] + query[2]/50],
+                            [query[0] - query[2]/69, query[1] + query[2]/50] ]);
+    });
+
+    console.log(polylatlngs);
+
+    L.polygon(polylatlngs, {
+        stroke: false,
+    	color: '#333',
+    	fillOpacity: 0.5,
+    	clickable: true
+    }).addTo(primaryMap);
+{% endif %}
 
 
 var map_dict = {}

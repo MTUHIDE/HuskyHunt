@@ -133,6 +133,7 @@ def search(request):
             Q(notes__contains=request.GET['search'])
         )
 
+        search_split = []
         radius = 69.0 # There are genuinely approximately 69 miles to a degree latitude
         crResults = re.match(r'\[\s*(\-?\d{1,3}(?:\.\d+)?)\s*\,\s*(\-?\d{1,3}(?:\.\d+)?)\s*(?:\,\s*(\d+(?:\.\d+)?)\s*)?\]', request.GET['search'])
         if(crResults is not None):
@@ -140,6 +141,7 @@ def search(request):
             lon = float(crResults.group(2))
             if(crResults.group(3) is not None):
                 radius = float(crResults.group(3))
+            search_split.append([lat, lon, radius])
 
             # Note: this search region isn't a circle,
             # it isn't even a square. It's a weird oblong trapezoid that gets less accurate as you get further north
@@ -166,6 +168,7 @@ def search(request):
           'rides': rides,
           'title': title,
           'search': request.GET['search'],
+          'search_split': search_split,
           'filters': filters,
         }
 
