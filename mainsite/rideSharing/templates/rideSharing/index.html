@@ -65,23 +65,23 @@
                   <div class="row">
                       <div class="col-12" style="color: #ffcd00;">
                           Cities within
-                          <input type="text" size="4" value="{{query.1.2}}"></input>
+                          <input id="RadiusTextValue" type="text" size="4" value="{{query.1.2}}"></input>
                            miles of
                            {% if query.2 %}
-                          <input type="text" size="8" value="{{ query.2 }}" disabled="disabled"></input>
+                          <input id="CityNameTextValue" type="text" size="8" value="{{ query.2 }}" disabled="disabled"></input>
                            (
                           {% endif %}
                           coordinates
-                          <input type="text" size="4" value="{{query.1.0}}"></input>
+                          <input id="LatTextValue" type="text" size="4" value="{{query.1.0}}" disabled="disabled"></input>
                           ,
-                          <input type="text" size="4" value="{{query.1.1}}"></input>
+                          <input id="LonTextValue" type="text" size="4" value="{{query.1.1}}" disabled="disabled"></input>
                           {% if query.2 %}){% endif %}
                       </div>
                   </div>
                   {% endfor %}
               </div>
               <div class="col-2">
-                  <button type="submit" class="btn btn-outline-primary" form="RideSearchForm">Update Search</button>
+                  <button type="submit" class="btn btn-outline-primary" onclick='updateButtonFunction()'>Update Search</button>
               </div>
               <div class="col-2">
                   <a href="{% url 'rideSharing:index' %}" class="btn btn-outline-secondary">Reset Search</a>
@@ -282,7 +282,13 @@ document.getElementsByName("mapid").forEach(element => {
             Search for rides near:<br>\
             <a href="http://localhost:8000/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</a>\
         ')
-        .replace("[[1]]", encodeURIComponent("[ " + destination_coordinates_lat + " , " + destination_coordinates_lon + " , " + destination_city + " ]" ) )
+        .replace("[[1]]", encodeURIComponent("[ "
+        + destination_coordinates_lat + " , " + destination_coordinates_lon + " , "
+        + (function(){
+            let radThing = document.getElementById("RadiusTextValue");
+            return radThing ? radThing.value : 69;
+        })()
+        + " , " + destination_city + " ]" ) )
         .replace("[[2]]", destination_city.trim())
     ).addTo(primaryMap);
 
@@ -323,6 +329,21 @@ document.getElementsByName("mapid").forEach(element => {
 
 function modalcard_onclick(ride_pk) {
 
+}
+
+function updateButtonFunction() {
+    document.getElementById("RideSearchEntry").value =
+        "[ " +
+        document.getElementById("LatTextValue").value +
+        " , " +
+        document.getElementById("LonTextValue").value +
+        " , " +
+        document.getElementById("RadiusTextValue").value +
+        {% if search_split.0.2 %}" , " +
+        document.getElementById("CityNameTextValue").value +
+        {% endif %}" ] ";
+
+        document.getElementById("SearchButton").click();
 }
 
 </script>

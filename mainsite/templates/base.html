@@ -117,12 +117,12 @@
               <li class="nav-item active">
                   {% if 'ridesharing' in request.path %}
                     <form class="form-inline my-2 my-lg-0" method="get" action="/ridesharing/search/" id="RideSearchForm">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search" id="RideSearchEntry">
                   {% else %}
                     <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search/">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search Catalog" aria-label="Search" name="search">
                   {% endif %}
-                  <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
+                  <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" id="SearchButton" >Search</button>
                   </form>
               </li>
 
