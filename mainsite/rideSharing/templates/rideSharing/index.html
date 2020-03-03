@@ -24,7 +24,7 @@
           {% endif %}
            </form>
         {% endfor %}
-        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'rideSharing:index' %}"">Clear Filters</a>
+        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'rideSharing:index' %}" >Clear Filters</a>
       </div>
     </div>
   </div>
@@ -58,18 +58,30 @@
       	<title>Ridesharing</title>
       </head>
 
-      {% if search %}
-      <div class="row">
-          <div class="col-1"></div>
-          <div class="col-3">
-              <a href="{% url 'rideSharing:index' %}" class="btn btn-light">Reset Search</a>
+      {% if search and not failed_search %}
+          <div class="row">
+              <div class="col-8">
+                  {% for query in search_split %}
+                  <div class="row">
+                      <div class="col-2"></div>
+                      <div class="col-6" style="color: #ffcd00;">
+                          You searched for:
+                          <br>{{ query.1 }}
+                      </div>
+                      <div class="col-4">
+                          Closest city:
+                          <br><span id="hahastinky_{{ query.2 }}"></span>
+                      </div>
+                  </div>
+                  {% endfor %}
+              </div>
+              <div class="col-2">
+                  <button type="submit" class="btn btn-outline-primary" form="RideSearchForm">Update Search</button>
+              </div>
+              <div class="col-2">
+                  <a href="{% url 'rideSharing:index' %}" class="btn btn-outline-secondary">Reset Search</a>
+              </div>
           </div>
-          <div class="col-3" style="color: #ffcd00;">
-              You searched for:
-              <br>{{ search }}
-          </div>
-          <div class="col-5"></div>
-      </div>
       {% endif %}
 
       <br>
@@ -206,20 +218,29 @@ function createMap(element_id) {
 var primaryMap = createMap("primary_map");
 primaryMap.setView([43.597778, -84.7675], 6);
 
-{% if search %}
+var nearest_search = [];
+
+
+{% if search and not failed_search %}
     let polylatlngs = [];
 
     polylatlngs.push([[-90, -180],[-90, 180],[90, 180],[90, -180]]);
 
-    let search_split = {{search_split}} ;
+    let search_split = {% autoescape off %} {{search_split}} {% endautoescape %} ;
     search_split.forEach(query => {
-        polylatlngs.push([  [query[0] - query[2]/69, query[1] - query[2]/50],
-                            [query[0] + query[2]/69, query[1] - query[2]/50],
-                            [query[0] + query[2]/69, query[1] + query[2]/50],
-                            [query[0] - query[2]/69, query[1] + query[2]/50] ]);
-    });
+        let type = query[0];
+        let index = query[2];
+        query = query[1];
 
-    console.log(polylatlngs);
+        if(type == "coor") {
+            polylatlngs.push([  [query[0] - query[2]/69, query[1] - query[2]/50],
+                                [query[0] + query[2]/69, query[1] - query[2]/50],
+                                [query[0] + query[2]/69, query[1] + query[2]/50],
+                                [query[0] - query[2]/69, query[1] + query[2]/50] ]);
+
+            nearest_search[index] = ["", 100000000, null];
+        }
+    });
 
     L.polygon(polylatlngs, {
         stroke: false,
@@ -228,7 +249,6 @@ primaryMap.setView([43.597778, -84.7675], 6);
     	clickable: true
     }).addTo(primaryMap);
 {% endif %}
-
 
 var map_dict = {}
 
@@ -255,6 +275,17 @@ document.getElementsByName("mapid").forEach(element => {
 
     let starting_coord = [ 47.117222, -88.5625 ];
     let ending_coord = [destination_coordinates_lat, destination_coordinates_lon];
+
+    {% if search and not failed_search %}
+        nearest_search.forEach( (element, index) => {
+            let dist = Math.pow((destination_coordinates_lat - element[0][0]), 2) + Math.pow((destination_coordinates_lon - element[0][1]), 2);
+            if( dist  < element[1]) {
+                nearest_search[index][0] = destination_city;
+                nearest_search[index][1] = dist;
+                nearest_search[index][2] = [ destination_coordinates_lat, destination_coordinates_lon ];
+            }
+        });
+    {% endif %}
 
     // Add a marker to the primary_map for the ending location
 
@@ -301,6 +332,14 @@ document.getElementsByName("mapid").forEach(element => {
     };
     route_req.send();
 });
+
+{% if search and not failed_search %}
+search_split.forEach(query => {
+    if(query[0] == "coor") {
+        document.getElementById("hahastinky_[" + query[2]).value = nearest_search[query[2]][;
+    }
+});
+{% endif %}
 
 function modalcard_onclick(ride_pk) {
 

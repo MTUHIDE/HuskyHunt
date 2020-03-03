@@ -136,12 +136,13 @@ def search(request):
         search_split = []
         radius = 69.0 # There are genuinely approximately 69 miles to a degree latitude
         crResults = re.match(r'\[\s*(\-?\d{1,3}(?:\.\d+)?)\s*\,\s*(\-?\d{1,3}(?:\.\d+)?)\s*(?:\,\s*(\d+(?:\.\d+)?)\s*)?\]', request.GET['search'])
+        i = 0
         if(crResults is not None):
             lat = float(crResults.group(1))
             lon = float(crResults.group(2))
             if(crResults.group(3) is not None):
                 radius = float(crResults.group(3))
-            search_split.append([lat, lon, radius])
+            search_split.append(["coor", [lat, lon, radius], i]); i += 1;
 
             # Note: this search region isn't a circle,
             # it isn't even a square. It's a weird oblong trapezoid that gets less accurate as you get further north

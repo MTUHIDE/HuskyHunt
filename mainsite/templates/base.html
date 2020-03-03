@@ -116,7 +116,7 @@
           <ul class="navbar-nav ml-auto" style="text-align: center;">
               <li class="nav-item active">
                   {% if 'ridesharing' in request.path %}
-                    <form class="form-inline my-2 my-lg-0" method="get" action="/ridesharing/search/">
+                    <form class="form-inline my-2 my-lg-0" method="get" action="/ridesharing/search/" id="RideSearchForm">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search">
                   {% else %}
                     <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search/">
