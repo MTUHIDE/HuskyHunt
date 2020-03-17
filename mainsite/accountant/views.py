@@ -87,11 +87,13 @@ def index(request):
 def deleteItem(request, pk):
   if request.user.is_authenticated:
     # delete item from database
-    item = CatalogItem.objects.filter(pk=pk)
+    item = CatalogItem.objects.get(pk=pk)
 
     # delete only if this user owns the item, a precautionary measure
-    if item.get(pk=pk).username == request.user:
-      item.delete(); # Delete the item
+    if item.username == request.user:
+      item.archived = "True" # archive this item
+      item.save()
+
 
     # redirect to accountant page
     return HttpResponseRedirect('/accountant')
