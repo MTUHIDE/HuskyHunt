@@ -88,6 +88,9 @@ class CatalogItem(models.Model):
     #An integer identifying the item
     views = models.IntegerField(default=0)
 
+    # If the ride has been archived or not
+    archived = models.BooleanField(default=False)
+
     def __str__(self):
         return self.item_title
 

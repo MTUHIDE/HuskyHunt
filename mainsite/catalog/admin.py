@@ -16,8 +16,8 @@ class CategoryAdmin(admin.ModelAdmin):
     inlines = [SubCategoryInline]
 
 class CatalogItemAdmin(admin.ModelAdmin):
-    list_display = ('date_added', 'username', 'item_price', 'item_title', 'item_description')
-    list_filter = ['category', 'date_added', 'username']
+    list_display = ('date_added', 'username', 'item_price', 'item_title', 'item_description', 'archived')
+    list_filter = ['archived', 'category', 'date_added', 'username']
     search_fields = ['item_title', 'item_description']
 
 admin.site.register(Category)

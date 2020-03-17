@@ -4,7 +4,7 @@ from .models import RideItem, RideCategory
 class RideItemAdmin(admin.ModelAdmin):
     list_display = ('date_added', 'username', 'driver', 'start_city', 'start_state', 'destination_city', 
     	'destination_state', 'date_leaving', 'return_date', 'archived')
-    list_filter = ['date_added', 'username', 'archived']
+    list_filter = ['archived', 'date_added', 'username']
 
 class RideCategoryAdmin(admin.ModelAdmin):
     fieldsets = [
