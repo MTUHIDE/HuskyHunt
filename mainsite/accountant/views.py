@@ -66,7 +66,7 @@ def index(request):
         defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
 
         # load items and rides
-        my_items = CatalogItem.objects.filter(username = request.user)
+        my_items = CatalogItem.objects.filter(username = request.user, archived='False')
         ride_items = RideItem.objects.filter(username = request.user, archived='False')
         filters = Category.objects.all()
         title = 'My items'
