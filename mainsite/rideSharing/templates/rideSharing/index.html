@@ -24,7 +24,7 @@
           {% endif %}
            </form>
         {% endfor %}
-        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'rideSharing:index' %}"">Clear Filters</a>
+        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'rideSharing:index' %}" >Clear Filters</a>
       </div>
     </div>
   </div>
@@ -58,18 +58,35 @@
       	<title>Ridesharing</title>
       </head>
 
-      {% if search %}
-      <div class="row">
-          <div class="col-1"></div>
-          <div class="col-3">
-              <a href="{% url 'rideSharing:index' %}" class="btn btn-light">Reset Search</a>
+      {% if search and not failed_search %}
+          <div class="row">
+              <div class="col-8">
+                  {% for query in search_split %}
+                  <div class="row">
+                      <div class="col-12" style="color: #ffcd00;">
+                          Cities within
+                          <input id="RadiusTextValue" type="text" size="4" value="{{query.1.2}}"></input>
+                           miles of
+                           {% if query.2 %}
+                          <input id="CityNameTextValue" type="text" size="8" value="{{ query.2 }}" disabled="disabled"></input>
+                           (
+                          {% endif %}
+                          coordinates
+                          <input id="LatTextValue" type="text" size="4" value="{{query.1.0}}" disabled="disabled"></input>
+                          ,
+                          <input id="LonTextValue" type="text" size="4" value="{{query.1.1}}" disabled="disabled"></input>
+                          {% if query.2 %}){% endif %}
+                      </div>
+                  </div>
+                  {% endfor %}
+              </div>
+              <div class="col-2">
+                  <button type="submit" class="btn btn-outline-primary" onclick='updateButtonFunction()'>Update Search</button>
+              </div>
+              <div class="col-2">
+                  <a href="{% url 'rideSharing:index' %}" class="btn btn-outline-secondary">Reset Search</a>
+              </div>
           </div>
-          <div class="col-3" style="color: #ffcd00;">
-              You searched for:
-              <br>{{ search }}
-          </div>
-          <div class="col-5"></div>
-      </div>
       {% endif %}
 
       <br>
@@ -187,12 +204,16 @@ var access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzO
 
 function createMap(element_id) {
     // Create the map object for each ticket
-    let mymap = L.map(element_id, { renderer: L.svg({ padding: 2 }) } );
+    let mymap = L.map(element_id, {
+        renderer: L.svg({ padding: 2 }),
+        maxBounds: L.latLngBounds([77.078784, -156.796875],[0, -35.156250]),
+        minZoom: 3
+    } );
     let tileLayuer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox/streets-v11',
-        accessToken: access_token
+        accessToken: access_token,
     }); // Note for longer-term changes: to limit requests, this should really by on request and/or cache results
     tileLayuer.addTo(mymap);
 
@@ -202,6 +223,31 @@ function createMap(element_id) {
 var primaryMap = createMap("primary_map");
 primaryMap.setView([43.597778, -84.7675], 6);
 
+{% if search and not failed_search %}
+    let polylatlngs = [];
+
+    polylatlngs.push([[-90, -180],[-90, 180],[90, 180],[90, -180]]);
+
+    let search_split = {% autoescape off %} {{search_split}} {% endautoescape %} ;
+    search_split.forEach(query => {
+        let type = query[0];
+        query = query[1];
+
+        if(type == "coor") {
+            polylatlngs.push([  [query[0] - query[2]/69, query[1] - query[2]/50],
+                                [query[0] + query[2]/69, query[1] - query[2]/50],
+                                [query[0] + query[2]/69, query[1] + query[2]/50],
+                                [query[0] - query[2]/69, query[1] + query[2]/50] ]);
+        }
+    });
+
+    L.polygon(polylatlngs, {
+        stroke: false,
+    	color: '#333',
+    	fillOpacity: 0.5,
+    	clickable: true
+    }).addTo(primaryMap);
+{% endif %}
 
 var map_dict = {}
 
@@ -236,7 +282,13 @@ document.getElementsByName("mapid").forEach(element => {
             Search for rides near:<br>\
             <a href="http://localhost:8000/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</a>\
         ')
-        .replace("[[1]]", encodeURIComponent("[ " + destination_coordinates_lat + " , " + destination_coordinates_lon + " ]" ) )
+        .replace("[[1]]", encodeURIComponent("[ "
+        + destination_coordinates_lat + " , " + destination_coordinates_lon + " , "
+        + (function(){
+            let radThing = document.getElementById("RadiusTextValue");
+            return radThing ? radThing.value : 69;
+        })()
+        + " , " + destination_city + " ]" ) )
         .replace("[[2]]", destination_city.trim())
     ).addTo(primaryMap);
 
@@ -277,6 +329,21 @@ document.getElementsByName("mapid").forEach(element => {
 
 function modalcard_onclick(ride_pk) {
 
+}
+
+function updateButtonFunction() {
+    document.getElementById("RideSearchEntry").value =
+        "[ " +
+        document.getElementById("LatTextValue").value +
+        " , " +
+        document.getElementById("LonTextValue").value +
+        " , " +
+        document.getElementById("RadiusTextValue").value +
+        {% if search_split.0.2 %}" , " +
+        document.getElementById("CityNameTextValue").value +
+        {% endif %}" ] ";
+
+        document.getElementById("SearchButton").click();
 }
 
 </script>

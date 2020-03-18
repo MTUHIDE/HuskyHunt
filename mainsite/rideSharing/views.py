@@ -136,13 +136,17 @@ def search(request):
             archived='False'
         )
 
+        search_split = []
         radius = 69.0 # There are genuinely approximately 69 miles to a degree latitude
-        crResults = re.match(r'\[\s*(\-?\d{1,3}(?:\.\d+)?)\s*\,\s*(\-?\d{1,3}(?:\.\d+)?)\s*(?:\,\s*(\d+(?:\.\d+)?)\s*)?\]', request.GET['search'])
+        crResults = re.match(r'\[\s*(?P<a>\-?\d{1,3}(?:\.\d+)?)\s*\,\s*(?P<b>\-?\d{1,3}(?:\.\d+)?)\s*(?:\,\s*(?P<c>\d+(?:\.\d+)?)\s*)?(?:\,\s*(?P<d>[^\]]+)\s*)?\]', request.GET['search'])
         if(crResults is not None):
-            lat = float(crResults.group(1))
-            lon = float(crResults.group(2))
-            if(crResults.group(3) is not None):
-                radius = float(crResults.group(3))
+            lat = float(crResults.group('a'))
+            lon = float(crResults.group('b'))
+            if(crResults.group('c') is not None):
+                radius = float(crResults.group('c'))
+            dres = crResults.group('d')
+            dres = dres if dres else 0
+            search_split.append(["coor", [lat, lon, radius], dres])
 
             # Note: this search region isn't a circle,
             # it isn't even a square. It's a weird oblong trapezoid that gets less accurate as you get further north
@@ -169,6 +173,7 @@ def search(request):
           'rides': rides,
           'title': title,
           'search': request.GET['search'],
+          'search_split': search_split,
           'filters': filters,
         }
 

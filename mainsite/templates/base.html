@@ -21,6 +21,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
+    <script>    // Fix via https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-150544739
+    (function () {
+      if (!L || !L.GridLayer || !L.GridLayer.prototype) return;
+      var originalInitTile = L.GridLayer.prototype._initTile;
+      L.GridLayer.include({
+        _initTile: function (tile) {
+          originalInitTile.call(this, tile);
+          var tileSize = this.getTileSize();
+          tile.style.width = tileSize.x + 1 + 'px';
+          tile.style.height = tileSize.y + 1 + 'px';
+        }
+      });
+    })();
+    </script>
 
     <title>HuskyHunt</title>
 
@@ -102,13 +116,13 @@
           <ul class="navbar-nav ml-auto" style="text-align: center;">
               <li class="nav-item active">
                   {% if 'ridesharing' in request.path %}
-                    <form class="form-inline my-2 my-lg-0" method="get" action="/ridesharing/search/">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search">
+                    <form class="form-inline my-2 my-lg-0" method="get" action="/ridesharing/search/" id="RideSearchForm">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search" id="RideSearchEntry">
                   {% else %}
                     <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search/">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search Catalog" aria-label="Search" name="search">
                   {% endif %}
-                  <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
+                  <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" id="SearchButton" >Search</button>
                   </form>
               </li>
 
