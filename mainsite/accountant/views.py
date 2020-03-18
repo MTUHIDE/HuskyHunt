@@ -66,8 +66,8 @@ def index(request):
         defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
 
         # load items and rides
-        my_items = CatalogItem.objects.filter(username = request.user)
-        ride_items = RideItem.objects.filter(username = request.user)
+        my_items = CatalogItem.objects.filter(username = request.user, archived='False')
+        ride_items = RideItem.objects.filter(username = request.user, archived='False')
         filters = Category.objects.all()
         title = 'My items'
 
@@ -87,11 +87,13 @@ def index(request):
 def deleteItem(request, pk):
   if request.user.is_authenticated:
     # delete item from database
-    item = CatalogItem.objects.filter(pk=pk)
+    item = CatalogItem.objects.get(pk=pk)
 
     # delete only if this user owns the item, a precautionary measure
-    if item.get(pk=pk).username == request.user:
-      item.delete();
+    if item.username == request.user:
+      item.archived = "True" # archive this item
+      item.save()
+
 
     # redirect to accountant page
     return HttpResponseRedirect('/accountant')
@@ -101,14 +103,15 @@ def deleteItem(request, pk):
 # Used as an intermediate function to delete an item
 def deleteRide(request, pk):
   if request.user.is_authenticated:
-    # delete item from database
-    item = RideItem.objects.filter(pk=pk)
+    # delete ride from database
+    ride = RideItem.objects.get(pk=pk)
 
-    # delete only if this user owns the item, a precautionary measure
-    if item.get(pk=pk).username == request.user:
-      item.delete();
+    # delete only if this user owns the ride, a precautionary measure
+    if ride.username == request.user:
+      ride.archived = "True" # archive this ride
+      ride.save()
 
-    # redirect to accountant page
+    # redirect to accountant page (refresh)
     return HttpResponseRedirect('/accountant')
   else:
     return HttpResponseRedirect('/')

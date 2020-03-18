@@ -22,6 +22,7 @@ def addErrorOnEmpty(context, type, num_items = 4):
 
         #Gets num_items most recent items from the database and sorts by date added
         recent_items = CatalogItem.objects.filter(
+            archived='False',
             date_added__lte=timezone.now()
         ).order_by('-date_added')[:num_items]
 
@@ -51,7 +52,8 @@ def search(request):
     if request.user.is_authenticated:
         #Uses the filter function to get the data of the searched items
         recent_items = CatalogItem.objects.filter(
-            Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search'])
+            Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search']),
+            archived='False'
         )[:500]
 
         #Gets all the different categories
@@ -100,6 +102,7 @@ def index(request):
 
         #Gets 500 most recent items from the database and sorts by date added
         recent_items = CatalogItem.objects.filter(
+            archived='False',
             date_added__lte=timezone.now()
         ).order_by('-date_added')[:500]
 
@@ -197,9 +200,15 @@ def detail(request, pk):
                 'item_list': item_list,
         }
 
+        # No page found
         if item_list.count() == 0:
-                request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
-                return HttpResponseRedirect(reverse('catalog:index'))
+            request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+            return HttpResponseRedirect(reverse('catalog:index'))
+
+        # Item is archived
+        if item_list[0].archived:
+            request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+            return HttpResponseRedirect(reverse('catalog:index'))
 
 
 
@@ -236,6 +245,7 @@ def filter(request):
       if len([x for x in filters if x.category_name == filt]) == 0:
         misform = True
       recent_items = recent_items.filter(
+        archived='False',
         category__category_name=filt
       ).order_by('-date_added')
 
