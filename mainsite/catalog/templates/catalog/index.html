@@ -14,20 +14,40 @@
 
        {% for filter in filters %}
           {% if not curFilters %}
-            <form action="/catalog/filter/" method="get">
+            <form id="filterForm" action="/catalog/filter/" method="get">
           {% elif filter.category_name in curFilters %}
-            <form action="/catalog/filter/">
+            <form id="filterForm" action="/catalog/filter/">
           {% else %}
-            <form action="/catalog/filter/">
+            <form id="filterForm" action="/catalog/filter/">
           {% endif %}
           {% if filter.category_name in curFilters %}
-          <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
+          <button type="submit" id="filterButton" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
           {% else %}
-          <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+          <button type="submit"  id="filterButton" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
           {% endif %}
            </form>
         {% endfor %}
         <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'catalog:index' %}"">Clear Filters</a>
+
+        <!-- Filter/search dual functionality -->
+          <script type="text/javascript">
+            // Cancel the submit form (which overrides the url)
+            $('#filterForm').submit(function() {
+              // check if the url is at the /filter/ page
+              if not (window.location.href.indexOf("filter") > -1) {
+                alert(bad);
+              }
+
+              searchFilter();
+              return false;
+            })
+
+            // set the correct url
+            function searchFilter() {
+              filter = document.getElementById("filterButton").value;
+              appendToUrl('filter', filter);
+            }
+          </script>
       </div>
     </div>
   </div>

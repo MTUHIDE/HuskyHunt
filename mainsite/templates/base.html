@@ -43,18 +43,22 @@
         function appendToUrl(param, value) {
             var url = new URL(window.location.href.toString());
 
+            // replace the search query if it exists (prevents stacking of &search=)
+            if (param == "filter" && url.toString().includes("filter=")) {
+                var query_string = url.search;
+                var search_params = new URLSearchParams(query_string);
+                search_params.set('search', value);
+                url.search = search_params.toString();
+            } 
             // replace the page query if it exists (prevents stacking of &page=)
-            if (param == "page" && url.toString().includes("page=")) {
+            else if (param == "page" && url.toString().includes("page=")) {
                 var query_string = url.search;
                 var search_params = new URLSearchParams(query_string);
                 search_params.set('page', value);
                 url.search = search_params.toString();
-            } else {
-                url.searchParams.append(param, value);
-            }
-
+            } 
             // replace the search query if it exists (prevents stacking of &search=)
-            if (param == "search" && url.toString().includes("search=")) {
+            else if (param == "search" && url.toString().includes("search=")) {
                 var query_string = url.search;
                 var search_params = new URLSearchParams(query_string);
                 search_params.set('search', value);
@@ -64,42 +68,6 @@
             }
 
             window.location.replace(url.toString());
-        }
-
-        function removeFromUrl(value) {
-            var j = 0;
-            var url = new URL(window.location.href.toString());
-            for (var i of url.searchParams.values()) {
-                if (i == value) {
-                    var newUrl = url.toString().replace(("filter=" + value.replace(" ", "+")), "");
-                    var n;
-                    if (j == 0) {
-                        n = newUrl.indexOf("&");
-                    } else if (url.searchParams.values().next().done) {
-                        n = newUrl.indexOf("&&");
-                    } else {
-                        n = newUrl.lastIndexOf("&");
-                    }
-
-                    if (n + 1 != newUrl.length) {
-                        newUrl = newUrl.slice(0, n) + newUrl.slice(n + 1);
-                    } else {
-                        newUrl = newUrl.slice(0, n);
-                    }
-                    url = new URL(newUrl);
-                    if (url.searchParams.values().next().done) {
-                        if(window.location.href.indexOf("catalog") > -1) {
-                            window.location.replace("/catalog");
-                        }
-                        else {
-                            window.location.replace("/ridesharing");
-                        }
-                    } else {
-                        window.location.replace(url.toString());
-                    }
-                }
-                j++;
-            }
         }
     </script>
 
@@ -134,14 +102,16 @@
                   </form>
               </li>
 
+              <!-- Filter/search dual functionality -->
               <script type="text/javascript">
+                // Cancel the submit form (which overrides the url)
                 $('#ItemSearchForm').submit(function() {
-                  searchFilter();
+                  searchURL();
                   return false;
                 })
 
-
-                function searchFilter() {
+                // set the correct url
+                function searchURL() {
                   search = document.getElementById("searchBox").value;
                   appendToUrl('search', search);
                 }
