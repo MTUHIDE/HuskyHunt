@@ -49,11 +49,19 @@
                 var search_params = new URLSearchParams(query_string);
                 search_params.set('page', value);
                 url.search = search_params.toString();
-
             } else {
                 url.searchParams.append(param, value);
             }
 
+            // replace the search query if it exists (prevents stacking of &search=)
+            if (param == "search" && url.toString().includes("search=")) {
+                var query_string = url.search;
+                var search_params = new URLSearchParams(query_string);
+                search_params.set('search', value);
+                url.search = search_params.toString();
+            } else {
+                url.searchParams.append(param, value);
+            }
 
             window.location.replace(url.toString());
         }
@@ -119,12 +127,26 @@
                     <form class="form-inline my-2 my-lg-0" method="get" action="/ridesharing/search/" id="RideSearchForm">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search" id="RideSearchEntry">
                   {% else %}
-                    <form class="form-inline my-2 my-lg-0" method="get" action="/catalog/search/">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search Catalog" aria-label="Search" name="search">
+                    <form class="form-inline my-2 my-lg-0" id="ItemSearchForm" method="get" action="/catalog/filter/">
+                    <input class="form-control mr-sm-2" id="searchBox" type="search" placeholder="Search Catalog" aria-label="Search" name="search">
                   {% endif %}
-                  <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" id="SearchButton" >Search</button>
+                  <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" id="SearchButton">Search</button>
                   </form>
               </li>
+
+              <script type="text/javascript">
+                $('#ItemSearchForm').submit(function() {
+                  searchFilter();
+                  return false;
+                })
+
+
+                function searchFilter() {
+                  search = document.getElementById("searchBox").value;
+                  appendToUrl('search', search);
+                }
+              </script>
+
 
       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                       <a class="dropdown-item" href="{% url 'catalog:index' %}">Catalog</a>
