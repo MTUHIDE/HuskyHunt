@@ -259,26 +259,6 @@ def filter(request):
         category__category_name=filt
       ).order_by('-date_added')[:500]
 
-    # # No filters, display search only
-    # if not request.GET.getlist('filter'):
-    #     # Paginator will show 16 items per page
-    #     paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
-    #     page = request.GET.get('page') # Gets the page number to display
-    #     items = paginator.get_page(page)
-
-    #     #Puts all the data to be displayed into context
-    #     context = {
-    #       'items': items,
-    #       'title': title,
-    #       'filters': filters,
-    #     }
-
-    #     addErrorOnEmpty(context, 'SearchFail')
-
-    #     #Returns a render function call to display onto the website for the user to see
-    #     return render(request, template, context)
-        
-
     # Paginator will show 16 items per page
     paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
     page = request.GET.get('page') # Gets the page number to display
