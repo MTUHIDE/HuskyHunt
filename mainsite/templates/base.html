@@ -96,7 +96,7 @@
                     <form class="form-inline my-2 my-lg-0" method="get" action="/ridesharing/search/" id="RideSearchForm">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search" id="RideSearchEntry">
                   {% else %}
-                    <form class="form-inline my-2 my-lg-0" id="ItemSearchForm">
+                    <form class="form-inline my-2 my-lg-0" id="ItemSearchForm" method="get" action="/catalog/filter">
                     <input class="form-control mr-sm-2" id="searchBox" type="search" placeholder="Search Catalog" aria-label="Search" name="search">
                   {% endif %}
                   <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" id="SearchButton">Search</button>
@@ -107,9 +107,9 @@
               <script type="text/javascript">
                 // Cancel the submit form (which overrides the url)
                 $('#ItemSearchForm').submit(function() {
-                  // check if the url is at the /filter/ page (somehow this check fixes a bug of search not redirecting properly)
-                  // if not (window.location.href.indexOf("filter") > -1) {
-                  // }
+                  check if the url is at the /filter/ page (somehow this check fixes a bug of search not redirecting properly)
+                  if not (window.location.href.indexOf("filter") > -1) {
+                  }
 
                   searchURL();
                   return false;
