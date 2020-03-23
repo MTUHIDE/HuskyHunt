@@ -107,12 +107,15 @@
               <script type="text/javascript">
                 // Cancel the submit form (which overrides the url)
                 $('#ItemSearchForm').submit(function() {
-                  check if the url is at the /filter/ page (somehow this check fixes a bug of search not redirecting properly)
-                  if not (window.location.href.indexOf("filter") > -1) {
-                  }
-
                   searchURL();
-                  return false;
+
+                  //check if the url has any filter
+                  var url = new URL(window.location.href.toString());
+                  if(url.toString().includes("filter=")) {
+                    return false;
+                  } else {
+                    return true;
+                  }
                 })
 
                 // set the correct url
