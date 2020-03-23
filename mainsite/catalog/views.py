@@ -232,22 +232,32 @@ def filter(request):
 
     #Checks to make sure the user has logged in
   if request.user.is_authenticated:
+
+    # Check if no filters or search
+    if not (request.GET.getlist('filter') or request.GET.getlist('search')):
+        return HttpResponseRedirect('/catalog')
+
+    recent_items = CatalogItem.objects.all()
+
+    # Apply search if it exists
+    if (request.GET.getlist('search')):
+        recent_items = CatalogItem.objects.filter(
+            Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search']),
+            archived='False'
+        ).order_by('-date_added')
+
     filters = Category.objects.all()
     misform = False
     failed_search = None
 
-
-       #Uses the filter function to get the data of the searched items based on filters
-    recent_items = CatalogItem.objects.all()
-    if not request.GET.getlist('filter'):
-      return HttpResponseRedirect('/catalog')
+    # Apply filters, if they exist
     for filt in request.GET.getlist('filter'):
       if len([x for x in filters if x.category_name == filt]) == 0:
         misform = True
       recent_items = recent_items.filter(
         archived='False',
         category__category_name=filt
-      ).order_by('-date_added')
+      ).order_by('-date_added')[:500]
 
     # Paginator will show 16 items per page
     paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
