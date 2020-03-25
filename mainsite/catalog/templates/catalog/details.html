@@ -8,8 +8,8 @@
 
 {% if item_list %}
 {% for item in item_list %}
-<div class="row">
-    <div class="col-md-4 col-sm-4 align-middle text-center">
+<div class="row" style="margin: 0;">
+    <div class="col-md-4 align-middle text-center">
         <img class="img-end" src="{{item.item_picture.url}}" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
     </div>
     <div class="col-md-8">
@@ -17,7 +17,7 @@
             <div class="col-lg-9">
                 <h1 class="page-header" style="word-wrap: break-word;">{{item.item_title}}</h1>
             </div>
-            <div class="col-lg-3>">
+            <div class="col-lg-3">
                 <h1><span class="label label-default">${{item.item_price}}</span></h1>
             </div>
         </div>
