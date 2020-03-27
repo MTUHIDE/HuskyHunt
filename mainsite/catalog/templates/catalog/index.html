@@ -12,41 +12,44 @@
       </div>
       <div style="display: inline-block;">
 
-       {% for filter in filters %}
-          {% if not curFilters %}
-            <form id="filterForm" action="/catalog/filter/" method="get">
-          {% elif filter.category_name in curFilters %}
-            <form id="filterForm" action="/catalog/filter/">
-          {% else %}
-            <form id="filterForm" action="/catalog/filter/">
-          {% endif %}
+       {% for filter in filters %} 
+          <form id="{{ filter|cut:' ' }}Form" action="/catalog/filter" method="get" onsubmit="return {{ filter|cut:' ' }}Submit();">
+
           {% if filter.category_name in curFilters %}
-          <button type="submit" id="filterButton" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
+          <button type="submit" id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
           {% else %}
-          <button type="submit"  id="filterButton" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+          <button type="submit"  id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
           {% endif %}
            </form>
-        {% endfor %}
-        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'catalog:index' %}"">Clear Filters</a>
 
-        <!-- Filter/search dual functionality -->
+
+           <!-- Filter/search dual functionality -->
           <script type="text/javascript">
             // Cancel the submit form (which overrides the url)
-            $('#filterForm').submit(function() {
-              // check if the url is at the /filter/ page (somehow this check fixes a bug of books not redirecting properly)
-              if not (window.location.href.indexOf("filter") > -1) {
+            function {{ filter|cut:' ' }}Submit() {
+              search{{ filter|cut:' ' }}();
+              
+              //check if the url has any search
+              var url = new URL(window.location.href.toString());
+              if(url.toString().includes("search=")) {
+                // do not proceed with normal get
+                return false;
+              } else {
+                // proceed with normal get
+                return true;
               }
-
-              searchFilter();
-              return false;
-            })
+            }
 
             // set the correct url
-            function searchFilter() {
-              filter = document.getElementById("filterButton").value;
+            function search{{  filter|cut:' '  }}() {
+              filter = document.getElementById("{{ filter|cut:' ' }}Button").value;
               appendToUrl('filter', filter);
             }
           </script>
+
+        {% endfor %}
+
+        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'catalog:index' %}"">Clear Filters</a>
       </div>
     </div>
   </div>
