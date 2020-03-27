@@ -22,8 +22,7 @@
           {% endif %}
            </form>
 
-
-           <!-- Filter/search dual functionality -->
+          <!-- Filter/search dual functionality -->
           <script type="text/javascript">
             // Cancel the submit form (which overrides the url)
             function {{ filter|cut:' ' }}Submit() {
@@ -32,10 +31,11 @@
               //check if the url has any search
               var url = new URL(window.location.href.toString());
               if(url.toString().includes("search=")) {
-                // do not proceed with normal get
+                // has search paramater
+                // do not proceed with normal get request
                 return false;
               } else {
-                // proceed with normal get
+                // proceed with normal get request
                 return true;
               }
             }

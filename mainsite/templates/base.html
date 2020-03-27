@@ -112,8 +112,11 @@
                   //check if the url has any filter
                   var url = new URL(window.location.href.toString());
                   if(url.toString().includes("filter=")) {
+                    // has filter paramater
+                    // do not proceed with normal get request
                     return false;
                   } else {
+                    // proceed with normal get request
                     return true;
                   }
                 })
