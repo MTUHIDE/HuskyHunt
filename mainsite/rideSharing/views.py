@@ -36,6 +36,57 @@ def addErrorOnEmpty(context, type, num_items = 4):
         return True
     return False
 
+#This function sends a prepared email message to a seller
+#param: request - array variable that is passed around the website, kinda like global variables
+#param: pk - a int variable that is used as the primary key for the item in the database
+#returns: The same page that the user is currently on
+def email(request, pk):
+    #Checks if the user has logged in
+    if request.user.is_authenticated:
+
+        #The subject line of the email
+        subject = "Interested in your ride"
+
+        #The body of the email
+        message = (request.user.get_short_name() +
+                  ' has messaged you about a ride you posted on HuskyHunt!\n\n' +
+                  'Message from ' + request.user.get_short_name() + ': ' + request.GET['message'] +
+                  '\n\nYou can respond by replying to this email, or by contacting ' + 
+                  request.user.get_short_name() + ' directly: ' + request.user.email)
+
+        #The email that this message is sent from
+        from_email = request.user.get_short_name() + ' via HuskyHunt <' + request.user.email + '>'
+        #Gets the item that is currently being viewed
+        ride_item = RideItem.objects.filter(pk=pk)
+        #Creates a variable to later store the sellers email
+        to_email = ''
+
+        #need to add an email to ride item. for now assume username is mtu username
+
+        #For each loop that iterates on the number of items being currently viewed? Need to ask isaac about this
+        for ride in ride_item:
+            #Sets the recipient of the email as the sellers email from the database
+            to_email = ride.username.email
+
+        #Checks if the message is no empty
+        if (request.GET['message'] != ''):
+
+            #Sends the email with a subject, body, the sender, and the recipient
+            send_mail(subject, message, from_email, [to_email], fail_silently=False,)
+            #Displays that the email was sent successfully
+            messages.error(request, 'Message sent successfully!')
+
+        #If the message is empty then an error message is displayed
+        else:
+            messages.error(request, 'Please enter a message!')
+
+        #Redirects the user to the same webpage (So nothing changes but the success message appearing)
+        return HttpResponseRedirect('/ridesharing/' + str(pk))
+
+    #If not logged in then the user is sent to the Husky Statue
+    else:
+        return HttpResponseRedirect('/')
+
 #This function gets all the items from the database
 #and displays them to the screen sorted by most recently added
 #param: request - array variable that is passed around the website, kinda like global variables
