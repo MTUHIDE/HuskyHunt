@@ -83,11 +83,11 @@ def email(request, pk):
             email.send();
 
             #Displays that the email was sent successfully
-            messages.error(request, 'Message sent successfully!')
+            messages.error(request, 'Message sent successfully!', extra_tags=str(pk))
 
         #If the message is empty then an error message is displayed
         else:
-            messages.error(request, 'Please enter a message!')
+            messages.error(request, 'Please enter a message!', extra_tags=str(pk))
 
         #Redirects the user to the same webpage (So nothing changes but the success message appearing)
 

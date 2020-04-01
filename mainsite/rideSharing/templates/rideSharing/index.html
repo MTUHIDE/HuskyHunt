@@ -156,18 +156,20 @@
                           <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
                             {% if messages %}
                               {% for message in messages %}
-                                <!--<p class="alert closebtn">{{ message }}</p>-->
-                                {% if message.message == "Please enter a message!" %}
-                                  <div class="alert" style="background-color:#cc3333">
-                                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                    <strong>{{message}}</strong> </br> Message failed to send!
-                                  </div>
-                                {% else %}
-                                  <div class="alert" style="background-color:#33cc33">
-                                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                    <strong>{{message}}</strong> </br> Message sent successfully!
-                                  </div>
-                                {% endif %}
+                                {% if message.extra_tags == ride.pk|stringformat:"i" %}
+                                  <!--<p class="alert closebtn">{{ message }}</p>-->
+                                  {% if message.message == "Please enter a message!" %}
+                                    <div class="alert" style="background-color:#cc3333">
+                                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                      <strong>{{message}}</strong> </br> Message failed to send!
+                                    </div>
+                                  {% else %}
+                                    <div class="alert" style="background-color:#33cc33">
+                                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                      <strong>{{message}}</strong> </br> Message sent successfully!
+                                    </div>
+                                  {% endif %}
+                                {% endif%}
                               {% endfor %}
                             {% endif %}
                             <h6>Message {{ride.first_name}}:</h6>
