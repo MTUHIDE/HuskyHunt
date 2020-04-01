@@ -90,7 +90,8 @@ def email(request, pk):
             messages.error(request, 'Please enter a message!')
 
         #Redirects the user to the same webpage (So nothing changes but the success message appearing)
-        return HttpResponseRedirect('/ridesharing/')
+
+        return HttpResponseRedirect('/ridesharing/' + str(pk))
 
     #If not logged in then the user is sent to the Husky Statue
     else:
@@ -100,7 +101,7 @@ def email(request, pk):
 #and displays them to the screen sorted by most recently added
 #param: request - array variable that is passed around the website, kinda like global variables
 #returns: all the items in the database, with the most recently item added at the top
-def index(request):
+def ride(request, pk):
 
     #The CSS for this function can be found here
     template = 'rideSharing/index.html'
@@ -143,6 +144,13 @@ def index(request):
         return render(request, template, context)
     else:
         return HttpResponseRedirect('/')
+
+#This function gets all the items from the database
+#and displays them to the screen sorted by most recently added
+#param: request - array variable that is passed around the website, kinda like global variables
+#returns: all the items in the database, with the most recently item added at the top
+def index(request):
+    return ride(request, -1)
 
 
 #This small helper function adds an appropriate error message to the page
