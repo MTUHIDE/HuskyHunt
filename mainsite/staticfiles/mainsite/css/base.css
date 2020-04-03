@@ -80,6 +80,10 @@ body {
   .top-links a, .my-account a, .logout a{
     padding-left: 0.6rem;
   }
+
+  .ride-modal {
+    margin: 40px;
+  }
   
   .navbar-brand {
     margin-right: 0.5rem;

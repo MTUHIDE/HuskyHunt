@@ -1,11 +1,37 @@
 {% extends 'base.html' %}
+
+<!-- BEGIN FILTERS BLOCK FOR MOBILE DEVICES -->
+{% block filtersmobile %} 
+  <!--filters on sidebar-->
+  {% for filter in filters %}
+    {% if not curFilters %}
+    <form action="/ridesharing/filter/" method="get">
+    {% elif filter.category_name in curFilters %}
+      <form action="/ridesharing/filter/">
+    {% else %}
+      <form action="/ridesharing/filter/">
+    {% endif %}
+    {% if filter.category_name in curFilters %}
+    <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
+    {% else %}
+    <button type="submit" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+    {% endif %}
+    </form>
+  {% endfor %}
+  <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'rideSharing:index' %}" >Clear Filters</a>
+{% endblock %}
+<!-- END FILTERS BLOCK FOR MOBILE DEVICES -->
+
+
+<!-- MAIN CONTENT STARTS HERE -->
+
 {% block content %}
 
 <div class="row">
   <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
   <div class="col align-center" style="-ms-flex: 0 0 250px; flex: 0 0 250px;">
     <!--Fixes the size of the side bar so it doent grow or shink. The width is 10 px less so then there margin between the start of the rides. -->
-  <div style="text-align: center;background-color: black; height: 100%;width:240px; position: fixed; top: 50px; ">
+  <div id="sidebar" style="text-align: center;background-color: black; height: 100%;width:240px; position: fixed; top: 0px; padding-top: 50px; overflow: scroll; ">
       <h1 class="my-4" style="color: #ffcd00; text-align: center;">Ride Sharing</h1>
       <div style="display: inline-block;">
 				<!--filters on sidebar-->
@@ -115,7 +141,7 @@
             </div>
             <!-- Modal -->
             <div id="rideModal{{ride.pk}}" class="modal fade" role="dialog">
-              <div class="modal-dialog modal-lg">
+              <div class="ride-modal modal-dialog modal-lg">
 
                 <!-- Modal content-->
                 <div class="modal-content" style="background-color: #1c1c21;">
