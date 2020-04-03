@@ -60,6 +60,11 @@ body {
   width: 100%;
 }
 
+.pgtitle-mobile {
+  display: none;
+  text-align: center;
+}
+
 @media screen and (max-width: 573px) {
   #sidebar {
     visibility: hidden;
@@ -67,6 +72,9 @@ body {
   .filters-mobile {
     width: unset;
     height: unset;
+    display: unset;
+  }
+  .pgtitle-mobile {
     display: unset;
   }
   .top-links a, .my-account a, .logout a{
