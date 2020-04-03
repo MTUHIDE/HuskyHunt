@@ -97,7 +97,7 @@
                     <input class="form-control mr-sm-2" type="search" placeholder="Search Rides" aria-label="Search" name="search" id="RideSearchEntry">
                   {% else %}
                     <form class="form-inline my-2 my-lg-0" id="ItemSearchForm" method="get" action="/catalog/filter">
-                    <input class="form-control mr-sm-2" id="searchBox" type="search" placeholder="Search Catalog" aria-label="Search" name="search">
+                    <input class="search-mobile form-control mr-sm-2" id="searchBox" type="search" placeholder="Search Catalog" aria-label="Search" name="search">
                   {% endif %}
                   <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" id="SearchButton">Search</button>
                   </form>
@@ -138,13 +138,16 @@
                       <a class="dropdown-item" href="{% url 'landing:index' %}">login</a>-->
                 </div>
             </ul>
-        </div>
-        <div class="logout">
-            <a class="link" href="{% url 'accountant:index' %}">My Account</a>
-            {% if request.user.is_staff %}
-            <a class="link" href="{% url 'admin:index' %}">Admin</a>
-            {% endif %}
-            <a class="link" href="{% url 'accountant:logout' %}">Logout</a>
+            <div class="filters-mobile">
+              {% block filtersmobile %} {% endblock %}
+            </div>
+            <div class="logout">
+              <a class="link" href="{% url 'accountant:index' %}">My Account</a>
+              {% if request.user.is_staff %}
+              <a class="link" href="{% url 'admin:index' %}">Admin</a>
+              {% endif %}
+              <a class="link" href="{% url 'accountant:logout' %}">Logout</a>
+            </div>
         </div>
     </nav>
 

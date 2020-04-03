@@ -38,6 +38,46 @@ body {
 #title {
     color: var(--main-title-color);
 }
+
+.navbar-toggler:focus {
+  outline: 1px solid #2d2d2d;
+}
+
+.filters-mobile {
+  display: none;
+  color: #FFCD00;
+  width: 0px;
+  height: 0px;
+  margin-bottom: 8px;
+}
+
+.search-mobile {
+  width: calc(100% - 87px);
+  margin-right: 10px;
+}
+
+.filter-dropdown {
+  width: 100%;
+}
+
+@media screen and (max-width: 573px) {
+  #sidebar {
+    visibility: hidden;
+  }
+  .filters-mobile {
+    width: unset;
+    height: unset;
+    display: unset;
+  }
+  .top-links a, .my-account a, .logout a{
+    padding-left: 0.6rem;
+  }
+  
+  .navbar-brand {
+    margin-right: 0.5rem;
+  }
+}
+
 #sidebar{
   background-color: var(--main-sidebarBackground-color);
 }
