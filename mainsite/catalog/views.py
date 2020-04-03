@@ -4,10 +4,11 @@ from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib import auth
-from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.urls import reverse
+from accountant.models import user_profile
 
 
 #This small helper function adds an appropriate error message to the page
@@ -136,35 +137,43 @@ def email(request, pk):
     #Checks if the user has logged in
     if request.user.is_authenticated:
 
-        #The subject line of the email
-        subject = "Interested in your item"
+        name = request.user.first_name
+
+        # Gets the preferred name if not empty
+        profile = user_profile.objects.filter(user = request.user)
+        if (profile[0].preferred_name):
+            name = profile[0].preferred_name
+
+        user_email = request.user.email
 
         #The body of the email
-        message = (request.user.get_short_name() +
+        message = (name +
                   ' has messaged you about an item you posted on HuskyHunt!\n\n' +
-                  'Message from ' + request.user.get_short_name() + ': ' + request.GET['message'] +
+                  'Message from ' + name + ': ' + request.GET['message'] +
                   '\n\nYou can respond by replying to this email, or by contacting ' + 
-                  request.user.get_short_name() + ' directly: ' + request.user.email)
+                  name + ' directly: ' + user_email)
 
         #The email that this message is sent from
-        from_email = request.user.get_short_name() + ' via HuskyHunt <' + request.user.email + '>'
+        from_email = name + ' via HuskyHunt <admin@huskyhunt.com>'
         #Gets the item that is currently being viewed
         item_list = CatalogItem.objects.filter(pk=pk)
-        #Creates a variable to later store the sellers email
-        to_email = ''
-
-        #need to add an email to category item. for now assume username is mtu username
-
-        #For each loop that iterates on the number of items being currently viewed? Need to ask isaac about this
-        for item in item_list:
-            #Sets the recipient of the email as the sellers email from the database
-            to_email = item.username.email
+        #Gets the sellers email
+        to_email = item_list[0].username.email
 
         #Checks if the message is no empty
         if (request.GET['message'] != ''):
+            # Create the email object
+            email = EmailMessage(
+                'Interested in your item', # subject
+                message, #body
+                from_email, # from_email
+                [to_email],  # to email
+                reply_to=[user_email],  # reply to email
+                )
 
-            #Sends the email with a subject, body, the sender, and the recipient
-            send_mail(subject, message, from_email, [to_email], fail_silently=False,)
+            # Sends the email
+            email.send();
+
             #Displays that the email was sent successfully
             messages.error(request, 'Message sent successfully!')
 

@@ -153,8 +153,37 @@
                           <h6>Price: ${{ ride.price }}</h6>
                           <h6>Notes: {{ ride.notes }}</h6>
                           <br>
-                          <div class="text-right">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Send</button>
+                          <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
+                            {% if messages %}
+                              {% for message in messages %}
+                                {% if message.extra_tags == ride.pk|stringformat:"i" %}
+                                  <!--<p class="alert closebtn">{{ message }}</p>-->
+                                  {% if message.message == "Please enter a message!" %}
+                                    <div class="alert" style="background-color:#cc3333">
+                                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                      <strong>{{message}}</strong> </br> Message failed to send!
+                                    </div>
+                                  {% else %}
+                                    <div class="alert" style="background-color:#33cc33">
+                                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                      <strong>{{message}}</strong> </br> Message sent successfully!
+                                    </div>
+                                  {% endif %}
+                                {% endif%}
+                              {% endfor %}
+                            {% endif %}
+                            <h6>Message {{ride.first_name}}:</h6>
+                            <textarea class="form-control" rows="5" id="message{{ride.id}}" placeholder="Ask the owner something..." name="message" form="emailform{{ride.id}}" maxlength="1000" style="border: 1px solid black;"></textarea>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                <form action='/ridesharing/{{ride.id}}/email' method="GET" onsubmit="sendButton.disabled = true" id="emailform{{ride.id}}">
+                                    <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
+                                    </form>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6> Owner: {{ride.first_name}} </h6>
+                                </div>
+                            </div>
                           </div>
                         </div>
 
@@ -348,5 +377,27 @@ function updateButtonFunction() {
 
 </script>
 
+<!-- Used to display the correct modal -->
+<script type="text/javascript">
+  function showModal() {
+    // alert("ran");
+
+    // get url
+    url = window.location.href;
+
+    // remove ending / if needed
+    if (url.substring(url.length - 1) == '/') {
+      url = url.substring(0, url.length - 1);
+    }
+
+    // get the ride pk
+    num = url.substring(url.lastIndexOf('/') + 1);
+
+    // show the ride
+    $('#rideModal' + num).modal('show');
+  }
+
+  window.onload = showModal;
+</script>
 
 {% endblock %}

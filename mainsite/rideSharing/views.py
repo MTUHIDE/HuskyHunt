@@ -5,11 +5,12 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib import auth
-from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from django.contrib import messages
 from rideSharing.models import RideItem, RideCategory
 from django import forms
 from django.core.paginator import Paginator
+from accountant.models import user_profile
 
 #This small helper function adds an appropriate error message to the page
 #param: context - the context that's normally passed to the catalog pages;
@@ -36,11 +37,71 @@ def addErrorOnEmpty(context, type, num_items = 4):
         return True
     return False
 
+#This function sends a prepared email message to a seller
+#param: request - array variable that is passed around the website, kinda like global variables
+#param: pk - a int variable that is used as the primary key for the item in the database
+#returns: The same page that the user is currently on
+def email(request, pk):
+    #Checks if the user has logged in
+    if request.user.is_authenticated:
+
+        name = request.user.first_name
+
+        # Gets the preferred name if not empty
+        profile = user_profile.objects.filter(user = request.user)
+        if (profile[0].preferred_name):
+            name = profile[0].preferred_name
+
+        user_email = request.user.email
+
+        #The body of the email
+        message = (name +
+                  ' has messaged you about a ride you posted on HuskyHunt!\n\n' +
+                  'Message from ' + name + ': ' + request.GET['message'] +
+                  '\n\nYou can respond by replying to this email, or by contacting ' + 
+                  name + ' directly: ' + user_email)
+
+        #The email that this message is sent from
+        from_email = name + ' via HuskyHunt <admin@huskyhunt.com>'
+        #Gets the item that is currently being viewed
+        ride_list = RideItem.objects.filter(pk=pk)
+        #Gets the sellers email
+        to_email = ride_list[0].username.email
+
+        #Checks if the message is no empty
+        if (request.GET['message'] != ''):
+            # Create the email object
+            email = EmailMessage(
+                'Interested in your ride', # subject
+                message, #body
+                from_email, # from_email
+                [to_email],  # to email
+                reply_to=[user_email],  # reply to email
+                )
+
+            # Sends the email
+            email.send();
+
+            #Displays that the email was sent successfully
+            messages.error(request, 'Message sent successfully!', extra_tags=str(pk))
+
+        #If the message is empty then an error message is displayed
+        else:
+            messages.error(request, 'Please enter a message!', extra_tags=str(pk))
+
+        #Redirects the user to the same webpage (So nothing changes but the success message appearing)
+
+        return HttpResponseRedirect('/ridesharing/' + str(pk))
+
+    #If not logged in then the user is sent to the Husky Statue
+    else:
+        return HttpResponseRedirect('/')
+
 #This function gets all the items from the database
 #and displays them to the screen sorted by most recently added
 #param: request - array variable that is passed around the website, kinda like global variables
 #returns: all the items in the database, with the most recently item added at the top
-def index(request):
+def ride(request, pk):
 
     #The CSS for this function can be found here
     template = 'rideSharing/index.html'
@@ -83,6 +144,13 @@ def index(request):
         return render(request, template, context)
     else:
         return HttpResponseRedirect('/')
+
+#This function gets all the items from the database
+#and displays them to the screen sorted by most recently added
+#param: request - array variable that is passed around the website, kinda like global variables
+#returns: all the items in the database, with the most recently item added at the top
+def index(request):
+    return ride(request, -1)
 
 
 #This small helper function adds an appropriate error message to the page
