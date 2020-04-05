@@ -188,9 +188,31 @@ Instead we display our custom error message -->
     var mymap_route = null;
 
     function updateMap() {
+        let start_city = document.getElementById('id_start_city').value.trim();
+        let start_state = document.getElementById('id_start_state').value.trim();
+        let start_zipcode = document.getElementById('id_start_zipcode').value.trim();
+
         let destination_city = document.getElementById('id_destination_city').value.trim();
         let destination_state = document.getElementById('id_destination_state').value.trim();
         let destination_zipcode = document.getElementById('id_destination_zipcode').value.trim();
+
+        let start_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
+        + encodeURIComponent(start_city.trim()) + "%20"
+        + encodeURIComponent(start_state.trim()) + "%20"
+        + encodeURIComponent(start_zipcode.trim()) + "%20"
+        + ".json?access_token="
+        + access_token;
+
+        let starting_coord;
+
+        let start_req = new XMLHttpRequest();
+        start_req.open('GET', start_url, true);
+        start_req.onload = function() {
+          let start_coord = (JSON.parse(start_req.response))["features"][0]["center"];
+            start_coord = [start_coord[1], start_coord[0]];
+            starting_coord = start_coord;
+        };
+        start_req.send();
 
         let locate_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
         + encodeURIComponent(destination_city.trim()) + "%20"
@@ -202,7 +224,7 @@ Instead we display our custom error message -->
         let locate_req = new XMLHttpRequest();
         locate_req.open('GET', locate_url, true);
         locate_req.onload = function() {
-            let starting_coord = [ 47.117222, -88.5625 ];
+            // let starting_coord = [ 47.117222, -88.5625 ];
             let ending_coord = (JSON.parse(locate_req.response))["features"][0]["center"];
             ending_coord = [ending_coord[1], ending_coord[0]];
 
@@ -248,6 +270,9 @@ Instead we display our custom error message -->
 
     // Alternate options: consider using on_blur, on_keyup
 
+    document.getElementById("id_start_city").onchange = updateMap;
+    document.getElementById("id_start_state").onchange = updateMap;
+    document.getElementById("id_start_zipcode").onchange = updateMap;
     document.getElementById("id_destination_city").onchange = updateMap;
     document.getElementById("id_destination_state").onchange = updateMap;
     document.getElementById("id_destination_zipcode").onchange = updateMap;

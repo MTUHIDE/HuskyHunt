@@ -71,6 +71,10 @@ class RideItem(models.Model):
     destination_coordinates_lat = models.DecimalField(decimal_places=6, max_digits=14, default=0.00)
     destination_coordinates_lon = models.DecimalField(decimal_places=6, max_digits=14, default=0.00)
 
+    # Calculated based on the previous points
+    start_coordinates_lat = models.DecimalField(decimal_places=6, max_digits=14, default=0.00)
+    start_coordinates_lon = models.DecimalField(decimal_places=6, max_digits=14, default=0.00)
+
 
     # Date leaving
     date_leaving = models.DateField(auto_now=False, auto_now_add=False)
