@@ -88,7 +88,7 @@ class RideItem(models.Model):
     driver = models.CharField(max_length=25)
 
     # A description of the ride that can be 1000 letters long
-    notes = models.CharField(max_length=1000)
+    notes = models.CharField(max_length=1000, blank = True)
 
     # The price that the user wants to sell the ride at (per spot)
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
