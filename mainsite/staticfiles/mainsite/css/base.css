@@ -47,6 +47,18 @@ body {
 #btnRealButtonRide{
   color: black;
 }
+#MarketplaceButton{
+  color: var(--main-title-color);
+}
+#RidesharingButton{
+  color: var(--main-title-color);
+}
+#deleteButton{
+
+}
+#viewButton{
+
+}
 h1,
 h2,
 h3,

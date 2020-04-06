@@ -6,7 +6,7 @@
   --main-background-color: #ffe96b;
   --main-bg-color: #f2f2f2;
   --main-txt-color: #404040;
-  --main-border-color: #FFCD00;
+  --main-border-color: #7a7a7a;
   --main-catalogName-color:#ffcd00;
   --main-itemTitle-color: black;
   --main-title-color:#ffcd00;
@@ -47,6 +47,20 @@ body {
 }
 #btnRealButtonRide{
   color: var(--main-txt-color);
+}
+#MarketplaceButton{
+  color: var(--main-txt-color);
+}
+#RidesharingButton{
+  color: var(--main-txt-color);
+}
+#deleteButton{
+background-color: #ffcd00;
+color: var(--main-txt-color);
+}
+#viewButton{
+background-color: #ffcd00;
+color: var(--main-txt-color);
 }
 h1,
 h2,
