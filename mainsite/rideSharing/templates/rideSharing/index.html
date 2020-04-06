@@ -159,9 +159,25 @@
                         <div class="col-lg-6">
                           <label class="label">Basic Information</label>
                           <hr style="margin-bottom: 1%;margin-top: 1%;">
-                          <h6>Start: {{ ride.start_city }} {{ ride.start_state }}  {{ ride.start_zipcode }}</h6>
-                          <h6>Destination: <span id="destSpan_destination_city_{{ ride.pk }}">{{ ride.destination_city }}</span> <span id="destSpan_destination_state_{{ ride.pk }}">{{ ride.destination_state }}</span> <span id="destSpan_destination_zipcode_{{ ride.pk }}">{{ ride.destination_zipcode }}</span></h6>
-                          <h6>Leaving Date: {{ ride.date_leaving }}</h6> <span id="destSpan_destination_coordinates_lat_{{ ride.pk }}" hidden=true>{{ ride.destination_coordinates_lat}}</span><span id="destSpan_destination_coordinates_lon_{{ ride.pk }}" hidden=true>{{ ride.destination_coordinates_lon}}</span>
+
+                          <h6>Start: 
+                            <span id="startSpan_destination_city_{{ ride.pk }}">{{ ride.start_city }}</span>
+                            <span id="startSpan_destination_state_{{ ride.pk }}">{{ ride.start_state }}</span>
+                            <span id="startSpan_destination_zipcode_{{ ride.pk }}">{{ ride.start_zipcode }}</span>
+                          </h6>
+
+                          <h6>Destination: 
+                            <span id="destSpan_destination_city_{{ ride.pk }}">{{ ride.destination_city }}</span> 
+                            <span id="destSpan_destination_state_{{ ride.pk }}">{{ ride.destination_state }}</span> 
+                            <span id="destSpan_destination_zipcode_{{ ride.pk }}">{{ ride.destination_zipcode }}</span>
+                          </h6>
+
+                          <h6>Leaving Date: {{ ride.date_leaving }}</h6>
+
+                          <span id="startSpan_destination_coordinates_lat_{{ ride.pk }}" hidden=true>{{ ride.start_coordinates_lat}}</span>
+                          <span id="startSpan_destination_coordinates_lon_{{ ride.pk }}" hidden=true>{{ ride.start_coordinates_lon}}</span>
+                          <span id="destSpan_destination_coordinates_lat_{{ ride.pk }}" hidden=true>{{ ride.destination_coordinates_lat}}</span>
+                          <span id="destSpan_destination_coordinates_lon_{{ ride.pk }}" hidden=true>{{ ride.destination_coordinates_lon}}</span>
                           <br>
 
                           {% if ride.round_trip %}
@@ -321,13 +337,21 @@ document.getElementsByName("mapid").forEach(element => {
         mymap.invalidateSize();
     });
 
+    // starting location
+    let start_city = document.getElementById('startSpan_destination_city_' + ride_pk).innerHTML.trim();
+    let start_state = document.getElementById('startSpan_destination_state_' + ride_pk).innerHTML.trim();
+    let start_zipcode = document.getElementById('startSpan_destination_zipcode_' + ride_pk).innerHTML.trim();
+    let start_coordinates_lat = document.getElementById("startSpan_destination_coordinates_lat_" + ride_pk).innerHTML.trim();
+    let start_coordinates_lon = document.getElementById("startSpan_destination_coordinates_lon_" + ride_pk).innerHTML.trim();
+
+    // destination location
     let destination_city = document.getElementById('destSpan_destination_city_' + ride_pk).innerHTML.trim();
     let destination_state = document.getElementById('destSpan_destination_state_' + ride_pk).innerHTML.trim();
     let destination_zipcode = document.getElementById('destSpan_destination_zipcode_' + ride_pk).innerHTML.trim();
     let destination_coordinates_lat = document.getElementById("destSpan_destination_coordinates_lat_" + ride_pk).innerHTML.trim();
     let destination_coordinates_lon = document.getElementById("destSpan_destination_coordinates_lon_" + ride_pk).innerHTML.trim();
 
-    let starting_coord = [ 47.117222, -88.5625 ];
+    let starting_coord = [ start_coordinates_lat, start_coordinates_lon];
     let ending_coord = [destination_coordinates_lat, destination_coordinates_lon];
 
     // Add a marker to the primary_map for the ending location

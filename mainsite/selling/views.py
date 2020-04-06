@@ -39,6 +39,7 @@ def index(request):
                     ride_item.price = 0
 
                 ride_item.destination_coordinates_lat, ride_item.destination_coordinates_lon = getLocationByRequest(ride_item)
+                ride_item.start_coordinates_lat, ride_item.start_coordinates_lon = getStartByRequest(ride_item)
 
                 ride_item.save()       #error?
 
@@ -95,6 +96,24 @@ def getLocationByRequest(ride_item):
         + requests.utils.quote(destination_city.strip()) + "%20" \
         + requests.utils.quote(destination_state.strip()) + "%20" \
         + requests.utils.quote(destination_zipcode.strip()) + "%20" \
+        + ".json?access_token=" + access_token;
+
+        req = requests.get(locate_url)
+
+        lon, lat = (req.json())["features"][0]["center"]
+        return lat, lon;
+
+def getStartByRequest(ride_item):
+        access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
+
+        start_city = ride_item.start_city
+        start_state = ride_item.start_state
+        start_zipcode = ride_item.start_zipcode
+
+        locate_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" \
+        + requests.utils.quote(start_city.strip()) + "%20" \
+        + requests.utils.quote(start_state.strip()) + "%20" \
+        + requests.utils.quote(start_zipcode.strip()) + "%20" \
         + ".json?access_token=" + access_token;
 
         req = requests.get(locate_url)

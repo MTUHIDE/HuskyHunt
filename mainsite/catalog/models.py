@@ -77,7 +77,7 @@ class CatalogItem(models.Model):
     item_title = models.CharField(max_length=200)
 
     #A description of the item that can be 1500 letters long
-    item_description = models.CharField(max_length=1500)
+    item_description = models.CharField(max_length=1500, blank=True)
 
     #Picture that is uploaded on item creation
     item_picture = models.ImageField(upload_to='catalog/%Y/%m/%d/', height_field=None, width_field=None)
