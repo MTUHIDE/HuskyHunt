@@ -13,7 +13,7 @@
 }
 
 body {
-    background: green;
+    background: #1C1C21;
 }
 
 .top-links a, .my-account a, .logout a{
@@ -93,7 +93,24 @@ body {
 #sidebar{
   background-color: var(--main-sidebarBackground-color);
 }
+#btnRealButton{
+  color: black;
+}
+#btnRealButtonRide{
+  color: black;
+}
+#MarketplaceButton{
+  color: var(--main-title-color);
+}
+#RidesharingButton{
+  color: var(--main-title-color);
+}
+#deleteButton{
 
+}
+#viewButton{
+
+}
 h1,
 h2,
 h3,
@@ -133,7 +150,13 @@ th {
   background-color: var(--main-border-color);
   border-color: var(--main-bg-color);
 }
-
+.modal-conent{
+  background-color: #1C1C21;
+}
+.account-card{
+  border: 2px solid #000000;
+  background-color: #1C1C21;
+}
 .husky-card {
   border-radius: calc(.25rem - 1px);
   border: 1px solid var(--main-border-color);

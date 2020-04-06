@@ -50,14 +50,14 @@
                 search_params = new URLSearchParams(query_string);
                 search_params.set('filter', value);
                 url.search = search_params.toString();
-            } 
+            }
             // replace the page query if it exists (prevents stacking of &page=)
             else if (param == "page" && url.toString().includes("page=")) {
                 var query_string = url.search;
                 search_params = new URLSearchParams(query_string);
                 search_params.set('page', value);
                 url.search = search_params.toString();
-            } 
+            }
             // replace the search query if it exists (prevents stacking of &search=)
             else if (param == "search" && url.toString().includes("search=")) {
                 var query_string = url.search;
@@ -75,7 +75,7 @@
 
 </head>
 
-<body style="background-color: #1C1C21;">
+<body>
     <!-- Implement NavBar -->
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-expand-lg navbar-dark fixed-top" style="background-color: black;">
@@ -112,11 +112,8 @@
                   //check if the url has any filter
                   var url = new URL(window.location.href.toString());
                   if(url.toString().includes("filter=")) {
-                    // has filter paramater
-                    // do not proceed with normal get request
                     return false;
                   } else {
-                    // proceed with normal get request
                     return true;
                   }
                 })

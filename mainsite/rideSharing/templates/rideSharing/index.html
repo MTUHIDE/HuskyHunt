@@ -89,7 +89,7 @@
               <div class="col-8">
                   {% for query in search_split %}
                   <div class="row">
-                      <div class="col-12" style="color: #ffcd00;">
+                      <div class="col-12">
                           Cities within
                           <input id="RadiusTextValue" type="text" size="4" value="{{query.1.2}}"></input>
                            miles of
@@ -127,8 +127,8 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card h-100 husky-card"  style="width: auto; cursor: pointer;" data-toggle="modal" data-target="#rideModal{{ride.pk}}">
                     <div class="card-body">
-                        <h4 class="card-title" style="color: white;">
-                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: white; text-align: center; line-height: normal;">
+                        <h4 class="card-title">
+                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; text-align: center; line-height: normal;">
                                 {{ ride.destination_city }},&nbsp{{ ride.destination_state }}
                             </div>
                         </h4>
@@ -144,7 +144,7 @@
               <div class="ride-modal modal-dialog modal-lg">
 
                 <!-- Modal content-->
-                <div class="modal-content" style="background-color: #1c1c21;">
+                <div class="modal-content">
                   <div class="modal-header" style="background-color:black;"> <!-- style="justify-content:center;" this centers title in modal-->
                     <h4 class="" style="color:#ffcd00;">{{ ride.destination_city }},&nbsp{{ ride.destination_state }}</h4>
                     {% if ride.round_trip %}

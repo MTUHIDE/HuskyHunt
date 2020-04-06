@@ -6,7 +6,7 @@
   --main-background-color: #ffe96b;
   --main-bg-color: #f2f2f2;
   --main-txt-color: #404040;
-  --main-border-color: #FFCD00;
+  --main-border-color: #7a7a7a;
   --main-catalogName-color:#ffcd00;
   --main-itemTitle-color: black;
   --main-title-color:#ffcd00;
@@ -14,7 +14,7 @@
 }
 
 body {
-    background: var(--main-background-color);
+    background: #FFFFFF;
 }
 
 .top-links a, .my-account a, .logout a{
@@ -31,7 +31,7 @@ body {
     padding-top: 10px;
 }
 #catalogName {
-  color: var(--main-catalogName-color);
+  color: White;
 }
 #itemTitle {
   color: var(--main-itemTitle-color);
@@ -42,7 +42,26 @@ body {
 #sidebar{
   background-color: var(--main-sidebarBackground-color);
 }
-
+#btnRealButton{
+  color: var(--main-txt-color);
+}
+#btnRealButtonRide{
+  color: var(--main-txt-color);
+}
+#MarketplaceButton{
+  color: var(--main-txt-color);
+}
+#RidesharingButton{
+  color: var(--main-txt-color);
+}
+#deleteButton{
+background-color: #ffcd00;
+color: var(--main-txt-color);
+}
+#viewButton{
+background-color: #ffcd00;
+color: var(--main-txt-color);
+}
 h1,
 h2,
 h3,
@@ -75,8 +94,12 @@ th {
   background-color: var(--main-bg-color);
   border-color: var(--main-border-color);
 }
-
-
+.modal-conent{
+  background-color: var(--main-bg-color);
+}
+.account-card{
+  background-color: var(--main-bg-color);
+}
 .husky-button-light, .husky-button-dark:hover {
   color: var(--main-bg-color);
   background-color: var(--main-border-color);
@@ -93,7 +116,7 @@ th {
 }
 
 .husky-card-foot {
-  background-color: #657bfc;
+  background-color: #000000;
   margin: 10px;
 }
 /* .card{
