@@ -31,7 +31,7 @@ body {
     padding-top: 10px;
 }
 #catalogName {
-  color: var(--main-catalogName-color);
+  color: White;
 }
 #itemTitle {
   color: var(--main-itemTitle-color);
@@ -102,7 +102,7 @@ th {
 }
 
 .husky-card-foot {
-  background-color: #616161;
+  background-color: #000000;
   margin: 10px;
 }
 /* .card{

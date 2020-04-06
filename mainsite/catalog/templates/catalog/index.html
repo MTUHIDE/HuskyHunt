@@ -12,7 +12,7 @@
       </div>
       <div style="display: inline-block;">
 
-       {% for filter in filters %} 
+       {% for filter in filters %}
           <form id="{{ filter|cut:' ' }}Form" action="/catalog/filter" method="get" onsubmit="return {{ filter|cut:' ' }}Submit();">
 
           {% if filter.category_name in curFilters %}
@@ -27,7 +27,7 @@
             // Cancel the submit form (which overrides the url)
             function {{ filter|cut:' ' }}Submit() {
               search{{ filter|cut:' ' }}();
-              
+
               //check if the url has any search
               var url = new URL(window.location.href.toString());
               if(url.toString().includes("search=")) {
@@ -90,23 +90,20 @@
                 <div class="card h-100 husky-card">
                     <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
                     <div class="card-body">
-                        <h4 class="card-title">
+                        <h3 class="card-title">
                             <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: white;">
                                 <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title }}</a>
                             </div>
-                        </h4>
-                        <h6>${{ item.item_price }}</h6>
+                        </h3>
+                        <h4>${{ item.item_price }}</h4>
+                        <h6>Seller: {{ item.first_name }}</h6>
                         <!--
                         <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
                             <p class="card-text">{{ item.item_description }}</p>
                         </div>
                     -->
                 </div>
-                <div class="card-footer husky-card-foot"> <!--black-->
-                    <div style="text-align: center; width: auto;">
-                        <h5 id="catalogName" class="card-text">{{ item.first_name }}</h5>
-                    </div>
-                </div>
+
             </div>
         </div>
         {% endfor %}
