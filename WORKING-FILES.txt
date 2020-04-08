@@ -1,0 +1,27 @@
+
+    )                          )
+ ( /(               )       ( /(                  )
+ )\())   (       ( /( (     )\())   (          ( /(
+((_)\   ))\  (   )\()))\ ) ((_)\   ))\   (     )\())
+ _((_) /((_) )\ ((_)\(()/(  _((_) /((_)  )\ ) (_))/
+| || |(_))( ((_)| |(_))(_))| || |(_))(  _(_/( | |_
+| __ || || |(_-<| / /| || || __ || || || ' \))|  _|
+|_||_| \_,_|/__/|_\_\ \_, ||_||_| \_,_||_||_|  \__|
+                      |__/
+
+PLEASE LIST ANY FILES YOU ARE CHANGING IN THE SCOPE OF YOUR FEATURE.
+Space separated, all on one line, paths relative to main folder.
+Use * to signify all subfolders (use with caution!)
+(An Example: mainsite/landing/templates/* mainsite/landing/views.py)
+
+          |
+          |
+      \   |   /
+        \ | /
+          |
+
+          |
+        / | \
+      /   |   \
+          |
+          |

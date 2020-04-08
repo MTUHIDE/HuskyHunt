@@ -1,0 +1,99 @@
+ {% extends 'base.html' %} {% load static %} {% block content %}
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Welcome page CSS -->
+    <style type="text/css">
+        .main {
+            width: 100vw;
+            min-height: calc(100vh - 56px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #1C1C21;
+            margin-top: -9px;
+        }
+        
+        @media screen and (max-width: 1060px) {
+            .main {
+                flex-direction: column;
+            }
+        }
+        
+        .item {
+            width: 300px;
+            height: 300px;
+            border: 2px solid #FFCD00;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            background-color: black;
+            color: rgb(191, 191, 191);
+            text-align: center;
+            margin: 40px;
+            padding: 20px;
+            cursor: pointer;
+        }
+        
+        .item h2 {
+            margin-top: 20px;
+        }
+        
+        .item img {
+            /* width: 100px; */
+            height: 100px;
+            /* background-color: white; */
+        }
+        /* unvisited link */
+        
+        a:link,
+        a:visited,
+        a:hover,
+        a:active {
+            color: unset;
+            text-decoration: none;
+        }
+        
+        .item:hover, 
+        .item:hover h2 {
+            color: #ffffff;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'mainsite/css/base.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'mainsite/favicon.ico' %}" />
+
+</head>
+
+<div class="main">
+    <a href="{% url 'catalog:index' %}">
+        <div class="item">
+            <img src="{% static "mainsite/Graphics-02.png" %}">
+            <h2>Item Catalog</h2>
+            <p>Browse a list of items (textbooks, furniture, etc.) up for sale by students at MTU.</p>
+        </div>
+    </a>
+    <a href="{% url 'rideSharing:index' %}">
+        <div class="item">
+            <img src="{% static "mainsite/Graphics-03.png" %}">
+            <h2>Ridesharing</h2>
+            <p>See who's providing rides from Houghton to where you call home, or vice versa.</p>
+        </div>
+    </a>
+    <a href="{% url 'selling:index' %}">
+        <div class="item">
+            <img src="{% static "mainsite/Graphics-01.png" %}">
+            <h2>Add Listing</h2>
+            <p>Want to add your carpool or cool item to be listed on the site? <br>Click here!</p>
+        </div>
+    </a>
+</div>
+
+{% endblock %}

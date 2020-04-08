@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% if failed_search %}
+    <!--{% -->
+{% endif %}
+
+{% if item_list %}
+{% for item in item_list %}
+<div class="row" style="margin: 0;">
+    <div class="col-md-4 align-middle text-center">
+        <img class="img-end" src="{{item.item_picture.url}}" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-lg-9">
+                <h1 class="page-header" style="word-wrap: break-word;">{{item.item_title}}</h1>
+            </div>
+            <div class="col-lg-3">
+                <h1><span class="label label-default">${{item.item_price}}</span></h1>
+            </div>
+        </div>
+        <hr style="border: 2px solid black;"> <br>
+        <div style="word-wrap: break-word;">
+            <h6> {{item.item_description}} </h6>
+        </div>
+        <br> <br>
+        <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
+
+            {% if messages %}
+                {% for message in messages %}
+                  <!--<p class="alert closebtn">{{ message }}</p>-->
+                  {% if message.message == "Please enter a message!" %}
+                  <div class="alert" style="background-color:#cc3333">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <strong>{{message}}</strong> </br> Message failed to send!
+                  </div>
+                  {% else %}
+                  <div class="alert" style="background-color:#33cc33">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <strong>{{message}}</strong> </br> Message sent successfully!
+                  </div>
+                  {% endif %}
+                {% endfor %}
+            {% endif %}
+            <h6>Message {{item.first_name}}:</h6>
+            <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
+            <div class="row">
+                <div class="col-lg-4">
+                <form action="/catalog/{{item.id}}/email" method="get" onsubmit="sendButton.disabled = true" id="emailform">
+                    <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
+                    </form>
+                </div>
+
+                <div class="col-lg-4">
+                    <h6> Owner: {{item.first_name}} </h6>
+                </div>
+                <div class="col-lg-4">
+                    <h6> {{item.date_added}} </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

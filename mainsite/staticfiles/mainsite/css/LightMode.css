@@ -1,0 +1,132 @@
+#loginPicture {
+    background-image: url("images\mtu_logo_round.png");
+}
+
+:root {
+  --main-background-color: #ffe96b;
+  --main-bg-color: #f2f2f2;
+  --main-txt-color: #404040;
+  --main-border-color: #7a7a7a;
+  --main-catalogName-color:#ffcd00;
+  --main-itemTitle-color: black;
+  --main-title-color:#ffcd00;
+  --main-sidebarBackground-color:black;
+}
+
+body {
+    background: #FFFFFF;
+}
+
+.top-links a, .my-account a, .logout a{
+  color: #FFCD00;
+  padding-left: 1rem;
+}
+
+.product-icon {
+    height:200px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width:100%;
+    padding-top: 10px;
+}
+#catalogName {
+  color: White;
+}
+#itemTitle {
+  color: var(--main-itemTitle-color);
+}
+#title {
+    color: var(--main-title-color);
+}
+#sidebar{
+  background-color: var(--main-sidebarBackground-color);
+}
+#btnRealButton{
+  color: var(--main-txt-color);
+}
+#btnRealButtonRide{
+  color: var(--main-txt-color);
+}
+#MarketplaceButton{
+  color: var(--main-txt-color);
+}
+#RidesharingButton{
+  color: var(--main-txt-color);
+}
+#deleteButton{
+background-color: #ffcd00;
+color: var(--main-txt-color);
+}
+#viewButton{
+background-color: #ffcd00;
+color: var(--main-txt-color);
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+color: var(--main-txt-color);
+}
+label{
+  color: var(--main-txt-color);
+}
+th {
+  font-weight: 400;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+  background-color: var(--main-bg-color);
+  border-color: var(--main-border-color);
+  border-radius: 0rem;
+}
+.nav-tabs{
+  border-color: transparent;
+}
+.nav-tabs .nav-link:hover{
+  border-color: var(--main-border-color);
+  border-radius: 0rem;
+}
+
+.husky-button-dark, .husky-button-light:hover {
+  color: var(--main-border-color);
+  background-color: var(--main-bg-color);
+  border-color: var(--main-border-color);
+}
+.modal-conent{
+  background-color: var(--main-bg-color);
+}
+.account-card{
+  background-color: var(--main-bg-color);
+}
+.husky-button-light, .husky-button-dark:hover {
+  color: var(--main-bg-color);
+  background-color: var(--main-border-color);
+  border-color: var(--main-bg-color);
+}
+
+.husky-card {
+  border-radius: calc(.25rem - 1px);
+  border: 1px solid var(--main-border-color);
+  width: 90%;
+  background-color: var(--main-bg-color);
+  margin: auto;
+  padding: 5px;
+}
+
+.husky-card-foot {
+  background-color: #000000;
+  margin: 10px;
+}
+/* .card{
+  background-color: #1c1c21;
+} */
+.card.text{
+  color: #1c1c21;
+}
+
+.husky-modal{
+  background-color: #657bfc;
+  border: none;
+}

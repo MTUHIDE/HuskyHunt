@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- <h1> {{ account.username }} </h1>  <!---->
+
+<form action="{% url 'accountant:edit' %}" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+
+  <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
+    <div class="row justify-content-center align-end">
+       <table> <!---->
+        {{ form.as_table }}
+      </table>
+
+      <br>
+    </div>
+  </div>
+  <br>
+  <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
+    <input type="submit" value="Save Changes" class="btn btn-outline-warning husky-button-light">
+  </div>
+
+</form>
+
+<script type="text/javascript">
+  {% for field in form %}
+    {% if field.id_for_label != "id_picture" %}
+      document.getElementById("{{field.id_for_label}}").classList.add('form-control');
+      document.getElementById("{{field.id_for_label}}").classList.add('form-control-sm');
+      document.getElementById("{{field.id_for_label}}").style.margin = '5px';
+    {% endif %}
+  {% endfor %}
+  document.getElementById("picture_id").style.color = "#ACBABD";
+</script>
+
+{% endblock %}

@@ -1,0 +1,183 @@
+#loginPicture {
+    background-image: url("images\mtu_logo_round.png");
+}
+
+:root {
+  --main-bg-color: #000000;
+  --main-txt-color: #bfbfbf;
+  --main-border-color: #FFCD00;
+  --main-catalogName-color:#ffcd00;
+  --main-itemTitle-color: white;
+  --main-title-color:#ffcd00;
+  --main-sidebarBackground-color:black;
+}
+
+body {
+    background: #1C1C21;
+}
+
+.top-links a, .my-account a, .logout a{
+  color: #FFCD00;
+  padding-left: 1rem;
+}
+
+.product-icon {
+    height:200px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width:100%;
+    padding-top: 10px;
+}
+#catalogName {
+  color: var(--main-catalogName-color);
+}
+#itemTitle {
+  color: var(--main-itemTitle-color);
+}
+#title {
+    color: var(--main-title-color);
+}
+
+.navbar-toggler:focus {
+  outline: 1px solid #2d2d2d;
+}
+
+.filters-mobile {
+  display: none;
+  color: #FFCD00;
+  width: 0px;
+  height: 0px;
+  margin-bottom: 8px;
+}
+
+.search-mobile {
+  width: calc(100% - 87px);
+  margin-right: 10px;
+}
+
+.filter-dropdown {
+  width: 100%;
+}
+
+.pgtitle-mobile {
+  display: none;
+  text-align: center;
+}
+
+@media screen and (max-width: 573px) {
+  #sidebar {
+    visibility: hidden;
+  }
+  .filters-mobile {
+    width: unset;
+    height: unset;
+    display: unset;
+  }
+  .pgtitle-mobile {
+    display: unset;
+  }
+  .top-links a, .my-account a, .logout a{
+    padding-left: 0.6rem;
+  }
+
+  .ride-modal {
+    margin: 40px;
+  }
+  
+  .navbar-brand {
+    margin-right: 0.5rem;
+  }
+}
+
+#sidebar{
+  background-color: var(--main-sidebarBackground-color);
+}
+#btnRealButton{
+  color: black;
+}
+#btnRealButtonRide{
+  color: black;
+}
+#MarketplaceButton{
+  color: var(--main-title-color);
+}
+#RidesharingButton{
+  color: var(--main-title-color);
+}
+#deleteButton{
+
+}
+#viewButton{
+
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+color: var(--main-txt-color);
+}
+label{
+  color: var(--main-txt-color);
+}
+th {
+  font-weight: 400;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+  background-color: var(--main-bg-color);
+  border-color: var(--main-border-color);
+  border-radius: 0rem;
+}
+.nav-tabs{
+  border-color: transparent;
+}
+.nav-tabs .nav-link:hover{
+  border-color: var(--main-border-color);
+  border-radius: 0rem;
+}
+
+.husky-button-dark, .husky-button-light:hover {
+  color: var(--main-border-color);
+  background-color: var(--main-bg-color);
+  border-color: var(--main-border-color);
+}
+
+
+.husky-button-light, .husky-button-dark:hover {
+  color: var(--main-bg-color);
+  background-color: var(--main-border-color);
+  border-color: var(--main-bg-color);
+}
+.modal-conent{
+  background-color: #1C1C21;
+}
+.account-card{
+  border: 2px solid #000000;
+  background-color: #1C1C21;
+}
+.husky-card {
+  border-radius: calc(.25rem - 1px);
+  border: 1px solid var(--main-border-color);
+  width: 90%;
+  background-color: var(--main-bg-color);
+  margin: auto;
+  padding: 5px;
+}
+
+.husky-card-foot {
+  background-color: #1C1C21;
+  margin: 10px;
+}
+/* .card{
+  background-color: #1c1c21;
+} */
+.card.text{
+  color: #1c1c21;
+}
+
+.husky-modal{
+  background-color: #1C1C21;
+  border: none;
+}

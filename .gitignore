@@ -1,0 +1,13 @@
+# Ignore configuration files that may contain sensitive information
+my.cnf
+mainsite/*/__pycache__/
+mainsite/*/*/__pycache__/
+mainsite/mainsite/settings.py
+.DS_Store
+
+
+# Database Stuff
+
+mainsite/huskydb
+mainsite/uploads/account/profilepics/*
+

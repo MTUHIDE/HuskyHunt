@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+<!-- BEGIN FILTERS BLOCK FOR MOBILE DEVICES -->
+{% block filtersmobile %} 
+<div style="width: 50%; margin-left: 25%">
+  {% for filter in filters %} 
+  <form id="{{ filter|cut:' ' }}Form" action="/catalog/filter" method="get" onsubmit="return {{ filter|cut:' ' }}Submit();">
+
+  {% if filter.category_name in curFilters %}
+  <button type="submit" id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
+  {% else %}
+  <button type="submit"  id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+  {% endif %}
+  </form>
+
+  <!-- Filter/search dual functionality -->
+  <script type="text/javascript">
+    // Cancel the submit form (which overrides the url)
+    function {{ filter|cut:' ' }}Submit() {
+      search{{ filter|cut:' ' }}();
+      
+      //check if the url has any search
+      var url = new URL(window.location.href.toString());
+      if(url.toString().includes("search=")) {
+        // has search paramater
+        // do not proceed with normal get request
+        return false;
+      } else {
+        // proceed with normal get request
+        return true;
+      }
+    }
+
+    // set the correct url
+    function search{{  filter|cut:' '  }}() {
+      filter = document.getElementById("{{ filter|cut:' ' }}Button").value;
+      appendToUrl('filter', filter);
+    }
+  </script>
+
+  {% endfor %}
+
+  <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'catalog:index' %}"">Clear Filters</a>
+</div>
+{% endblock %}
+<!-- END FILTERS BLOCK FOR MOBILE DEVICES -->
+
+
+<!-- MAIN CONTENT STARTS HERE -->
+
+{% block content %}
+
+<div class="row" style="width: 100%;">
+  <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
+ <div class="col align-center" style="-ms-flex: 0 0 230px; flex: 0 0 230px;">
+  <div class="wrapper">
+    <!--Fixes the size of the side bar so it doent grow or shink. -->
+    <div id="sidebar" style="text-align: center; height: 100%;width:230px; position: fixed; top: 0px; padding-top: 50px; overflow: scroll;">
+      <div class="sidebar-header">
+        <h1 id="title" class="my-4" style="text-align: center;">Catalog</h1>
+      </div>
+      <div style="display: inline-block;">
+
+       {% for filter in filters %}
+          <form id="{{ filter|cut:' ' }}Form" action="/catalog/filter" method="get" onsubmit="return {{ filter|cut:' ' }}Submit();">
+
+          {% if filter.category_name in curFilters %}
+          <button type="submit" id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
+          {% else %}
+          <button type="submit"  id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+          {% endif %}
+           </form>
+
+          <!-- Filter/search dual functionality -->
+          <script type="text/javascript">
+            // Cancel the submit form (which overrides the url)
+            function {{ filter|cut:' ' }}Submit() {
+              search{{ filter|cut:' ' }}();
+
+              //check if the url has any search
+              var url = new URL(window.location.href.toString());
+              if(url.toString().includes("search=")) {
+                // has search paramater
+                // do not proceed with normal get request
+                return false;
+              } else {
+                // proceed with normal get request
+                return true;
+              }
+            }
+
+            // set the correct url
+            function search{{  filter|cut:' '  }}() {
+              filter = document.getElementById("{{ filter|cut:' ' }}Button").value;
+              appendToUrl('filter', filter);
+            }
+          </script>
+
+        {% endfor %}
+
+        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'catalog:index' %}"">Clear Filters</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- /.col-lg-3 -->
+    <div class="col " style="position: static;height: 100%;">
+      <div class="sidebar-header pgtitle-mobile">
+        <h1 id="title" class="my-4" style="text-align: center;">Catalog</h1>
+      </div>
+
+      {% if failed_search %}
+        <div style="background-color: black; border: 2px solid black; border-spacing: 10px; text-align: center; margin-bottom: 20px; margin-top: 10px;">
+            <h1 style="color: #ffcd00; margin-top: 3px; margin-bottom: 1.5px;">Oops!</h1>
+            <h6 style="color: #ffcd00; margin-top: 1.5px; margin-bottom: 3px;">
+
+              {% if failed_search == 'MisformedFilterFail' %}
+              Seems like one of your filters isn't valid, so we couldn't find any results.
+              <br>Please <a href="{% url 'catalog:index' %}" >return to</a> the catalog, then select filters from the sidebar.
+              {% elif failed_search == 'FilterFail' %}
+              Looks like no items have been uploaded for {% if curFilters|length > 1 %} those categories{% else %}that category{% endif %}. But here are some recently-uploaded items instead!
+              {% elif failed_search == 'PageNotFoundFail' %}
+              Looks like that item couldn't be found. But here are some recently-uploaded items instead!
+              {% elif failed_search == 'SearchFail' %}
+              Looks like no items could be found for your search. But here are some recently-uploaded items instead!
+              {% else %}
+              Looks like something went wrong. Please contact MTU HuskyHunt if this error persists.
+              {% endif %}
+
+            </h6>
+        </div>
+      {% endif %}
+      <!-- -->
+
+        <div class="row" style="margin: 0px;">
+            {% if items %}
+            {% for item in items %}
+            <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 justify-content-center" style="margin: 5px 0px 5px 0px; padding: 0px;">
+                <div class="card h-100 husky-card">
+                    <a href="\catalog\{{item.id}}"><img class="product-icon" src="{{ item.item_picture.url }}" alt=""></a>
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: white;">
+                                <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title }}</a>
+                            </div>
+                        </h3>
+                        <h4>${{ item.item_price }}</h4>
+                        <h6>Seller: {{ item.first_name }}</h6>
+                        <!--
+                        <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                            <p class="card-text">{{ item.item_description }}</p>
+                        </div>
+                    -->
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+{% if items.paginator.num_pages > 1 %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if items.has_previous %}
+            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '1')">
+            &laquo; first
+            </button>
+
+            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.previous_page_number }}')">
+            previous
+            </button>
+            {% endif %}
+
+            <span class="current">
+                Page {{ items.number }} of {{ items.paginator.num_pages }}.
+            </span>
+
+            {% if items.has_next %}
+            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.next_page_number }}')">
+            next
+            </button>
+
+            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.paginator.num_pages }}')">
+            last &raquo;
+            </button>
+
+            {% endif %}
+        </span>
+    </div>
+{% endif %}
+
+
+  </div>
+
+
+</div>
+
+{% endblock %}
