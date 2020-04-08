@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 <!-- BEGIN FILTERS BLOCK FOR MOBILE DEVICES -->
-{% block filtersmobile %} 
+{% block filtersmobile %}
 <div style="width: 50%; margin-left: 25%">
-  {% for filter in filters %} 
+  {% for filter in filters %}
   <form id="{{ filter|cut:' ' }}Form" action="/catalog/filter" method="get" onsubmit="return {{ filter|cut:' ' }}Submit();">
 
   {% if filter.category_name in curFilters %}
@@ -18,7 +18,7 @@
     // Cancel the submit form (which overrides the url)
     function {{ filter|cut:' ' }}Submit() {
       search{{ filter|cut:' ' }}();
-      
+
       //check if the url has any search
       var url = new URL(window.location.href.toString());
       if(url.toString().includes("search=")) {
@@ -165,31 +165,32 @@
     <div class="pagination">
         <span class="step-links">
             {% if items.has_previous %}
-            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '1')">
+            <button type="button" class="btn btn-link husky-button-light" style="display: inline-block; margin-left: 20px;" onclick="appendToUrl('page', '1')">
             &laquo; first
             </button>
 
-            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.previous_page_number }}')">
+            <button type="button" class="btn btn-link husky-button-light" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.previous_page_number }}')">
             previous
             </button>
             {% endif %}
 
-            <span class="current">
+            <span class="current" style="color: #FFCD00; padding: 20px;">
                 Page {{ items.number }} of {{ items.paginator.num_pages }}.
             </span>
 
             {% if items.has_next %}
-            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.next_page_number }}')">
+            <button type="button" class="btn btn-link husky-button-light" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.next_page_number }}')">
             next
             </button>
 
-            <button type="button" class="btn btn-link" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.paginator.num_pages }}')">
+            <button type="button" class="btn btn-link husky-button-light" style="display: inline-block; margin-right: 20px;" onclick="appendToUrl('page', '{{ items.paginator.num_pages }}')">
             last &raquo;
             </button>
 
             {% endif %}
         </span>
     </div>
+    <br>
 {% endif %}
 
 
