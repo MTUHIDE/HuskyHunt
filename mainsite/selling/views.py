@@ -29,7 +29,7 @@ def index(request):
 
         # Ride Form
         submission_type = post_request.pop('submission_type', None)
-        if submission_type == ['ride']:
+        if submission_type == ['ride'] and 4 >= RideItem.objects.filter(username = request.user, archived='False').count():
             ride_form = RideForm(post_request, request.FILES)
             if ride_form.is_valid():
                 ride_item = ride_form.save(commit=False)
@@ -47,7 +47,7 @@ def index(request):
                 return HttpResponseRedirect(reverse('rideSharing:index'))
 
         # Catalog Form
-        elif submission_type == ['ctlg']:
+        elif submission_type == ['ctlg'] and 10 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
             catalog_form = SellingForm(post_request, request.FILES)
             if catalog_form.is_valid():
                 category = catalog_form.cleaned_data['category']
@@ -65,9 +65,9 @@ def index(request):
         else:
             pass #this should never happen
 
-    if catalog_form is None:
+    if catalog_form is None and 5 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
         catalog_form = SellingForm()
-    if ride_form is None:
+    if ride_form is None and 4 >= RideItem.objects.filter(username = request.user, archived='False').count():
         curr_user = user_profile.objects.get(user = request.user)
         ride_form = RideForm(initial = {
             'start_city': "Houghton",
@@ -78,9 +78,22 @@ def index(request):
             'destination_zipcode': curr_user.zipcode,
             'driver': curr_user.preferred_name if curr_user.preferred_name else request.user.get_short_name()
         })
+
+    # Set to true if the user has more than 10 items
+    too_many_items = False;
+    if catalog_form is None:
+        too_many_items = True;
+
+    # Set to true if the user has more than 4 rides
+    too_many_rides = False;
+    if ride_form is None:
+        too_many_rides = True;
+
     context = {
         'catalog_form': catalog_form,
         'ride_form': ride_form,
+        'too_many_items': too_many_items,
+        'too_many_rides': too_many_rides,
     }
     return render(request, template, context)
 
