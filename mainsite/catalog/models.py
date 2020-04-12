@@ -91,6 +91,9 @@ class CatalogItem(models.Model):
     # If the ride has been archived or not
     archived = models.BooleanField(default=False)
 
+    # If the ride is currently reported (flagged to be reviewed) or not
+    reported = models.BooleanField(default=False)
+
     def __str__(self):
         return self.item_title
 

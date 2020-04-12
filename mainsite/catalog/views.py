@@ -128,6 +128,30 @@ def index(request):
     else:
         return HttpResponseRedirect('/')
 
+#This function sets a post to be reported, for review by moderators
+#param: request - array variable that is passed around the website, kinda like global variables
+#param: pk - a int variable that is used as the primary key for the item in the database
+#returns: The same page that the user is currently on
+def report(request, pk):
+    #Checks if the user has logged in
+    if request.user.is_authenticated:
+
+        # Get the item
+        item = CatalogItem.objects.get(pk=pk)
+
+        # Set the reported to true
+        item.reported = "True" # Report this item
+        item.save()
+
+        messages.error(request, 'Post successfully reported!')
+
+        #Redirects the user to the same webpage (So nothing changes but the success message appearing)
+        return HttpResponseRedirect('/catalog/' + str(pk))
+
+    #If not logged in then the user is sent to the Husky Statue
+    else:
+        return HttpResponseRedirect('/')
+
 
 #This function sends a prepared email message to a seller
 #param: request - array variable that is passed around the website, kinda like global variables

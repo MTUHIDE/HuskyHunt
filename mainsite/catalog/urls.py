@@ -18,4 +18,7 @@ urlpatterns = [
 
     #...an integer followed by /email then execute the email method in views
     path('<int:pk>/email/', views.email, name='email'),
+
+    #...an integer followed by /email then execute the email method in views
+    path('<int:pk>/report/', views.report, name='report'),
 ]
