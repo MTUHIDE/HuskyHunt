@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.urls import reverse
 from accountant.models import user_profile
+from datetime import datetime, timedelta
+import pytz
 
 
 #This small helper function adds an appropriate error message to the page
@@ -184,8 +186,21 @@ def email(request, pk):
         #Gets the sellers email
         to_email = item_list[0].username.email
 
+        # Times to compare
+        last_email_original = user_profile.objects.filter(user = request.user)[0].last_email
+        one_min_ago_original = datetime.now() - timedelta(minutes=1)
+
+        #Set same timezone
+        last_email = last_email_original.astimezone(pytz.timezone('UTC'))
+        one_min_ago = one_min_ago_original.astimezone(pytz.timezone('UTC'))
+
+        # Checks if the user has sent an email in the last 1 minute
+        if (one_min_ago < last_email):
+            # sent an email less than two minutes ago
+            messages.error(request, 'Please wait one minute between emails!')
+
         #Checks if the message is no empty
-        if (request.GET['message'] != ''):
+        elif (request.GET['message'] != ''):
             # Create the email object
             email = EmailMessage(
                 'Interested in your item', # subject
@@ -197,6 +212,11 @@ def email(request, pk):
 
             # Sends the email
             email.send();
+
+            #Set last email sent time
+            profile = user_profile.objects.get(user = request.user)
+            profile.last_email = one_min_ago
+            profile.save()
 
             #Displays that the email was sent successfully
             messages.error(request, 'Message sent successfully!')

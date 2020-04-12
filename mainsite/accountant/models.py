@@ -18,6 +18,7 @@ class user_profile(models.Model):
     home_state = models.CharField(max_length=50, blank = True, null=True)
     zipcode = models.IntegerField(blank = True, null=True)
     picture = models.ImageField(upload_to=upload_directory, height_field=None, width_field=None, blank = True, null=True)
+    last_email = models.DateTimeField(auto_now=True, auto_now_add=False)
 
 @receiver(pre_save, sender=user_profile)
 def delete_changed_photos(sender, instance, **kwargs):

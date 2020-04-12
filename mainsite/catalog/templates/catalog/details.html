@@ -41,6 +41,11 @@
                       <div class="alert" style="background-color:#cc3333">
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                         <strong>{{message}}</strong> </br> Message failed to send!
+                    </div>
+                      {% elif message.message == "Please wait one minute between emails!" %}
+                      <div class="alert" style="background-color:#cc3333">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <strong>{{message}}</strong>
                       </div>
                   {% elif message.message == "Post successfully reported!" %}
                       <div class="alert" style="background-color:#33cc33">
