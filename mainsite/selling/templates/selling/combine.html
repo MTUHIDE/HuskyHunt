@@ -86,7 +86,7 @@ Instead we display our custom error message -->
      </div>
    </div>
 
-   <!-----------------------------------
+   <!-- ---------------------------------
    Ridesharing Form
    ----------------------------------->
    <div role="tabpanel" class="tab-pane" id="ride">
@@ -108,6 +108,10 @@ Instead we display our custom error message -->
 
          <div class="row justify-content-center">
            <div class="col-lg-5">
+
+               <datalist id="search_options">
+               </datalist>
+
                <table>
                  {{ ride_form.as_table }}
                </table>
@@ -168,6 +172,47 @@ Instead we display our custom error message -->
     $('[href="#ride"]').tab('show');
   }
 </script>
+
+<script type="text/javascript">
+
+    var user_typing_options = '';
+
+    var search_options = document.getElementById('search_options');
+    var user_typing = document.getElementById('id_user_typing');
+
+    search_options.innerHTML = user_typing_options ;
+    user_typing.setAttribute('list','search_options');
+
+    user_typing.onkeypress = function() {
+        let content = user_typing.value;
+
+        let autocomp_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
+            + encodeURIComponent( content )
+            + ".json?autocomplete=true"
+            + "&access_token=" + access_token;
+
+        let autocomp_req = new XMLHttpRequest();
+        autocomp_req.open('GET', autocomp_url, true);
+        autocomp_req.onload = function() {
+            user_typing_options = '';
+            ((JSON.parse(autocomp_req.response))["features"]).forEach((item, i) => {
+                target = item["place_name"];
+                user_typing_options += '<option value="' + target + '" />';
+            });
+            search_options.innerHTML = user_typing_options ;
+
+        };
+        autocomp_req.send();
+    };
+
+    user_typing.onchange = function() {
+        let content = user_typing.value.split(",");
+
+        document.getElementById('id_destination_city').value = content[0];
+        document.getElementById('id_destination_state').value = content[1] ? content[1] : '';
+    };
+</script>
+
 
 <script type="text/javascript">
 

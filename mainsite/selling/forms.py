@@ -1,8 +1,9 @@
 from django import forms
 from catalog.models import CatalogItem, Category, SubCategory
+from django.db.models import TextField
 from django.forms import ModelForm
 from rideSharing.models import RideItem, RideCategory
-from django.forms import TextInput
+from django.forms import TextInput, CharField
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 import math
@@ -44,16 +45,19 @@ class SellingForm(forms.ModelForm):
 
 
 class RideForm(forms.ModelForm):
+
+    user_typing = CharField(required=False, label="Address Search")
+
     class Meta:
         #The table that the information will go into
         model = RideItem
 
         # The normal input areas
-        fields = ['ride_category', 'start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
-        
+        fields = ['user_typing', 'ride_category', 'start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
+
         #The "special" input areas
         widgets = {
-            'driver': TextInput(attrs={'readonly': 'readonly'}), 
+            'driver': TextInput(attrs={'readonly': 'readonly'}),
             'notes': forms.Textarea(attrs={'cols': 80, 'rows': 10}),
             'date_leaving': forms.DateInput(attrs={'type': 'date'}),
             'return_date': forms.DateInput(attrs={'type': 'date'})
