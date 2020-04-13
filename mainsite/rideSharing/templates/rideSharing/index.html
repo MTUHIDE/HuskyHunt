@@ -359,7 +359,7 @@ document.getElementsByName("mapid").forEach(element => {
     let marker = L.marker(ending_coord).bindPopup(
         ('\
             Search for rides near:<br>\
-            <a href="http://localhost:8000/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</a>\
+            <a href="/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</a>\
         ')
         .replace("[[1]]", encodeURIComponent("[ "
         + destination_coordinates_lat + " , " + destination_coordinates_lon + " , "
