@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 <!-- BEGIN FILTERS BLOCK FOR MOBILE DEVICES -->
-{% block filtersmobile %} 
+{% block filtersmobile %}
   <!--filters on sidebar-->
   {% for filter in filters %}
     {% if not curFilters %}
@@ -153,22 +153,22 @@
                     <h6 class="text-danger" style="float:right;">This ride is not a round trip!</h6>
                     {% endif %}
                   </div>
-                  <div class="modal-body">
+                  <div class="modal-body husky-modal">
                     <div class="row">
 
                         <div class="col-lg-6">
                           <label class="label">Basic Information</label>
                           <hr style="margin-bottom: 1%;margin-top: 1%;">
 
-                          <h6>Start: 
+                          <h6>Start:
                             <span id="startSpan_destination_city_{{ ride.pk }}">{{ ride.start_city }}</span>
                             <span id="startSpan_destination_state_{{ ride.pk }}">{{ ride.start_state }}</span>
                             <span id="startSpan_destination_zipcode_{{ ride.pk }}">{{ ride.start_zipcode }}</span>
                           </h6>
 
-                          <h6>Destination: 
-                            <span id="destSpan_destination_city_{{ ride.pk }}">{{ ride.destination_city }}</span> 
-                            <span id="destSpan_destination_state_{{ ride.pk }}">{{ ride.destination_state }}</span> 
+                          <h6>Destination:
+                            <span id="destSpan_destination_city_{{ ride.pk }}">{{ ride.destination_city }}</span>
+                            <span id="destSpan_destination_state_{{ ride.pk }}">{{ ride.destination_state }}</span>
                             <span id="destSpan_destination_zipcode_{{ ride.pk }}">{{ ride.destination_zipcode }}</span>
                           </h6>
 

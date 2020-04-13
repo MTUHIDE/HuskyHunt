@@ -65,6 +65,10 @@ body {
   text-align: center;
 }
 
+#sidebar::-webkit-scrollbar {
+  display: none;
+}
+
 @media screen and (max-width: 573px) {
   #sidebar {
     visibility: hidden;
