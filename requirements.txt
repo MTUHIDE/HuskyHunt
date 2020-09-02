@@ -1,0 +1,4 @@
+Django
+Pillow
+social-auth-app-django
+django-cron
