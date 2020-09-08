@@ -43,45 +43,51 @@ Instead we display our custom error message -->
                       {% endfor %}
                  </div>
              {% endif %}
+             {% if too_many_items %}
+                <div class="alert alert-danger" role="alert">
+                  <strong>You have reached the limit of 10 active items!<br></strong>
+                 </div>
+              {% endif  %}
 
-             <form role="form" method="post" enctype="multipart/form-data" style='border: 2xp;'>
-                 {% csrf_token %}
-                 <input type="hidden" name="submission_type" value="ctlg">
+            {% if not too_many_items%}
+               <form role="form" method="post" enctype="multipart/form-data" style='border: 2xp;'>
+                   {% csrf_token %}
+                   <input type="hidden" name="submission_type" value="ctlg">
 
-                 {{ catalog_form.as_p}}
-                 <button type="submit" onclick="ItemInput()" class="btn btn-primary husky-button-light" id="btnRealButton">Submit</button>
-             </form>
+                   {{ catalog_form.as_p}}
+                   <button type="submit" onclick="ItemInput()" class="btn btn-primary husky-button-light" id="btnRealButton">Submit</button>
+               </form>
 
-             <!-- General Form Formatting -->
-              {% for field in catalog_form %}
-                <script type="text/javascript">
-                  document.getElementById("{{field.id_for_label}}").classList.add('form-control');
-                </script>
-              {% endfor %}
-
-              <script type="text/javascript">
-                document.getElementById("id_item_picture").classList.add('file-field');
-                document.getElementById("id_item_picture").style.backgroundColor = 'transparent';
-                document.getElementById("id_item_picture").style.border = 'transparent';
-                document.getElementById("id_item_picture").style.color = '#a6b1b7';
-                document.getElementById("id_item_picture").style.padding = '0px';
-              </script>
-
-              <!-- Highlight Fields -->
-             {% if catalog_form.errors %}
+               <!-- General Form Formatting -->
                 {% for field in catalog_form %}
-                    {% if field.errors %}
-                      <script type="text/javascript">
-                        document.getElementById("{{field.id_for_label}}").classList.add('is-invalid');
-                      </script>
-                    {% else %}
-                      <script type="text/javascript">
-                        document.getElementById("{{field.id_for_label}}").classList.add('is-valid');
-                      </script>
-                    {% endif %}
+                  <script type="text/javascript">
+                    document.getElementById("{{field.id_for_label}}").classList.add('form-control');
+                  </script>
                 {% endfor %}
-             {% endif %}
 
+                <script type="text/javascript">
+                  document.getElementById("id_item_picture").classList.add('file-field');
+                  document.getElementById("id_item_picture").style.backgroundColor = 'transparent';
+                  document.getElementById("id_item_picture").style.border = 'transparent';
+                  document.getElementById("id_item_picture").style.color = '#a6b1b7';
+                  document.getElementById("id_item_picture").style.padding = '0px';
+                </script>
+
+                <!-- Highlight Fields -->
+               {% if catalog_form.errors %}
+                  {% for field in catalog_form %}
+                      {% if field.errors %}
+                        <script type="text/javascript">
+                          document.getElementById("{{field.id_for_label}}").classList.add('is-invalid');
+                        </script>
+                      {% else %}
+                        <script type="text/javascript">
+                          document.getElementById("{{field.id_for_label}}").classList.add('is-valid');
+                        </script>
+                      {% endif %}
+                  {% endfor %}
+               {% endif %}
+            {% endif %}
          </div>
      </div>
    </div>
@@ -105,43 +111,50 @@ Instead we display our custom error message -->
           {% endfor %}
         </div>
         {% endif %}
+        {% if too_many_rides %}
+          <div class="alert alert-danger" role="alert">
+            <strong>You have reached the limit of 4 active rides!<br></strong>
+          </div>
+        {% endif  %}
 
-         <div class="row justify-content-center">
-           <div class="col-lg-5">
-               <table>
-                 {{ ride_form.as_table }}
-               </table>
-           </div>
-           <div class="col-lg-5">
-               <div id="mapid" name="mapid" style="height: 300px; width=100%;" ></div>
+        {% if not too_many_rides %}
+           <div class="row justify-content-center">
+             <div class="col-lg-5">
+                 <table>
+                   {{ ride_form.as_table }}
+                 </table>
+             </div>
+             <div class="col-lg-5">
+                 <div id="mapid" name="mapid" style="height: 300px; width=100%;" ></div>
+             </div>
            </div>
          </div>
-       </div>
-       <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
-          <button type="submit" onclick="RideInput()" class="btn btn-primary husky-button-light" id="btnRealButtonRide" onclick="RideInput()">Submit</button>
-       </div>
-     </form>
+         <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
+            <button type="submit" onclick="RideInput()" class="btn btn-primary husky-button-light" id="btnRealButtonRide" onclick="RideInput()">Submit</button>
+         </div>
+       </form>
 
-     <!-- General Form Formatting -->
-        {% for field in ride_form %}
-          <script type="text/javascript">
-            document.getElementById("{{field.id_for_label}}").classList.add('form-control');
-          </script>
-        {% endfor %}
-
-      <!-- Highlight Fields -->
-        {% if ride_form.errors %}
+       <!-- General Form Formatting -->
           {% for field in ride_form %}
-            {% if field.errors %}
-              <script type="text/javascript">
-                document.getElementById("{{field.id_for_label}}").classList.add('is-invalid');
-              </script>
-            {% else %}
-              <script type="text/javascript">
-                document.getElementById("{{field.id_for_label}}").classList.add('is-valid');
-              </script>
-            {% endif %}
+            <script type="text/javascript">
+              document.getElementById("{{field.id_for_label}}").classList.add('form-control');
+            </script>
           {% endfor %}
+
+        <!-- Highlight Fields -->
+          {% if ride_form.errors %}
+            {% for field in ride_form %}
+              {% if field.errors %}
+                <script type="text/javascript">
+                  document.getElementById("{{field.id_for_label}}").classList.add('is-invalid');
+                </script>
+              {% else %}
+                <script type="text/javascript">
+                  document.getElementById("{{field.id_for_label}}").classList.add('is-valid');
+                </script>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
         {% endif %}
    </div>
 

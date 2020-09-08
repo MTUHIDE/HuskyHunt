@@ -7,3 +7,8 @@ Similar to BarkBoard (now discontinued), and somewhat similar to Craigslist.
 - Ridesharing feature to plan carpools for student travels
 - Restricted to Michigan Tech students and faculty
 - Open source
+
+## Development
+
+To set up your development environment, [follow this guide](https://docs.google.com/document/d/1rSDuOqgPMx_CeDBvN1eOBhjPo7JABpMkT8OJ_QSg09k/edit?usp=sharing).
+

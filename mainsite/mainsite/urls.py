@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import url, include
+from . import comingSoon
 
 urlpatterns = [
+    url(r'^', comingSoon.index, name='index'),
     path('accountant/', include('accountant.urls', namespace='accountant')),
     path('catalog/', include('catalog.urls', namespace='catalog')),
     path('ridesharing/', include('rideSharing.urls', namespace='rideSharing')),
