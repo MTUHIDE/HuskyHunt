@@ -2,7 +2,7 @@
 my.cnf
 mainsite/*/__pycache__/
 mainsite/*/*/__pycache__/
-mainsite/mainsite/settings.py
+mainsite/mainsite/local_settings.py
 .DS_Store
 
 
@@ -10,4 +10,3 @@ mainsite/mainsite/settings.py
 
 mainsite/huskydb
 mainsite/uploads/account/profilepics/*
-
