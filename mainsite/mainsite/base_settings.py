@@ -34,12 +34,9 @@ LOGIN_REDIRECT_URL = 'catalog'
 
 AUTHENTICATION_BACKENDS = (
  'social_core.backends.google.GoogleOAuth2',  # for Google authentication
- #'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
  'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='568921202692-kqmjfu42i0un3cjhl98g7oskhetj5ius.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'FVKzVWkx0WDu12g5fTb0Zer1'
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
