@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
 from django.urls import include, path
 from django.conf.urls import url, include
 from . import comingSoon
@@ -32,6 +33,5 @@ urlpatterns = [
     path('auth/complete/google-oauth2/', include('accountant.urls', namespace='authsuccess')),
 ]
 
-from .import settings
 from django.contrib.staticfiles.urls import static
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
