@@ -20,7 +20,6 @@ from django.conf.urls import url, include
 from . import comingSoon
 
 urlpatterns = [
-    url(r'^', comingSoon.index, name='index'),
     path('accountant/', include('accountant.urls', namespace='accountant')),
     path('catalog/', include('catalog.urls', namespace='catalog')),
     path('ridesharing/', include('rideSharing.urls', namespace='rideSharing')),
@@ -32,6 +31,9 @@ urlpatterns = [
     url(r'^auth/', include('social_django.urls', namespace='social')),  # <- Here
     path('auth/complete/google-oauth2/', include('accountant.urls', namespace='authsuccess')),
 ]
+
+if settings.SHOW_COMING_SOON:
+    urlpatterns.insert(0, url(r'^', comingSoon.index, name='index'))
 
 from django.contrib.staticfiles.urls import static
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
