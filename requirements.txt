@@ -5,3 +5,4 @@ django-cron
 gunicorn
 django-environ
 whitenoise
+mysqlclient
