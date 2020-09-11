@@ -26,6 +26,10 @@ EMAIL_PORT = env.int('EMAIL_PORT')
 
 SHOW_COMING_SOON = env.bool('SHOW_COMING_SOON', False)
 
+DATABASES = {
+    'default': env.db('DATABASE_URL', default='sqlite:///huskydb')
+}
+
 ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = 'landing'
@@ -105,16 +109,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mainsite.wsgi.application'
-
-# Database
-DATABASES = {
-    'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-	'NAME': 'huskydb',
-	'USER': 'djadmin',
-	'PASSWORD': '!@#qweASDzxc',
-    }
-}
 
 
 # Password validation
