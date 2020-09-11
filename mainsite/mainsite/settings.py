@@ -30,6 +30,8 @@ DATABASES = {
     'default': env.db('DATABASE_URL', default='sqlite:///huskydb')
 }
 
+MEDIA_ROOT = env.str('MEDIA_ROOT', os.path.join(BASE_DIR, 'uploads'))
+
 ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = 'landing'
@@ -146,7 +148,6 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media Files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/uploads/'
 
 # Login Redirect
