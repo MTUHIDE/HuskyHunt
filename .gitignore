@@ -10,4 +10,7 @@ mainsite/mainsite/settings.py
 
 mainsite/huskydb
 mainsite/uploads/account/profilepics/*
+mainsite/uploads/catalog/*
 
+# Migrations
+**/migrations/**
