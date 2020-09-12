@@ -20,6 +20,7 @@ class user_profile(models.Model):
     picture = models.ImageField(upload_to=upload_directory, height_field=None, width_field=None, blank = True, null=True)
     last_email = models.DateTimeField(auto_now_add=False)
     emails_today = models.IntegerField(blank = False, null=False, default=0)
+    points = models.IntegerField(blank = False, null=False, default=0)
 
 @receiver(pre_save, sender=user_profile)
 def delete_changed_photos(sender, instance, **kwargs):
