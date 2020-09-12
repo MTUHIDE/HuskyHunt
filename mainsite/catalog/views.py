@@ -154,6 +154,12 @@ def report(request, pk):
     else:
         return HttpResponseRedirect('/')
 
+# Used in formatting timedelta objects
+def strfdelta(tdelta, fmt):
+    d = {"days": tdelta.days}
+    d["hours"], rem = divmod(tdelta.seconds, 3600)
+    d["minutes"], d["seconds"] = divmod(rem, 60)
+    return fmt.format(**d)
 
 #This function sends a prepared email message to a seller
 #param: request - array variable that is passed around the website, kinda like global variables
@@ -189,15 +195,28 @@ def email(request, pk):
         # Times to compare
         last_email_original = user_profile.objects.filter(user = request.user)[0].last_email
         one_min_ago_original = datetime.now() - timedelta(minutes=1)
+        twenty_four_hour_ago_original = datetime.now() - timedelta(hours=24)
 
         #Set same timezone
         last_email = last_email_original.astimezone(pytz.timezone('UTC'))
         one_min_ago = one_min_ago_original.astimezone(pytz.timezone('UTC'))
+        twenty_four_hour_ago = twenty_four_hour_ago_original.astimezone(pytz.timezone('UTC'))
+
+        # reset last email count if it has been over 24 hours since last email
+        if (twenty_four_hour_ago > last_email):
+            profile = user_profile.objects.get(user = request.user)
+            profile.emails_today = 0
+            profile.save()
 
         # Checks if the user has sent an email in the last 1 minute
         if (one_min_ago < last_email):
             # sent an email less than two minutes ago
             messages.error(request, 'Please wait one minute between emails!')
+
+        # Check if user has maxed out on emails today
+        elif (user_profile.objects.filter(user = request.user)[0].emails_today >= 5):
+            time_remaining = timedelta(hours=24) - (datetime.now().astimezone(pytz.timezone('UTC')) - last_email)
+            messages.error(request, 'You can only send 5 messages per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."))
 
         #Checks if the message is no empty
         elif (request.GET['message'] != ''):
@@ -213,9 +232,10 @@ def email(request, pk):
             # Sends the email
             email.send();
 
-            #Set last email sent time
+            #Set last email sent time and increment number of emails
             profile = user_profile.objects.get(user = request.user)
             profile.last_email = one_min_ago
+            profile.emails_today = profile.emails_today + 1
             profile.save()
 
             #Displays that the email was sent successfully

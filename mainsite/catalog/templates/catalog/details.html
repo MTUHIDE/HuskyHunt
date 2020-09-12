@@ -42,6 +42,11 @@
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                         <strong>{{message}}</strong> </br> Message failed to send!
                     </div>
+                      {% elif message.message|slice:":27" in 'You can only send 5 messages per day!' %}
+                      <div class="alert" style="background-color:#cc3333">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <strong>{{message}}</strong> </br> Message failed to send!
+                      </div>
                       {% elif message.message == "Please wait one minute between emails!" %}
                       <div class="alert" style="background-color:#cc3333">
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
