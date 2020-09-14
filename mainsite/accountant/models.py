@@ -18,7 +18,7 @@ class user_profile(models.Model):
     home_state = models.CharField(max_length=50, blank = True, null=True)
     zipcode = models.IntegerField(blank = True, null=True)
     picture = models.ImageField(upload_to=upload_directory, height_field=None, width_field=None, blank = True, null=True)
-    last_email = models.DateTimeField(auto_now_add=False)
+    last_email = models.DateTimeField(null=True, auto_now_add=False)
     emails_today = models.IntegerField(blank = False, null=False, default=0)
     points = models.IntegerField(blank = False, null=False, default=0)
 
