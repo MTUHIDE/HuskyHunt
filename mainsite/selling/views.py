@@ -43,6 +43,11 @@ def index(request):
 
                 ride_item.save()       #error?
 
+                # Inrement number of points by one
+                profile = user_profile.objects.get(user = request.user)
+                profile.points = profile.points + 1
+                profile.save()
+
                 # check for failure cases! what happens with invalid data?
                 return HttpResponseRedirect(reverse('rideSharing:index'))
 
@@ -60,6 +65,11 @@ def index(request):
                 item_picture = catalog_form.cleaned_data['item_picture']
                 catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
                 catalogItem_instance.save()
+
+                # Inrement number of points by one
+                profile = user_profile.objects.get(user = request.user)
+                profile.points = profile.points + 1
+                profile.save()
 
                 return HttpResponseRedirect(reverse('catalog:index'))
         else:
