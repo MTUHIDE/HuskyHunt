@@ -19,7 +19,7 @@ Instead we display our custom error message -->
 <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
   <ul class="nav nav-tabs justify-content-center" role="tablist">
     <li role="presentation" class="nav-item"><a class="nav-link active" href="#ctlg" role="tab" data-toggle="tab" id="MarketplaceButton">Marketplace</a></li>
-    <li role="presentation" class="nav-item"><a class="nav-link" href="#ride" role="tab" data-toggle="tab" id="RidesharingButton" >Ridesharing</a></li>
+    <li role="presentation" class="nav-item rona-disabled"><a class="nav-link" href="#ride" role="tab" data-toggle="tab" id="RidesharingButton" >Ridesharing</a></li>
   </ul>
 </div>
 <br>
@@ -89,7 +89,7 @@ Instead we display our custom error message -->
    <!-----------------------------------
    Ridesharing Form
    ----------------------------------->
-   <div role="tabpanel" class="tab-pane" id="ride">
+   <div role="tabpanel" class="tab-pane" id="ride"><div class='rona-disabled'>
      <form action="" method="post">
        {% csrf_token %}
        <input type="hidden" name="submission_type" value="ride">
@@ -143,7 +143,7 @@ Instead we display our custom error message -->
             {% endif %}
           {% endfor %}
         {% endif %}
-   </div>
+   </div> </div>
 
 
 <!-- Used to prevent multiple submits -->
