@@ -2,8 +2,9 @@
 my.cnf
 mainsite/*/__pycache__/
 mainsite/*/*/__pycache__/
-mainsite/mainsite/settings.py
+.env
 .DS_Store
+collected_static
 
 
 # Database Stuff
