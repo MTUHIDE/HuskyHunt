@@ -1,5 +1,5 @@
 #loginPicture {
-    background-image: url("images\mtu_logo_round.png");
+    background-image: url("../images/mtu_logo_round.png");
 }
 
 :root {
@@ -63,6 +63,10 @@ body {
 .pgtitle-mobile {
   display: none;
   text-align: center;
+}
+
+#sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 @media screen and (max-width: 573px) {
@@ -184,4 +188,32 @@ th {
 .husky-modal{
   background-color: #1C1C21;
   border: none;
+}
+
+.rona-disabled {
+    position: relative;
+}
+
+.rona-disabled-overlay {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+
+    opacity: 40%;
+    background-color: rgb(0, 0, 0, 1);
+}
+
+:not(.link) > .rona-disabled-overlay {
+    background-image: url("/static/mainsite/images/rona.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.rona-disabled.link {
+    color: #808080;
 }

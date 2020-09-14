@@ -11,6 +11,12 @@
 <div class="row" style="margin: 0;">
     <div class="col-md-4 align-middle text-center">
         <img class="img-end" src="{{item.item_picture.url}}" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+        <div>
+            <br>
+            <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="sendButton.disabled = true" id="reportForm">
+                <input type="submit" class="btn btn-default" name="reportButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Report Post">
+            </form>
+        </div>
     </div>
     <div class="col-md-8">
         <div class="row">
@@ -32,15 +38,30 @@
                 {% for message in messages %}
                   <!--<p class="alert closebtn">{{ message }}</p>-->
                   {% if message.message == "Please enter a message!" %}
-                  <div class="alert" style="background-color:#cc3333">
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    <strong>{{message}}</strong> </br> Message failed to send!
-                  </div>
+                      <div class="alert" style="background-color:#cc3333">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <strong>{{message}}</strong> </br> Message failed to send!
+                    </div>
+                      {% elif message.message|slice:":27" in 'You can only send 5 messages per day!' %}
+                      <div class="alert" style="background-color:#cc3333">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <strong>{{message}}</strong> </br> Message failed to send!
+                      </div>
+                      {% elif message.message == "Please wait one minute between emails!" %}
+                      <div class="alert" style="background-color:#cc3333">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <strong>{{message}}</strong>
+                      </div>
+                  {% elif message.message == "Post successfully reported!" %}
+                      <div class="alert" style="background-color:#33cc33">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <strong>{{message}}</strong>
+                      </div>
                   {% else %}
-                  <div class="alert" style="background-color:#33cc33">
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    <strong>{{message}}</strong> </br> Message sent successfully!
-                  </div>
+                      <div class="alert" style="background-color:#33cc33">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <strong>{{message}}</strong> </br> Message sent successfully!
+                      </div>
                   {% endif %}
                 {% endfor %}
             {% endif %}
@@ -48,8 +69,8 @@
             <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
             <div class="row">
                 <div class="col-lg-4">
-                <form action="/catalog/{{item.id}}/email" method="get" onsubmit="sendButton.disabled = true" id="emailform">
-                    <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
+                    <form action="/catalog/{{item.id}}/email" method="get" onsubmit="sendButton.disabled = true" id="emailform">
+                        <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
                     </form>
                 </div>
 
@@ -60,6 +81,7 @@
                     <h6> {{item.date_added}} </h6>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

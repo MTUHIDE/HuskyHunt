@@ -14,8 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
 from django.urls import include, path
 from django.conf.urls import url, include
+from . import comingSoon
 
 urlpatterns = [
     path('accountant/', include('accountant.urls', namespace='accountant')),
@@ -30,6 +32,8 @@ urlpatterns = [
     path('auth/complete/google-oauth2/', include('accountant.urls', namespace='authsuccess')),
 ]
 
-from .import settings
+if settings.SHOW_COMING_SOON:
+    urlpatterns.insert(0, url(r'^', comingSoon.index, name='index'))
+
 from django.contrib.staticfiles.urls import static
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

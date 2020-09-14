@@ -19,13 +19,13 @@
             background-color: #1C1C21;
             margin-top: -9px;
         }
-        
+
         @media screen and (max-width: 1060px) {
             .main {
                 flex-direction: column;
             }
         }
-        
+
         .item {
             width: 300px;
             height: 300px;
@@ -41,18 +41,18 @@
             padding: 20px;
             cursor: pointer;
         }
-        
+
         .item h2 {
             margin-top: 20px;
         }
-        
+
         .item img {
             /* width: 100px; */
             height: 100px;
             /* background-color: white; */
         }
         /* unvisited link */
-        
+
         a:link,
         a:visited,
         a:hover,
@@ -60,8 +60,8 @@
             color: unset;
             text-decoration: none;
         }
-        
-        .item:hover, 
+
+        .item:hover,
         .item:hover h2 {
             color: #ffffff;
         }
@@ -81,7 +81,7 @@
         </div>
     </a>
     <a href="{% url 'rideSharing:index' %}">
-        <div class="item">
+        <div class="item rona-disabled">
             <img src="{% static "mainsite/Graphics-03.png" %}">
             <h2>Ridesharing</h2>
             <p>See who's providing rides from Houghton to where you call home, or vice versa.</p>

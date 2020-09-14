@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 <!-- BEGIN FILTERS BLOCK FOR MOBILE DEVICES -->
-{% block filtersmobile %} 
+{% block filtersmobile %}
   <!--filters on sidebar-->
   {% for filter in filters %}
     {% if not curFilters %}
@@ -26,6 +26,8 @@
 <!-- MAIN CONTENT STARTS HERE -->
 
 {% block content %}
+
+<div class="rona-disabled">
 
 <div class="row">
   <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
@@ -89,7 +91,7 @@
               <div class="col-8">
                   {% for query in search_split %}
                   <div class="row">
-                      <div class="col-12">
+                      <div class="col-12" style="color: var(--main-txt-color);">
                           Cities within
                           <input id="RadiusTextValue" type="text" size="4" value="{{query.1.2}}"></input>
                            miles of
@@ -153,22 +155,22 @@
                     <h6 class="text-danger" style="float:right;">This ride is not a round trip!</h6>
                     {% endif %}
                   </div>
-                  <div class="modal-body">
+                  <div class="modal-body husky-modal">
                     <div class="row">
 
                         <div class="col-lg-6">
                           <label class="label">Basic Information</label>
                           <hr style="margin-bottom: 1%;margin-top: 1%;">
 
-                          <h6>Start: 
+                          <h6>Start:
                             <span id="startSpan_destination_city_{{ ride.pk }}">{{ ride.start_city }}</span>
                             <span id="startSpan_destination_state_{{ ride.pk }}">{{ ride.start_state }}</span>
                             <span id="startSpan_destination_zipcode_{{ ride.pk }}">{{ ride.start_zipcode }}</span>
                           </h6>
 
-                          <h6>Destination: 
-                            <span id="destSpan_destination_city_{{ ride.pk }}">{{ ride.destination_city }}</span> 
-                            <span id="destSpan_destination_state_{{ ride.pk }}">{{ ride.destination_state }}</span> 
+                          <h6>Destination:
+                            <span id="destSpan_destination_city_{{ ride.pk }}">{{ ride.destination_city }}</span>
+                            <span id="destSpan_destination_state_{{ ride.pk }}">{{ ride.destination_state }}</span>
                             <span id="destSpan_destination_zipcode_{{ ride.pk }}">{{ ride.destination_zipcode }}</span>
                           </h6>
 
@@ -359,7 +361,7 @@ document.getElementsByName("mapid").forEach(element => {
     let marker = L.marker(ending_coord).bindPopup(
         ('\
             Search for rides near:<br>\
-            <a href="http://localhost:8000/ridesharing/search/?search=[[1]]" class="btn btn-primary">[[2]]</a>\
+            <a href="/ridesharing/search/?search=[[1]]" class="btn btn-primary" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;">[[2]]</a>\
         ')
         .replace("[[1]]", encodeURIComponent("[ "
         + destination_coordinates_lat + " , " + destination_coordinates_lon + " , "
@@ -449,5 +451,7 @@ function updateButtonFunction() {
 
   window.onload = showModal;
 </script>
+
+</div>
 
 {% endblock %}

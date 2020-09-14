@@ -1,0 +1,8 @@
+Django
+Pillow
+social-auth-app-django
+django-cron
+gunicorn
+django-environ
+whitenoise
+mysqlclient

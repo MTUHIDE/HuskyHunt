@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import CatalogItem, Category, SubCategory
+from accountant.models import user_profile
+
 
 # Register your models here.
 class SubCategoryInline(admin.TabularInline):
@@ -16,9 +18,24 @@ class CategoryAdmin(admin.ModelAdmin):
     inlines = [SubCategoryInline]
 
 class CatalogItemAdmin(admin.ModelAdmin):
-    list_display = ('date_added', 'username', 'item_price', 'item_title', 'item_description', 'archived')
-    list_filter = ['archived', 'category', 'date_added', 'username']
+    list_display = ('reported', 'pk', 'date_added', 'username', 'item_price', 'item_title', 'item_description', 'archived')
+    list_filter = ['reported', 'archived', 'category', 'date_added', 'username']
     search_fields = ['item_title', 'item_description']
+    actions = ['remove_post', ]
+
+    def remove_post(self, request, queryset):
+        queryset.update(reported=True)
+        queryset.update(archived=True)
+
+        # Decrement number of points by three
+        profile = user_profile.objects.get(user = request.user)
+        profile.points = profile.points - 3
+        profile.save()
+
+    remove_post.short_description = "Remove offending posts"
+
+
+
 
 admin.site.register(Category)
 admin.site.register(SubCategory)
