@@ -158,8 +158,12 @@ th {
   background-color: #1C1C21;
 }
 .account-card{
-  border: 2px solid #000000;
-  background-color: #1C1C21;
+  border-radius: calc(.25rem - 1px);
+  border: 1px solid var(--main-border-color);
+  width: 90%;
+  background-color: var(--main-bg-color);
+  margin: auto;
+  padding: 5px;
 }
 .husky-card {
   border-radius: calc(.25rem - 1px);
