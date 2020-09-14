@@ -81,9 +81,9 @@
     <nav class="navbar navbar-default navbar-expand-lg navbar-dark fixed-top" style="background-color: black;">
         <div class="top-links">
             <a class="navbar-brand" href="{% url 'landing:welcome' %}">HuskyHunt</a> {% if request.path != '/welcome/' %}
-            <a class="link" href="{% url 'catalog:index' %}">Catalog</a>
+            <a class="link" href="{% url 'catalog:index' %}">Item Catalog</a>
             <a class="link" href="{% url 'rideSharing:index' %}">Ridesharing</a>
-            <a class="link" href="{% url 'selling:index' %}">Selling</a> {% endif %}
+            <a class="link" href="{% url 'selling:index' %}">Add Listing</a> {% endif %}
         </div>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
