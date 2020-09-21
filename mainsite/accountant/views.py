@@ -9,6 +9,11 @@ from accountant.models import user_profile
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+from django import forms
+from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+import math
+
 from django.urls import reverse
 from django.forms import ModelForm
 
@@ -27,13 +32,20 @@ class EditModelForm(ModelForm):
             'picture': PreviewImageWidget()
         }
 
+    def clean_picture(self):
+        pic = self.cleaned_data['picture']
+        if pic.size > settings.MAX_UPLOAD_SIZE:
+            raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
+            params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
+        return pic
+
 # Handles both GET and POST requests for the user account edit page
 def edit(request):
     currentUser = user_profile.objects.get(user = request.user)
 
     if request.method == "POST":
         # Check if the user clicked the 'reset' button last; if so, reset their picture
-        if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) is '1':
+        if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) == '1':
             currentUser.picture = None
 
         # Validate the data submitted

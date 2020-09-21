@@ -7,6 +7,16 @@
 <form action="{% url 'accountant:edit' %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+             {% for field in form %}
+               {% if field.errors %}
+                 <strong>{{ field.label }}: {{ field.errors|striptags }}<br></strong>
+               {% endif %}
+             {% endfor %}
+        </div>
+    {% endif %}
+
   <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
     <div class="row justify-content-center align-end">
        <table> <!---->
