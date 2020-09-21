@@ -197,6 +197,10 @@ def email(request, pk):
         one_min_ago_original = datetime.now() - timedelta(minutes=1)
         twenty_four_hour_ago_original = datetime.now() - timedelta(hours=24)
 
+        # Update the last email original time if it is null
+        if (last_email_original == None):
+            last_email_original = twenty_four_hour_ago_original
+
         #Set same timezone
         last_email = last_email_original.astimezone(pytz.timezone('UTC'))
         one_min_ago = one_min_ago_original.astimezone(pytz.timezone('UTC'))
