@@ -56,6 +56,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 INSTALLED_APPS = [
+    'user',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
