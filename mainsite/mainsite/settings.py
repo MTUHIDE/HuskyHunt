@@ -112,6 +112,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mainsite.wsgi.application'
 
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'mainsite/fixtures')
+]
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
