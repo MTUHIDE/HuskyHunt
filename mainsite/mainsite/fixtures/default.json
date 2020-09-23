@@ -1,0 +1,363 @@
+[{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "!LuA09F61a5FrjP9HW9NAkKsA04pgI3vOx4JvGmSd",
+    "last_login": "2020-02-24T23:26:17.627Z",
+    "is_superuser": false,
+    "username": "seeder",
+    "first_name": "Acorn",
+    "last_name": "Seed",
+    "email": "aseed@mtu.edu",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2020-02-24T23:26:17.523Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}, {
+  "model": "catalog.category",
+  "pk": 1,
+  "fields": {
+    "category_name": "Books",
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T15:59:32.943Z"
+  }
+}, {
+  "model": "catalog.category",
+  "pk": 2,
+  "fields": {
+    "category_name": "Household",
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T15:59:41.360Z"
+  }
+}, {
+  "model": "catalog.category",
+  "pk": 3,
+  "fields": {
+    "category_name": "Electronics",
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T15:59:47.586Z"
+  }
+}, {
+  "model": "catalog.category",
+  "pk": 4,
+  "fields": {
+    "category_name": "Sporting Goods",
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T15:59:55.401Z"
+  }
+}, {
+  "model": "catalog.category",
+  "pk": 5,
+  "fields": {
+    "category_name": "Educational",
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:06:38.338Z"
+  }
+}, {
+  "model": "catalog.category",
+  "pk": 6,
+  "fields": {
+    "category_name": "Miscellaneous",
+    "date_created": "2020-02-16",
+    "date_updated": "2020-02-16T20:44:24.738Z"
+  }
+}, {
+  "model": "catalog.subcategory",
+  "pk": 1,
+  "fields": {
+    "category_name": "Computer Science",
+    "subcategory_of": 1,
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:01:05.581Z"
+  }
+}, {
+  "model": "catalog.subcategory",
+  "pk": 2,
+  "fields": {
+    "category_name": "Summer",
+    "subcategory_of": 4,
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:01:15.512Z"
+  }
+}, {
+  "model": "catalog.subcategory",
+  "pk": 3,
+  "fields": {
+    "category_name": "Winter",
+    "subcategory_of": 4,
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:01:22.419Z"
+  }
+}, {
+  "model": "catalog.subcategory",
+  "pk": 4,
+  "fields": {
+    "category_name": "Gaming",
+    "subcategory_of": 3,
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:01:39.679Z"
+  }
+}, {
+  "model": "catalog.subcategory",
+  "pk": 5,
+  "fields": {
+    "category_name": "Computer",
+    "subcategory_of": 3,
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:01:56.719Z"
+  }
+}, {
+  "model": "catalog.subcategory",
+  "pk": 6,
+  "fields": {
+    "category_name": "Math",
+    "subcategory_of": 1,
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:02:17.294Z"
+  }
+}, {
+  "model": "catalog.subcategory",
+  "pk": 7,
+  "fields": {
+    "category_name": "Furniture",
+    "subcategory_of": 2,
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:04:37.935Z"
+  }
+}, {
+  "model": "catalog.subcategory",
+  "pk": 8,
+  "fields": {
+    "category_name": "Device",
+    "subcategory_of": 5,
+    "date_created": "2018-10-30",
+    "date_updated": "2018-10-30T16:07:11.396Z"
+  }
+}, {
+  "model": "catalog.catalogitem",
+  "pk": 12,
+  "fields": {
+    "username": 1,
+    "category": 4,
+    "date_added": "2019-11-04T15:44:11.233Z",
+    "item_title": "Huskies Pep Band",
+    "item_description": "Your very own huskies pep band!",
+    "item_picture": "catalog/2019/11/04/IMG_1851_S4cRvMH.JPG",
+    "item_price": "300.00",
+    "views": 0,
+    "archived": false,
+    "reported": false,
+    "subcategory": []
+  }
+}, {
+  "model": "catalog.catalogitem",
+  "pk": 13,
+  "fields": {
+    "username": 1,
+    "category": 2,
+    "date_added": "2019-11-04T15:45:25.462Z",
+    "item_title": "Paper Towel",
+    "item_description": "Gently used Paper Towel",
+    "item_picture": "catalog/2019/11/04/PaperTowel.jpg",
+    "item_price": "2.50",
+    "views": 0,
+    "archived": false,
+    "reported": false,
+    "subcategory": []
+  }
+}, {
+  "model": "catalog.catalogitem",
+  "pk": 14,
+  "fields": {
+    "username": 1,
+    "category": 5,
+    "date_added": "2019-11-04T15:46:16.446Z",
+    "item_title": "Mechanical Pencils",
+    "item_description": "Brand new, never opened",
+    "item_picture": "catalog/2019/11/04/Mechanical_Pencils.jpg",
+    "item_price": "8.50",
+    "views": 0,
+    "archived": false,
+    "reported": false,
+    "subcategory": []
+  }
+}, {
+  "model": "catalog.catalogitem",
+  "pk": 15,
+  "fields": {
+    "username": 1,
+    "category": 1,
+    "date_added": "2019-11-04T15:46:59.464Z",
+    "item_title": "Black's law dictionary",
+    "item_description": "Used",
+    "item_picture": "catalog/2019/11/04/lawDict.jpg",
+    "item_price": "25.00",
+    "views": 0,
+    "archived": false,
+    "reported": false,
+    "subcategory": []
+  }
+}, {
+  "model": "catalog.catalogitem",
+  "pk": 16,
+  "fields": {
+    "username": 1,
+    "category": 3,
+    "date_added": "2019-11-04T15:48:12.671Z",
+    "item_title": "Playstation 1",
+    "item_description": "Excellent condition. $65 OBO. Accessories included.",
+    "item_picture": "catalog/2019/11/04/ps1.jpg",
+    "item_price": "65.00",
+    "views": 0,
+    "archived": false,
+    "reported": false,
+    "subcategory": []
+  }
+}, {
+  "model": "catalog.catalogitem",
+  "pk": 19,
+  "fields": {
+    "username": 1,
+    "category": 5,
+    "date_added": "2019-11-04T15:51:28.146Z",
+    "item_title": "Resume Review Service",
+    "item_description": "I review resumes!",
+    "item_picture": "catalog/2019/11/04/FakeREsume.png",
+    "item_price": "10.00",
+    "views": 0,
+    "archived": false,
+    "reported": false,
+    "subcategory": []
+  }
+}, {
+  "model": "catalog.catalogitem",
+  "pk": 20,
+  "fields": {
+    "username": 1,
+    "category": 2,
+    "date_added": "2019-11-04T15:52:36.425Z",
+    "item_title": "Wads guest passes",
+    "item_description": "Need to get rid of",
+    "item_picture": "catalog/2019/11/04/wadsDining.jpg",
+    "item_price": "0.50",
+    "views": 0,
+    "archived": false,
+    "reported": false,
+    "subcategory": []
+  }
+}, {
+  "model": "rideSharing.ridecategory",
+  "pk": 4,
+  "fields": {
+    "category_name": "Thanksgiving Break",
+    "date_created": "2020-02-17",
+    "date_updated": "2020-02-17T19:52:23.350Z"
+  }
+}, {
+  "model": "rideSharing.ridecategory",
+  "pk": 5,
+  "fields": {
+    "category_name": "Christmas Break",
+    "date_created": "2020-02-17",
+    "date_updated": "2020-02-17T19:52:27.891Z"
+  }
+}, {
+  "model": "rideSharing.ridecategory",
+  "pk": 6,
+  "fields": {
+    "category_name": "Spring Break",
+    "date_created": "2020-02-17",
+    "date_updated": "2020-02-17T19:52:34.157Z"
+  }
+}, {
+  "model": "rideSharing.ridecategory",
+  "pk": 7,
+  "fields": {
+    "category_name": "Other",
+    "date_created": "2020-02-26",
+    "date_updated": "2020-02-26T23:41:00.268Z"
+  }
+}, {
+  "model": "rideSharing.rideitem",
+  "pk": 1,
+  "fields": {
+    "username": 1,
+    "views": 0,
+    "date_added": "2020-02-26T23:53:21.824Z",
+    "ride_category": 7,
+    "start_city": "Houghton",
+    "start_state": "Michigan",
+    "start_zipcode": "49931",
+    "destination_city": "St. Igance",
+    "destination_state": "",
+    "destination_zipcode": "",
+    "destination_coordinates_lat": "45.868600",
+    "destination_coordinates_lon": "-84.727800",
+    "start_coordinates_lat": "0.000000",
+    "start_coordinates_lon": "0.000000",
+    "date_leaving": "2020-02-27",
+    "round_trip": true,
+    "return_date": "2020-02-29",
+    "spots": 3,
+    "driver": "Carlito",
+    "notes": "Round Trip ride, asking for gas money",
+    "price": "20.00",
+    "archived": false
+  }
+}, {
+  "model": "rideSharing.rideitem",
+  "pk": 2,
+  "fields": {
+    "username": 1,
+    "views": 0,
+    "date_added": "2020-02-26T23:55:03.614Z",
+    "ride_category": 5,
+    "start_city": "Houghton",
+    "start_state": "Michigan",
+    "start_zipcode": "49931",
+    "destination_city": "Gaylord",
+    "destination_state": "MI",
+    "destination_zipcode": "",
+    "destination_coordinates_lat": "45.027500",
+    "destination_coordinates_lon": "-84.674800",
+    "start_coordinates_lat": "0.000000",
+    "start_coordinates_lon": "0.000000",
+    "date_leaving": "2020-12-19",
+    "round_trip": true,
+    "return_date": "2020-12-31",
+    "spots": 5,
+    "driver": "Carlito",
+    "notes": "Lots of luggage space. Safe driver. Sometimes.",
+    "price": "45.00",
+    "archived": false
+  }
+}, {
+  "model": "rideSharing.rideitem",
+  "pk": 3,
+  "fields": {
+    "username": 1,
+    "views": 0,
+    "date_added": "2020-02-26T23:56:19.498Z",
+    "ride_category": 6,
+    "start_city": "Houghton",
+    "start_state": "Michigan",
+    "start_zipcode": "49931",
+    "destination_city": "Detroit",
+    "destination_state": "",
+    "destination_zipcode": "",
+    "destination_coordinates_lat": "42.348700",
+    "destination_coordinates_lon": "-83.056700",
+    "start_coordinates_lat": "0.000000",
+    "start_coordinates_lon": "0.000000",
+    "date_leaving": "2020-03-07",
+    "round_trip": true,
+    "return_date": "2020-03-15",
+    "spots": 4,
+    "driver": "Carlito",
+    "notes": "Calling all gamers.",
+    "price": "35.67",
+    "archived": false
+  }
+}]
