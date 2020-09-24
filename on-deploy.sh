@@ -2,6 +2,7 @@
 
 # Migrate database
 python3 mainsite/manage.py migrate
+python3 mainsite/manage.py migrate django_cron
 
 if [ "$DEBUG" = 'true' ]
 then

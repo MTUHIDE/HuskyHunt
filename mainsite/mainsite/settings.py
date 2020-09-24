@@ -86,7 +86,7 @@ MIDDLEWARE = [
 
 CRON_CLASSES = [
 	"rideSharing.cron.ArchiveRides",
-    "rideSharing.cron.deleteOldRides"
+    "rideSharing.cron.deleteOldRides",
     "catalog.cron.archiveOldItems",
     "catalog.cron.deleteOldItems"
 ]
