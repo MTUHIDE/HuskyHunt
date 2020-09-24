@@ -1,2 +1,2 @@
-release: python3 mainsite/manage.py migrate && python3 mainsite/manage.py loaddata default
+release: ./on-deploy.sh
 web: gunicorn --chdir mainsite mainsite.wsgi
