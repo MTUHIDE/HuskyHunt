@@ -6,3 +6,4 @@ gunicorn
 django-environ
 whitenoise
 mysqlclient
+djangorestframework
