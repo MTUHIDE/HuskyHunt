@@ -10,14 +10,28 @@
 
     <div class="row">
       <div class="col">
+        <p>
+          There is a REST API (read-only) available at <code>/api</code>.
+        </p>
+
+        <p>
+          Documentation can be found <a href="/api">here</a>.
+        </p>
+
+        <p>
+          All requests require an authorization header to be included:
+        </p>
+
+        <p>
+          <code>Authorization: Token {{current_token}}</code>
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
         <a href="/accountant/developer/token/generate" class="btn {{ current_token|yesno:"btn-danger,btn-primary"}}">{{ current_token|yesno:"Regenerate Token,Generate Token"}}</a>
       </div>
-
-      {% if current_token %}
-        <div class="col*-lg-auto my-auto">
-          <code>{{current_token}}</code>
-        </div>
-      {% endif %}
     </div>
   </div>
 </div>
