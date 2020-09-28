@@ -16,6 +16,10 @@ body {
     background: #1C1C21;
 }
 
+p {
+  color: white;
+}
+
 .top-links a, .my-account a, .logout a{
   color: #FFCD00;
   padding-left: 1rem;

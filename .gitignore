@@ -11,3 +11,6 @@ collected_static
 mainsite/huskydb
 mainsite/uploads/account/profilepics/*
 mainsite/uploads/catalog/*
+
+# Virtual environment
+venv

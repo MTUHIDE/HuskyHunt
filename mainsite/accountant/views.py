@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from catalog.models import CatalogItem, Category, SubCategory
 from rideSharing.models import RideItem
+from rest_framework.authtoken.models import Token
 from django.utils import timezone
 
 from accountant.models import user_profile
@@ -82,6 +83,29 @@ def index(request):
         return render(request, template, context)
     else:
         return HttpResponseRedirect('/')
+
+def developer(request):
+    if request.user.is_authenticated:
+        current_token = Token.objects.filter(user = request.user).first()
+
+        return render(request, 'accountant/developer_settings.html', {
+            'current_token': current_token
+        })
+    else:
+        return HttpResponseRedirect('/')
+
+def developer_generate_token(request):
+    if request.user.is_authenticated:
+        current_token = Token.objects.filter(user = request.user).first()
+
+        if current_token:
+            current_token.delete()
+
+        Token.objects.create(user = request.user)
+
+    else:
+        return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/accountant/developer')
 
 # Used as an intermediate function to delete an item
 def deleteItem(request, pk):
