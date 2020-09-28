@@ -56,6 +56,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 INSTALLED_APPS = [
+    'user',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,7 +86,7 @@ MIDDLEWARE = [
 
 CRON_CLASSES = [
 	"rideSharing.cron.ArchiveRides",
-    "rideSharing.cron.deleteOldRides"
+    "rideSharing.cron.deleteOldRides",
     "catalog.cron.archiveOldItems",
     "catalog.cron.deleteOldItems"
 ]
@@ -112,6 +113,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mainsite.wsgi.application'
 
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'mainsite/fixtures')
+]
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
