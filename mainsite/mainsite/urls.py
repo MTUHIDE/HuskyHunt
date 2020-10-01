@@ -17,7 +17,14 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import include, path
 from django.conf.urls import url, include
+from rest_framework import routers
+from api import views
 from . import comingSoon
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'items', views.CatalogItemViewSet)
+router.register(r'categories', views.CategoryViewSet)
 
 urlpatterns = [
     path('accountant/', include('accountant.urls', namespace='accountant')),
@@ -30,6 +37,7 @@ urlpatterns = [
     path('', include('landing.urls', namespace='landing')),
     url(r'^auth/', include('social_django.urls', namespace='social')),  # <- Here
     path('auth/complete/google-oauth2/', include('accountant.urls', namespace='authsuccess')),
+    path('api/', include(router.urls)),
 ]
 
 if settings.SHOW_COMING_SOON:
