@@ -20,6 +20,40 @@ from django.forms import ModelForm
 
 from .widgets import PreviewImageWidget
 
+from profanity_filter import ProfanityFilter
+
+# ------
+#https://stackoverflow.com/questions/8000022/django-template-how-to-look-up-a-dictionary-value-with-a-variable
+from django.template.defaulttags import register
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+def profane_filter_base(dict, check):
+    ret_dict = {}
+    for key, val in dict.items():
+        ret_arr = []
+        for err in val:
+            if(isinstance(err, forms.ValidationError)):
+                if( (err.code == "profane") == check):
+                    ret_arr.append(err)
+            elif not check:
+                ret_arr.append(err)
+        if len(ret_arr) > 0:
+            ret_dict[key] = ret_arr
+    return ret_dict
+
+@register.filter
+def profane_filter(dict):
+    return profane_filter_base(dict, True)
+
+@register.filter
+def normal_filter(dict):
+    return profane_filter_base(dict, False)
+#------
+
+
+pf = ProfanityFilter()
 
 # The HTML Form that's submitted on the Edit Account page
 #   the ModelForm is used for data validation and automatic HTML production
@@ -32,6 +66,41 @@ class EditModelForm(ModelForm):
             #'bio': Textarea(attrs={'rows': 5}),
             'picture': PreviewImageWidget()
         }
+
+    def profanity_cleaner(self, target):
+        value = self.cleaned_data[target]
+        if value is None:
+            return None
+
+        profane_tokens = []
+        # https://github.com/rominf/profanity-filter/blob/73a813624d1c201d8ffeee8e94d1059f64d647d2/profanity_filter/profanity_filter.py#L788
+        text_parts = pf._split_by_language(text=value)
+        for language, text_part in text_parts:
+            doc = pf._parse(language=language, text=text_part)
+            for token in doc:
+                if token._.is_profane:
+                    profane_tokens.append(token.text)
+                    #text_part = pf._replace_token(text=text_part, old=token, new=("<p>" + token.text + "</p>"))
+
+        if pf.is_profane(value):
+            message = ', '.join(profane_tokens)
+            raise forms.ValidationError( message,
+                code="profane",
+                params={
+                    'target_label': target.replace('_', ' ').capitalize(),  # default django behavior
+                    'profane_strings': profane_tokens
+                })
+        return value
+
+    def clean_preferred_name(self):
+        return self.profanity_cleaner('preferred_name')
+
+    def clean_home_city(self):
+        return self.profanity_cleaner('home_city')
+
+    def clean_home_state(self):
+        return self.profanity_cleaner('home_state')
+
 
     def clean_picture(self):
         pic = self.cleaned_data['picture']
@@ -58,8 +127,12 @@ def edit(request):
     else: # ie request.method == "GET"
         form = EditModelForm(instance = currentUser)
 
+    context = {
+        'form': form,
+    }
+
     # Either a GET or a failed POST end up here
-    return render(request, 'accountant/account_detail.html', {'form': form})
+    return render(request, 'accountant/account_detail.html', context)
 
 # Redirect to the welcome page (this used to be the catalog)
 def catalogRedirect(request):

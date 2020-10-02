@@ -7,20 +7,50 @@
 <form action="{% url 'accountant:edit' %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 
-    {% if form.errors %}
+
+{% if form.errors %}
+    <!-- Profanity, handled separately so they're all together and have a button -->
+    {% if form.errors.as_data|profane_filter %}
         <div class="alert alert-danger" role="alert">
-             {% for field in form %}
-               {% if field.errors %}
-                 <strong>{{ field.label }}: {{ field.errors|striptags }}<br></strong>
-               {% endif %}
-             {% endfor %}
+            Some of the text you've submitted is being marked as profane. Flagged words:<br>
+            {% for field in form %}
+                {% if form.errors.as_data|profane_filter|get_item:field.name %}
+                    <strong>{{ field.label }}:&nbsp;</strong>
+                    {% for error in form.errors.as_data|profane_filter|get_item:field.name %} {% for mess in error %}
+                        {{ mess }}&nbsp;
+                    {% endfor %} {% endfor %}
+                    <br>
+                {% endif %}
+            {% endfor %}
+            If you think our profanity checker made a mistake, click here to submit anyway (this will also flag for moderator review):
+            <button>YUh</button>
+
         </div>
     {% endif %}
 
+    <!-- All the remaining errors, handled as in other pages: -->
+    {% if form.errors.as_data|normal_filter %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+                {% if form.errors.as_data|normal_filter|get_item:field.name is not None %}
+
+                    <strong>{{ field.label }}:</strong><br>
+                    {% for error in form.errors.as_data|normal_filter|get_item:field.name %} {% for mess in error %}
+                        {{ mess|striptags }}<br>
+                    {% endfor %} {% endfor %}
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}
+
   <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
     <div class="row justify-content-center align-end">
-       <table> <!---->
-        {{ form.as_table }}
+       <table>
+        {% for field in form %}
+            <tr><th>{{ field.label_tag }}</th><td>{{ field }}</td></tr>
+        {% endfor %}
       </table>
 
       <br>
@@ -43,5 +73,14 @@
   {% endfor %}
   document.getElementById("picture_id").style.color = "#ACBABD";
 </script>
+
+<script type="text/javascript">
+{% if form.errors %}
+    {% for field in form %}
+        document.getElementById("{{field.id_for_label}}").classList.add('{% if field.errors %}is-{% endif %}invalid');
+    {% endfor %}
+{% endif %}
+</script>
+
 
 {% endblock %}
