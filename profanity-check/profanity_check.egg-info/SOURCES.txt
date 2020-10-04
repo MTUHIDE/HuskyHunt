@@ -1,0 +1,13 @@
+README.md
+setup.py
+profanity_check/__init__.py
+profanity_check/profanity_check.py
+profanity_check.egg-info/PKG-INFO
+profanity_check.egg-info/SOURCES.txt
+profanity_check.egg-info/dependency_links.txt
+profanity_check.egg-info/requires.txt
+profanity_check.egg-info/top_level.txt
+profanity_check/data/model.joblib
+profanity_check/data/vectorizer.joblib
+tests/__init__.py
+tests/test_profanity_check.py
