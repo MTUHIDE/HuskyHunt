@@ -20,14 +20,13 @@ from django.forms import ModelForm
 
 from .widgets import PreviewImageWidget
 
-from profanity_filter import ProfanityFilter
+import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", UserWarning)
+    from profanity_check import predict, predict_prob
 
 # ------
-#https://stackoverflow.com/questions/8000022/django-template-how-to-look-up-a-dictionary-value-with-a-variable
 from django.template.defaulttags import register
-@register.filter
-def get_item(dictionary, key):
-    return dictionary.get(key)
 
 def profane_filter_base(dict, check):
     ret_dict = {}
@@ -50,10 +49,13 @@ def profane_filter(dict):
 @register.filter
 def normal_filter(dict):
     return profane_filter_base(dict, False)
+
+#https://stackoverflow.com/questions/8000022/django-template-how-to-look-up-a-dictionary-value-with-a-variable
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 #------
 
-
-pf = ProfanityFilter()
 
 # The HTML Form that's submitted on the Edit Account page
 #   the ModelForm is used for data validation and automatic HTML production
@@ -67,30 +69,32 @@ class EditModelForm(ModelForm):
             'picture': PreviewImageWidget()
         }
 
+    def __init__(self, *args, **kwargs):
+        print(kwargs)
+        self.profCheck = kwargs.pop('profCheck', True)
+        super().__init__(*args, **kwargs)
+
     def profanity_cleaner(self, target):
         value = self.cleaned_data[target]
         if value is None:
             return None
 
-        profane_tokens = []
-        # https://github.com/rominf/profanity-filter/blob/73a813624d1c201d8ffeee8e94d1059f64d647d2/profanity_filter/profanity_filter.py#L788
-        text_parts = pf._split_by_language(text=value)
-        for language, text_part in text_parts:
-            doc = pf._parse(language=language, text=text_part)
-            for token in doc:
-                if token._.is_profane:
-                    profane_tokens.append(token.text)
-                    #text_part = pf._replace_token(text=text_part, old=token, new=("<p>" + token.text + "</p>"))
+        print(self.profCheck)
 
-        if pf.is_profane(value):
-            message = ', '.join(profane_tokens)
-            raise forms.ValidationError( message,
-                code="profane",
-                params={
-                    'target_label': target.replace('_', ' ').capitalize(),  # default django behavior
-                    'profane_strings': profane_tokens
-                })
+        if self.profCheck:
+            tokens = value.split(' ') # there are fancier tokenizing schemes but eh, split on space works
+            profane_tokens = [ t[0] for t in zip(tokens, predict(tokens)) if t[1] ]
+
+            if len(profane_tokens) > 0:
+                message = ', '.join(profane_tokens)
+                raise forms.ValidationError( message,
+                    code="profane",
+                    params={
+                        'target_label': target.replace('_', ' ').capitalize(),  # default django behavior
+                        'profane_strings': profane_tokens
+                    })
         return value
+
 
     def clean_preferred_name(self):
         return self.profanity_cleaner('preferred_name')
@@ -118,8 +122,13 @@ def edit(request):
         if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) == '1':
             currentUser.picture = None
 
+        # profanity checking -- normally validate; flag to moderator if the "Submit Anyway" is pressed
+        profCheck = not (request.POST.get( 'submit_btn' ) == "Submit Anyway")
+        if not profCheck:
+            pass # TODO TODO Flag for moderator attention
+
         # Validate the data submitted
-        form = EditModelForm(request.POST, request.FILES, instance = currentUser)
+        form = EditModelForm(request.POST, request.FILES, instance = currentUser, profCheck = profCheck )
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('accountant:index'))
