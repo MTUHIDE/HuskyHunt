@@ -70,7 +70,6 @@ class EditModelForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        print(kwargs)
         self.profCheck = kwargs.pop('profCheck', True)
         super().__init__(*args, **kwargs)
 
@@ -78,8 +77,6 @@ class EditModelForm(ModelForm):
         value = self.cleaned_data[target]
         if value is None:
             return None
-
-        print(self.profCheck)
 
         if self.profCheck:
             tokens = value.split(' ') # there are fancier tokenizing schemes but eh, split on space works
