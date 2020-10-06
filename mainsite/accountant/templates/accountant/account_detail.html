@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% load profanity_tags %}
+
 <!-- <h1> {{ account.username }} </h1>  <!---->
 
 <form action="{% url 'accountant:edit' %}" method="post" enctype="multipart/form-data">

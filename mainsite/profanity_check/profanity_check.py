@@ -1,3 +1,5 @@
+# Cloned from https://github.com/vzhou842/profanity-check
+
 import pkg_resources
 import numpy as np
 import joblib
