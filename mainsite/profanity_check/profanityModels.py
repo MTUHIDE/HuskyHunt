@@ -19,11 +19,13 @@ class ProfFiltered_ModelForm( ModelForm ):
         super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        super().save(commit)    # if errors, should raise ValueError and skip next lines
+        retval = super().save(commit)    # if errors, should raise ValueError and skip next lines
 
-        if not self.profCheck:
+        if commit and not self.profCheck:
             # TODO: Raise to mod attention for real
             print("TODO: Raise for mod approval")
+
+        return retval
 
 
     def profanity_cleaner(self, target):

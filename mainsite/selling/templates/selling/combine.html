@@ -34,15 +34,7 @@ Instead we display our custom error message -->
      <div class='row justify-content-center'>
          <div class='col-lg-5' style='margin: 10px;'>
             <!-- Catalog Form Errors -->
-             {% if catalog_form.errors %}
-                 <div class="alert alert-danger" role="alert">
-                      {% for field in catalog_form %}
-                        {% if field.errors %}
-                          <strong>{{ field.label }}: {{ field.errors|striptags }}<br></strong>
-                        {% endif %}
-                      {% endfor %}
-                 </div>
-             {% endif %}
+
              {% if too_many_items %}
                 <div class="alert alert-danger" role="alert">
                   <strong>You have reached the limit of 10 active items!<br></strong>
@@ -52,6 +44,11 @@ Instead we display our custom error message -->
             {% if not too_many_items%}
                <form role="form" method="post" enctype="multipart/form-data" style='border: 2xp;'>
                    {% csrf_token %}
+
+                   {% with form=catalog_form %}
+                       {% include "profanity_check/errors.html" %}
+                   {% endwith %}
+
                    <input type="hidden" name="submission_type" value="ctlg">
 
                    {{ catalog_form.as_p}}
@@ -102,22 +99,18 @@ Instead we display our custom error message -->
        <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
 
         <!-- Ride Form Errors -->
-        {% if ride_form.errors %}
-        <div class="alert alert-danger" role="alert">
-          {% for field in ride_form %}
-            {% if field.errors %}
-              <strong>{{ field.label }}: {{ field.errors|striptags }}<br></strong>
-            {% endif %}
-          {% endfor %}
-        </div>
-        {% endif %}
+
         {% if too_many_rides %}
           <div class="alert alert-danger" role="alert">
-            <strong>You have reached the limit of 4 active rides!<br></strong>
+            <strong>You have reached the limit of 5 active rides!<br></strong>
           </div>
         {% endif  %}
 
         {% if not too_many_rides %}
+            {% with form=ride_form %}
+                {% include "profanity_check/errors.html" %}
+            {% endwith %}
+
            <div class="row justify-content-center">
              <div class="col-lg-5">
                  <table>
