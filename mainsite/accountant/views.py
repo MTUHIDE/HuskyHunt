@@ -10,16 +10,22 @@ from accountant.models import user_profile
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+from django import forms
+from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+import math
+
 from django.urls import reverse
 from django.forms import ModelForm
 
 from .widgets import PreviewImageWidget
 
+from profanity_check.profanityModels import ProfFiltered_ModelForm
 
 # The HTML Form that's submitted on the Edit Account page
 #   the ModelForm is used for data validation and automatic HTML production
 
-class EditModelForm(ModelForm):
+class EditModelForm( ProfFiltered_ModelForm ):
     class Meta:
         model = user_profile
         fields = ['preferred_name', 'home_city', 'home_state', 'zipcode', 'picture']
@@ -28,17 +34,34 @@ class EditModelForm(ModelForm):
             'picture': PreviewImageWidget()
         }
 
+    def clean_preferred_name(self):
+        return self.profanity_cleaner('preferred_name')
+
+    def clean_home_city(self):
+        return self.profanity_cleaner('home_city')
+
+    def clean_home_state(self):
+        return self.profanity_cleaner('home_state')
+
+
+    def clean_picture(self):
+        pic = self.cleaned_data['picture']
+        if pic.size > settings.MAX_UPLOAD_SIZE:
+            raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
+            params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
+        return pic
+
 # Handles both GET and POST requests for the user account edit page
 def edit(request):
     currentUser = user_profile.objects.get(user = request.user)
 
     if request.method == "POST":
         # Check if the user clicked the 'reset' button last; if so, reset their picture
-        if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) is '1':
+        if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) == '1':
             currentUser.picture = None
 
         # Validate the data submitted
-        form = EditModelForm(request.POST, request.FILES, instance = currentUser)
+        form = EditModelForm(request.POST, request.FILES, instance = currentUser, override_text = "Submit Anyway" )#, profCheck = profCheck )
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('accountant:index'))
@@ -46,8 +69,12 @@ def edit(request):
     else: # ie request.method == "GET"
         form = EditModelForm(instance = currentUser)
 
+    context = {
+        'form': form,
+    }
+
     # Either a GET or a failed POST end up here
-    return render(request, 'accountant/account_detail.html', {'form': form})
+    return render(request, 'accountant/account_detail.html', context)
 
 # Redirect to the welcome page (this used to be the catalog)
 def catalogRedirect(request):

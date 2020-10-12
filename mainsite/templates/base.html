@@ -176,23 +176,27 @@
     </template>
 
     <script>
-        document.addEventListener("DOMContentLoaded", (e) => {
+        const RONA_DISABLE = true; // this should read from settings
 
-            let templateElement = document.getElementsByName("rona-disabled-template")[0];
-            var modalElement = new bootstrap.Modal(document.getElementById('rona-modal'), { keyboard: false });
+        if(RONA_DISABLE) {
+            document.addEventListener("DOMContentLoaded", (e) => {
 
-            document.querySelectorAll(".rona-disabled").forEach( (item) => {
-                let clone = templateElement.content.cloneNode(true);
+                let templateElement = document.getElementsByName("rona-disabled-template")[0];
+                var modalElement = new bootstrap.Modal(document.getElementById('rona-modal'), { keyboard: false });
 
-                clone.querySelector(".rona-disabled-overlay").addEventListener("click", (e) => {
-                    modalElement.show();
-                    e.preventDefault();
-                    e.stopPropagation();
+                document.querySelectorAll(".rona-disabled").forEach( (item) => {
+                    let clone = templateElement.content.cloneNode(true);
+
+                    clone.querySelector(".rona-disabled-overlay").addEventListener("click", (e) => {
+                        modalElement.show();
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+
+                    item.appendChild(clone);
                 });
-
-                item.appendChild(clone);
             });
-        });
+        }
     </script>
 
   </body>

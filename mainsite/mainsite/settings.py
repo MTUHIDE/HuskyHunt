@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'polls',
     'selling',
     'social_django',
+    'profanity_check',
 ]
 
 REST_FRAMEWORK = {

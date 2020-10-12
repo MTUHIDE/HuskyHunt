@@ -8,8 +8,11 @@ from django.utils.translation import ugettext_lazy as _
 import math
 from datetime import date, timedelta
 
+from profanity_check.profanityModels import ProfFiltered_ModelForm
+
+
 #Defines the form to create an item
-class SellingForm(forms.ModelForm):
+class SellingForm( ProfFiltered_ModelForm ):
     class Meta:
 
         #The table that the information will go into
@@ -42,18 +45,24 @@ class SellingForm(forms.ModelForm):
             raise forms.ValidationError(_('Price cannot be negative!'))
         return price
 
+    def clean_item_title(self):
+        return self.profanity_cleaner('item_title')
 
-class RideForm(forms.ModelForm):
+    def clean_item_description(self):
+        return self.profanity_cleaner('item_description')
+
+
+class RideForm( ProfFiltered_ModelForm ):
     class Meta:
         #The table that the information will go into
         model = RideItem
 
         # The normal input areas
         fields = ['ride_category', 'start_city', 'start_state', 'start_zipcode', 'destination_city', 'destination_state', 'destination_zipcode', 'date_leaving', 'round_trip', 'return_date', 'spots', 'driver', 'notes', 'price']
-        
+
         #The "special" input areas
         widgets = {
-            'driver': TextInput(attrs={'readonly': 'readonly'}), 
+            'driver': TextInput(attrs={'readonly': 'readonly'}),
             'notes': forms.Textarea(attrs={'cols': 80, 'rows': 10}),
             'date_leaving': forms.DateInput(attrs={'type': 'date'}),
             'return_date': forms.DateInput(attrs={'type': 'date'})
@@ -64,6 +73,25 @@ class RideForm(forms.ModelForm):
 
             #Gets all the available categories for the new item
             self.fields['category'].queryset = RideCategory.objects.all()
+
+    def clean_driver(self):
+        return self.profanity_cleaner('driver')
+
+    def clean_notes(self):
+        return self.profanity_cleaner('notes')
+
+    def clean_start_city(self):
+        return self.profanity_cleaner('start_city')
+
+    def clean_start_state(self):
+        return self.profanity_cleaner('start_state')
+
+    def clean_destination_city(self):
+        return self.profanity_cleaner('destination_city')
+
+    def clean_destination_state(self):
+        return self.profanity_cleaner('destination_state')
+
 
     def clean_price(self):
         price = self.cleaned_data['price']

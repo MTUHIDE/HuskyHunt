@@ -1,0 +1,38 @@
+{% load profanity_tags %}
+
+{% if form.errors %}
+    <!-- Profanity, handled separately so they're all together and have a button -->
+    {% if form.errors.as_data|profane_filter %}
+        <div class="alert alert-danger" role="alert">
+            Some of the text you've submitted is being marked as profane. Flagged words:<br>
+            {% for field in form %}
+                {% if form.errors.as_data|profane_filter|get_item:field.name %}
+                    <strong>{{ field.label }}:&nbsp;</strong>
+                    {% for error in form.errors.as_data|profane_filter|get_item:field.name %} {% for mess in error %}
+                        {{ mess }}&nbsp;
+                    {% endfor %} {% endfor %}
+                    <br>
+                {% endif %}
+            {% endfor %}
+            If you think our profanity checker made a mistake, click here to submit anyway (this will also flag for moderator review):
+            <input type="submit" name="submit_btn" value="Submit Anyway" class="btn btn-outline-warning husky-button-light">
+
+        </div>
+    {% endif %}
+
+    <!-- All the remaining errors, handled as in other pages: -->
+    {% if form.errors.as_data|normal_filter %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+                {% if form.errors.as_data|normal_filter|get_item:field.name is not None %}
+
+                    <strong>{{ field.label }}:</strong><br>
+                    {% for error in form.errors.as_data|normal_filter|get_item:field.name %} {% for mess in error %}
+                        {{ mess|striptags }}<br>
+                    {% endfor %} {% endfor %}
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}
