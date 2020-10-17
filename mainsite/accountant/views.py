@@ -5,6 +5,7 @@ from catalog.models import CatalogItem, Category, SubCategory
 from rideSharing.models import RideItem
 from rest_framework.authtoken.models import Token
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 from accountant.models import user_profile
 from django.db.models import Q
@@ -52,6 +53,7 @@ class EditModelForm( ProfFiltered_ModelForm ):
         return pic
 
 # Handles both GET and POST requests for the user account edit page
+@login_required(login_url='/')
 def edit(request):
     currentUser = user_profile.objects.get(user = request.user)
 
@@ -86,57 +88,50 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 # Loads the primary account page
+@login_required(login_url='/')
 def index(request):
+    currentUser = user_profile.objects.get(user = request.user)
+    template = 'accountant/index.html'
+    defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
 
-    if request.user.is_authenticated:
-        currentUser = user_profile.objects.get(user = request.user)
-        template = 'accountant/index.html'
-        defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
+    # load items and rides
+    my_items = CatalogItem.objects.filter(username = request.user, archived='False')
+    ride_items = RideItem.objects.filter(username = request.user, archived='False')
+    filters = Category.objects.all()
+    title = 'My items'
 
-        # load items and rides
-        my_items = CatalogItem.objects.filter(username = request.user, archived='False')
-        ride_items = RideItem.objects.filter(username = request.user, archived='False')
-        filters = Category.objects.all()
-        title = 'My items'
+  # Put data in context to be accessed from template
+    context = {
+        'item_list':my_items,
+        'ride_list':ride_items,
+        'title': title,
+        'filters': filters,
+        'defaultPicture': currentUser.picture.url if currentUser.picture else defaultPicture,
+    }
+    return render(request, template, context)
 
-      # Put data in context to be accessed from template
-        context = {
-            'item_list':my_items,
-            'ride_list':ride_items,
-            'title': title,
-            'filters': filters,
-            'defaultPicture': currentUser.picture.url if currentUser.picture else defaultPicture,
-        }
-        return render(request, template, context)
-    else:
-        return HttpResponseRedirect('/')
-
+@login_required(login_url='/')
 def developer(request):
-    if request.user.is_authenticated:
-        current_token = Token.objects.filter(user = request.user).first()
+    current_token = Token.objects.filter(user = request.user).first()
 
-        return render(request, 'accountant/developer_settings.html', {
-            'current_token': current_token
-        })
-    else:
-        return HttpResponseRedirect('/')
+    return render(request, 'accountant/developer_settings.html', {
+        'current_token': current_token
+    })
 
+@login_required(login_url='/')
 def developer_generate_token(request):
-    if request.user.is_authenticated:
-        current_token = Token.objects.filter(user = request.user).first()
+    current_token = Token.objects.filter(user = request.user).first()
 
-        if current_token:
-            current_token.delete()
+    if current_token:
+        current_token.delete()
 
-        Token.objects.create(user = request.user)
+    Token.objects.create(user = request.user)
 
-    else:
-        return HttpResponseRedirect('/')
     return HttpResponseRedirect('/accountant/developer')
 
 # Used as an intermediate function to delete an item
+@login_required(login_url='/')
 def deleteItem(request, pk):
-  if request.user.is_authenticated:
     # delete item from database
     item = CatalogItem.objects.get(pk=pk)
 
@@ -148,12 +143,10 @@ def deleteItem(request, pk):
 
     # redirect to accountant page
     return HttpResponseRedirect('/accountant')
-  else:
-    return HttpResponseRedirect('/')
 
 # Used as an intermediate function to delete an item
+@login_required(login_url='/')
 def deleteRide(request, pk):
-  if request.user.is_authenticated:
     # delete ride from database
     ride = RideItem.objects.get(pk=pk)
 
@@ -164,5 +157,3 @@ def deleteRide(request, pk):
 
     # redirect to accountant page (refresh)
     return HttpResponseRedirect('/accountant')
-  else:
-    return HttpResponseRedirect('/')
