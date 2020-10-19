@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
 from .forms import SellingForm
@@ -16,10 +17,8 @@ from rideSharing.models import RideItem
 from accountant.models import user_profile
 
 
+@login_required(login_url='/')
 def index(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('catalog:index'))
-
     template = "selling/combine.html"
     catalog_form = None
     ride_form = None
