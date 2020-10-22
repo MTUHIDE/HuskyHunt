@@ -4,6 +4,7 @@ from catalog.models import CatalogItem, Category, SubCategory
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -44,6 +45,7 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #param: request - array variable that is passed around the website, kinda like global variables
 #returns: all items in the database that contain the string
 #from the search text field in their name or description
+@login_required(login_url='/')
 def search(request):
     #The CSS code for this function can be found here
     template = 'catalog/index.html'
@@ -51,43 +53,37 @@ def search(request):
     #The title for the webpage
     title = 'MTU Catalog'
 
-    #Checks to make sure the user has logged in
-    if request.user.is_authenticated:
-        #Uses the filter function to get the data of the searched items
-        recent_items = CatalogItem.objects.filter(
-            Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search']),
-            archived='False'
-        )[:500]
+    #Uses the filter function to get the data of the searched items
+    recent_items = CatalogItem.objects.filter(
+        Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search']),
+        archived='False'
+    )[:500]
 
-        #Gets all the different categories
-        filters = Category.objects.all()
+    #Gets all the different categories
+    filters = Category.objects.all()
 
-        # Paginator will show 16 items per page
-        paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
-        page = request.GET.get('page') # Gets the page number to display
-        items = paginator.get_page(page)
+    # Paginator will show 16 items per page
+    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
+    page = request.GET.get('page') # Gets the page number to display
+    items = paginator.get_page(page)
 
-        #Puts all the data to be displayed into context
-        context = {
-          'items': items,
-          'title': title,
-          'filters': filters,
-        }
+    #Puts all the data to be displayed into context
+    context = {
+      'items': items,
+      'title': title,
+      'filters': filters,
+    }
 
-        addErrorOnEmpty(context, 'SearchFail')
+    addErrorOnEmpty(context, 'SearchFail')
 
-        #Returns a render function call to display onto the website for the user to see
-        return render(request, template, context)
-
-    #If the user is not logged in then they get redirected to the HuskyStatue screen
-    else:
-        return HttpResponseRedirect('/')
-
+    #Returns a render function call to display onto the website for the user to see
+    return render(request, template, context)
 
 #This function gets all the items from the database
 #and displays them to the screen sorted by most recently added
 #param: request - array variable that is passed around the website, kinda like global variables
 #returns: all the items in the database, with the most recently item added at the top
+@login_required(login_url='/')
 def index(request):
 
     #The CSS for this function can be found here
@@ -100,191 +96,191 @@ def index(request):
         failed_search = request.session['index_redirect_failed_search']
         request.session['index_redirect_failed_search'] = None
 
-    #Checks if the user is logged in
-    if request.user.is_authenticated:
+    #Gets 500 most recent items from the database and sorts by date added
+    recent_items = CatalogItem.objects.filter(
+        archived='False',
+        date_added__lte=timezone.now()
+    ).order_by('-date_added')[:500]
 
-        #Gets 500 most recent items from the database and sorts by date added
-        recent_items = CatalogItem.objects.filter(
-            archived='False',
-            date_added__lte=timezone.now()
-        ).order_by('-date_added')[:500]
+    # Paginator will show 16 items per page
+    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
+    page = request.GET.get('page') # Gets the page number to display
+    items = paginator.get_page(page)
 
-        # Paginator will show 16 items per page
-        paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
-        page = request.GET.get('page') # Gets the page number to display
-        items = paginator.get_page(page)
+    #The filters dropdown containing all the categories (need to get a default category)
+    filters = Category.objects.all()
 
-        #The filters dropdown containing all the categories (need to get a default category)
-        filters = Category.objects.all()
+    #Packages the information to be displayed into context
+    context = {
+        'title': title,
+        'filters': filters,
+        'items': items,
+        'failed_search': failed_search,
+    }
 
-        #Packages the information to be displayed into context
-        context = {
-            'title': title,
-            'filters': filters,
-            'items': items,
-            'failed_search': failed_search,
-        }
-
-        #Displays all the items from the database with repect to the CSS template
-        return render(request, template, context)
-    else:
-        return HttpResponseRedirect('/')
+    #Displays all the items from the database with repect to the CSS template
+    return render(request, template, context)
 
 #This function sets a post to be reported, for review by moderators
 #param: request - array variable that is passed around the website, kinda like global variables
 #param: pk - a int variable that is used as the primary key for the item in the database
 #returns: The same page that the user is currently on
+@login_required(login_url='/')
 def report(request, pk):
-    #Checks if the user has logged in
-    if request.user.is_authenticated:
+    # Get the item
+    item = CatalogItem.objects.get(pk=pk)
 
-        # Get the item
-        item = CatalogItem.objects.get(pk=pk)
+    # Set the reported to true
+    item.reported = "True" # Report this item
+    item.save()
 
-        # Set the reported to true
-        item.reported = "True" # Report this item
-        item.save()
+    messages.error(request, 'Post successfully reported!')
 
-        messages.error(request, 'Post successfully reported!')
+    #Redirects the user to the same webpage (So nothing changes but the success message appearing)
+    return HttpResponseRedirect('/catalog/' + str(pk))
 
-        #Redirects the user to the same webpage (So nothing changes but the success message appearing)
-        return HttpResponseRedirect('/catalog/' + str(pk))
-
-    #If not logged in then the user is sent to the Husky Statue
-    else:
-        return HttpResponseRedirect('/')
-
+# Used in formatting timedelta objects
+def strfdelta(tdelta, fmt):
+    d = {"days": tdelta.days}
+    d["hours"], rem = divmod(tdelta.seconds, 3600)
+    d["minutes"], d["seconds"] = divmod(rem, 60)
+    return fmt.format(**d)
 
 #This function sends a prepared email message to a seller
 #param: request - array variable that is passed around the website, kinda like global variables
 #param: pk - a int variable that is used as the primary key for the item in the database
 #returns: The same page that the user is currently on
+@login_required(login_url='/')
 def email(request, pk):
-    #Checks if the user has logged in
-    if request.user.is_authenticated:
+    name = request.user.first_name
 
-        name = request.user.first_name
+    # Gets the preferred name if not empty
+    profile = user_profile.objects.filter(user = request.user)
+    if (profile[0].preferred_name):
+        name = profile[0].preferred_name
 
-        # Gets the preferred name if not empty
-        profile = user_profile.objects.filter(user = request.user)
-        if (profile[0].preferred_name):
-            name = profile[0].preferred_name
+    user_email = request.user.email
 
-        user_email = request.user.email
+    #The body of the email
+    message = (name +
+              ' has messaged you about an item you posted on HuskyHunt!\n\n' +
+              'Message from ' + name + ': ' + request.GET['message'] +
+              '\n\nYou can respond by replying to this email, or by contacting ' +
+              name + ' directly: ' + user_email)
 
-        #The body of the email
-        message = (name +
-                  ' has messaged you about an item you posted on HuskyHunt!\n\n' +
-                  'Message from ' + name + ': ' + request.GET['message'] +
-                  '\n\nYou can respond by replying to this email, or by contacting ' + 
-                  name + ' directly: ' + user_email)
+    #The email that this message is sent from
+    from_email = name + ' via HuskyHunt <admin@huskyhunt.com>'
+    #Gets the item that is currently being viewed
+    item_list = CatalogItem.objects.filter(pk=pk)
+    #Gets the sellers email
+    to_email = item_list[0].username.email
 
-        #The email that this message is sent from
-        from_email = name + ' via HuskyHunt <admin@huskyhunt.com>'
-        #Gets the item that is currently being viewed
-        item_list = CatalogItem.objects.filter(pk=pk)
-        #Gets the sellers email
-        to_email = item_list[0].username.email
+    # Times to compare
+    last_email_original = user_profile.objects.filter(user = request.user)[0].last_email
+    one_min_ago_original = datetime.now() - timedelta(minutes=1)
+    twenty_four_hour_ago_original = datetime.now() - timedelta(hours=24)
 
-        # Times to compare
-        last_email_original = user_profile.objects.filter(user = request.user)[0].last_email
-        one_min_ago_original = datetime.now() - timedelta(minutes=1)
+    # Update the last email original time if it is null
+    if (last_email_original == None):
+        last_email_original = twenty_four_hour_ago_original
 
-        #Set same timezone
-        last_email = last_email_original.astimezone(pytz.timezone('UTC'))
-        one_min_ago = one_min_ago_original.astimezone(pytz.timezone('UTC'))
+    #Set same timezone
+    last_email = last_email_original.astimezone(pytz.timezone('UTC'))
+    one_min_ago = one_min_ago_original.astimezone(pytz.timezone('UTC'))
+    twenty_four_hour_ago = twenty_four_hour_ago_original.astimezone(pytz.timezone('UTC'))
 
-        # Checks if the user has sent an email in the last 1 minute
-        if (one_min_ago < last_email):
-            # sent an email less than two minutes ago
-            messages.error(request, 'Please wait one minute between emails!')
+    # reset last email count if it has been over 24 hours since last email
+    if (twenty_four_hour_ago > last_email):
+        profile = user_profile.objects.get(user = request.user)
+        profile.emails_today = 0
+        profile.save()
 
-        #Checks if the message is no empty
-        elif (request.GET['message'] != ''):
-            # Create the email object
-            email = EmailMessage(
-                'Interested in your item', # subject
-                message, #body
-                from_email, # from_email
-                [to_email],  # to email
-                reply_to=[user_email],  # reply to email
-                )
+    # Checks if the user has sent an email in the last 1 minute
+    if (one_min_ago < last_email):
+        # sent an email less than two minutes ago
+        messages.error(request, 'Please wait one minute between emails!')
 
-            # Sends the email
-            email.send();
+    # Check if user has maxed out on emails today
+    elif (user_profile.objects.filter(user = request.user)[0].emails_today >= 5):
+        time_remaining = timedelta(hours=24) - (datetime.now().astimezone(pytz.timezone('UTC')) - last_email)
+        messages.error(request, 'You can only send 5 messages per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."))
 
-            #Set last email sent time
-            profile = user_profile.objects.get(user = request.user)
-            profile.last_email = one_min_ago
-            profile.save()
+    #Checks if the message is no empty
+    elif (request.GET['message'] != ''):
+        # Create the email object
+        email = EmailMessage(
+            'Interested in your item', # subject
+            message, #body
+            from_email, # from_email
+            [to_email],  # to email
+            reply_to=[user_email],  # reply to email
+            )
 
-            #Displays that the email was sent successfully
-            messages.error(request, 'Message sent successfully!')
+        # Sends the email
+        email.send();
 
-        #If the message is empty then an error message is displayed
-        else:
-            messages.error(request, 'Please enter a message!')
+        #Set last email sent time and increment number of emails
+        profile = user_profile.objects.get(user = request.user)
+        profile.last_email = one_min_ago
+        profile.emails_today = profile.emails_today + 1
+        profile.save()
 
-        #Redirects the user to the same webpage (So nothing changes but the success message appearing)
-        return HttpResponseRedirect('/catalog/' + str(pk))
+        #Displays that the email was sent successfully
+        messages.error(request, 'Message sent successfully!')
 
-    #If not logged in then the user is sent to the Husky Statue
+    #If the message is empty then an error message is displayed
     else:
-        return HttpResponseRedirect('/')
+        messages.error(request, 'Please enter a message!')
+
+    #Redirects the user to the same webpage (So nothing changes but the success message appearing)
+    return HttpResponseRedirect('/catalog/' + str(pk))
+
 
 #This function displays more detailed information about a item
 #while removing the other item from the view of the user
 #param: request - array variable that is passed around the website, kinda like global variables
 #param: pk - a int variable that is used as the primary key for the item in the database
 #returns: A new page of the website that contains all information on one item
+@login_required(login_url='/')
 def detail(request, pk):
-
     #The CSS for this page of the website can be found here
     template = 'catalog/details.html'
 
-    #Checks if the user is logged in
-    if request.user.is_authenticated:
+    #Gets the item from the database
+    item_list = CatalogItem.objects.filter(pk=pk)
 
-        #Gets the item from the database
-        item_list = CatalogItem.objects.filter(pk=pk)
+    #Packages the information to be displayed into context
+    context = {
+            'item_list': item_list,
+    }
 
-        #Packages the information to be displayed into context
-        context = {
-                'item_list': item_list,
-        }
+    # No page found
+    if item_list.count() == 0:
+        request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+        return HttpResponseRedirect(reverse('catalog:index'))
 
-        # No page found
-        if item_list.count() == 0:
-            request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
-            return HttpResponseRedirect(reverse('catalog:index'))
-
-        # Item is archived
-        if item_list[0].archived:
-            request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
-            return HttpResponseRedirect(reverse('catalog:index'))
+    # Item is archived
+    if item_list[0].archived:
+        request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+        return HttpResponseRedirect(reverse('catalog:index'))
 
 
 
     #Changes what the user sees to be more detailed information on the one item
-        return render(request, template, context)
-    #If the user is not logged in, redirect to login
-    else:
-        return HttpResponseRedirect('/')
+    return render(request, template, context)
 
 
 #This function allows a user to choose from a dropdown
 #what category/ies of items they want to see
 #param: request - array passed throughout a website, kinda like global variables
 #returns: render function that changes the items the user sees based on the category/ies
+@login_required(login_url='/')
 def filter(request):
-  #The CSS code for this function can be found here
-  template = 'catalog/index.html'
+    #The CSS code for this function can be found here
+    template = 'catalog/index.html'
 
     #The title for the webpage
-  title = 'MTU Catalog'
-
-    #Checks to make sure the user has logged in
-  if request.user.is_authenticated:
+    title = 'MTU Catalog'
 
     # Check if no filters or search
     if not (request.GET.getlist('filter') or request.GET.getlist('search')):
@@ -335,7 +331,3 @@ def filter(request):
 
         #Returns a render function call to display onto the website for the user to see
     return render(request, template, context)
-
-    #If the user is not logged in then they get redirected to the HuskyStatue screen
-  else:
-    return HttpResponseRedirect('/')

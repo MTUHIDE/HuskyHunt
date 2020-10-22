@@ -4,8 +4,8 @@
 
 <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Outside CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
@@ -80,14 +80,14 @@
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-expand-lg navbar-dark fixed-top" style="background-color: black;">
         <div class="top-links">
-            <a class="navbar-brand" href="{% url 'landing:welcome' %}">HuskyHunt</a> 
+            <a class="navbar-brand" href="{% url 'landing:welcome' %}">HuskyHunt</a>
             {% if request.path != '/welcome/' %}
-              <a class="link" href="{% url 'catalog:index' %}">Catalog</a>
-              <a class="link" href="{% url 'rideSharing:index' %}">Ridesharing</a>
+              <a class="link" href="{% url 'catalog:index' %}">Item Catalog</a>
+              <a class="link rona-disabled" href="{% url 'rideSharing:index' %}">Ridesharing</a>
               {% if request.get_full_path == "/ridesharing/" %}
-                <a class="link" href="{% url 'selling:index' %}?ride">Selling</a>
+                <a class="link" href="{% url 'selling:index' %}?ride">Add Listing</a>
               {% else %}
-                <a class="link" href="{% url 'selling:index' %}">Selling</a> 
+                <a class="link" href="{% url 'selling:index' %}">Add Listing</a>
               {% endif %}
             {% endif %}
         </div>
@@ -157,5 +157,59 @@
     <div style="padding-top: 65px; overflow: hidden;">
         {% block content %} {% endblock %}
     </div>
+
+<div id="rona-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Coronavirus Warning</h5>
+            </div>
+            <div class="modal-body">
+                <p class="text-dark">Due to concerns about COVID-19, we have disabled ridesharing at the current MTU Health and Safety Level. For more information, see the <a href="https://www.mtu.edu/flex/operations/levels/" target="_blank">MTU Flex Portal</a>. </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <template name="rona-disabled-template">
+        <div class="rona-disabled-overlay"></div>
+    </template>
+
+    <script>
+        const RONA_DISABLE = true; // this should read from settings
+
+        if(RONA_DISABLE) {
+            document.addEventListener("DOMContentLoaded", (e) => {
+
+                let templateElement = document.getElementsByName("rona-disabled-template")[0];
+                var modalElement = new bootstrap.Modal(document.getElementById('rona-modal'), { keyboard: false });
+
+                document.querySelectorAll(".rona-disabled").forEach( (item) => {
+                    let clone = templateElement.content.cloneNode(true);
+
+                    clone.querySelector(".rona-disabled-overlay").addEventListener("click", (e) => {
+                        modalElement.show();
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+
+                    item.appendChild(clone);
+                });
+            });
+        }
+    </script>
+
   </body>
+
+
+
+
+
+
+
+
+
+
+
+
 </html>

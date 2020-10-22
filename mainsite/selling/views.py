@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
 from .forms import SellingForm
@@ -16,10 +17,8 @@ from rideSharing.models import RideItem
 from accountant.models import user_profile
 
 
+@login_required(login_url='/')
 def index(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('catalog:index'))
-
     template = "selling/combine.html"
     catalog_form = None
     ride_form = None
@@ -43,6 +42,11 @@ def index(request):
 
                 ride_item.save()       #error?
 
+                # Inrement number of points by one
+                profile = user_profile.objects.get(user = request.user)
+                profile.points = profile.points + 1
+                profile.save()
+
                 # check for failure cases! what happens with invalid data?
                 return HttpResponseRedirect(reverse('rideSharing:index'))
 
@@ -60,6 +64,11 @@ def index(request):
                 item_picture = catalog_form.cleaned_data['item_picture']
                 catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
                 catalogItem_instance.save()
+
+                # Inrement number of points by one
+                profile = user_profile.objects.get(user = request.user)
+                profile.points = profile.points + 1
+                profile.save()
 
                 return HttpResponseRedirect(reverse('catalog:index'))
         else:

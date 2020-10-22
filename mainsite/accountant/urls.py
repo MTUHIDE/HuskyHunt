@@ -9,6 +9,8 @@ urlpatterns = [
     path('catalog/', views.catalogRedirect, name='authsuccess'),
     path('', views.index, name='index'),
     path('logout/', views.logout, name='logout'),
+    path('developer/', views.developer, name='developer'),
+    path('developer/token/generate', views.developer_generate_token, name='generateToken'),
 
     # used for deleting an item
     path('<int:pk>/', views.deleteItem, name='deleteItem'),

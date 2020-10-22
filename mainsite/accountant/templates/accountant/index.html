@@ -13,6 +13,7 @@
     <div class="row align-items-end">
     <div class="col-lg-auto">
       <a href="{% url 'accountant:edit' %}" method="get" class="btn btn-warning">Edit Account</a>
+      <a href="{% url 'accountant:developer' %}" method="get" class="btn btn-primary">Developer</a>
     </div>
   </div>
 </div>
@@ -40,7 +41,7 @@
         <div class="row justify-content-center">
             {% if item_list %}
             {% for item in item_list %}
-            <div class="col-xl-2 col-lg-3 col-md-3 col-sm-6">
+            <div class="col-xl-2 col-lg-3 col-md-3 col-sm-6" style="padding: 10px;">
                 <div class="card account-card">
                     <img class="product-icon" style="height:100px;" src="{{ item.item_picture.url }}" alt="">
                     <div class="card-body">
@@ -93,6 +94,8 @@
         {% endfor %}
         {% endif %}
 </div>
+
+<div class="rona-disabled">
 {% if ride_list %}
 <div class="row justify-content-center">
   <div class="col">
@@ -160,6 +163,7 @@
         {% endfor %}
         {% endif %}
 
+    </div>
     </div>
   </div>
 </div>

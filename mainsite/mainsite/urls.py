@@ -14,12 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
 from django.urls import include, path
 from django.conf.urls import url, include
+from rest_framework import routers
+from api import views
 from . import comingSoon
 
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'items', views.CatalogItemViewSet)
+router.register(r'categories', views.CategoryViewSet)
+
 urlpatterns = [
-    url(r'^', comingSoon.index, name='index'),
     path('accountant/', include('accountant.urls', namespace='accountant')),
     path('catalog/', include('catalog.urls', namespace='catalog')),
     path('ridesharing/', include('rideSharing.urls', namespace='rideSharing')),
@@ -30,8 +37,11 @@ urlpatterns = [
     path('', include('landing.urls', namespace='landing')),
     url(r'^auth/', include('social_django.urls', namespace='social')),  # <- Here
     path('auth/complete/google-oauth2/', include('accountant.urls', namespace='authsuccess')),
+    path('api/', include(router.urls)),
 ]
 
-from .import settings
+if settings.SHOW_COMING_SOON:
+    urlpatterns.insert(0, url(r'^', comingSoon.index, name='index'))
+
 from django.contrib.staticfiles.urls import static
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
