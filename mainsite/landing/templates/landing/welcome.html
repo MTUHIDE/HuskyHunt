@@ -12,17 +12,42 @@
     <style type="text/css">
         .main {
             width: 100vw;
-            min-height: calc(100vh - 56px);
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: #1C1C21;
-            margin-top: -9px;
+            margin-bottom: 50px;
+            overflow-y: auto;
+            min-height: calc(100vh - 56px);
+                margin-top: -9px;
+        }
+
+        .disclaimer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: white;
+            text-align: center;
+            margin-bottom: 10px
+        }
+
+        .disclaimer > p {
+            opacity: 50%;
         }
 
         @media screen and (max-width: 1060px) {
             .main {
                 flex-direction: column;
+                position: static;
+            }
+            .disclaimer {
+                visibility: hidden;
+            }
+        }
+        @media screen and (min-width: 1061px) {
+            .main {
+                position: fixed;
             }
         }
 
@@ -94,6 +119,12 @@
             <p>Want to add your carpool or cool item to be listed on the site? <br>Click here!</p>
         </div>
     </a>
+</div>
+    
+<div class="disclaimer">
+    <p>Please be aware when you message a seller your MTU email address will be shared with that seller.  We do not guarantee any reliablity <br>
+     or accuracy regarding items or rides. Any action taken outside of the HuskyHunt website (such as through emailing or Ridesharing) is stritcly at your own risk.
+    </p>
 </div>
 
 {% endblock %}
