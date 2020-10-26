@@ -42,7 +42,7 @@ Instead we display our custom error message -->
               {% endif  %}
 
             {% if not too_many_items%}
-               <form role="form" method="post" enctype="multipart/form-data" style='border: 2xp;'>
+               <form role="form" method="post" enctype="multipart/form-data" style='border: 2xp;' onsubmit="ItemInputSubmit()">
                    {% csrf_token %}
 
                    {% with form=catalog_form %}
@@ -52,7 +52,7 @@ Instead we display our custom error message -->
                    <input type="hidden" name="submission_type" value="ctlg">
 
                    {{ catalog_form.as_p}}
-                   <button type="submit" onclick="ItemInput()" class="btn btn-primary husky-button-light" id="btnRealButton">Submit</button>
+                   <button type="submit" class="btn btn-primary husky-button-light" id="btnRealButton">Submit</button>
                </form>
 
                <!-- General Form Formatting -->
@@ -154,11 +154,10 @@ Instead we display our custom error message -->
 
 <!-- Used to prevent multiple submits -->
 <script type="text/javascript">
-  function ItemInput() {
-      document.getElementById("btnRealButton").disabled = true;
-      document.getElementById("btnRealButton").form.submit();
-
+  function ItemInputSubmit() {
+    document.getElementById("btnRealButton").disabled = true;
   }
+
   function RideInput() {
       document.getElementById("btnRealButtonRide").disabled = true;
       document.getElementById("btnRealButtonRide").form.submit();
