@@ -130,11 +130,47 @@ def report(request, pk):
     # Get the item
     item = CatalogItem.objects.get(pk=pk)
 
-    # Set the reported to true
-    item.reported = "True" # Report this item
-    item.save()
+    # Times to compare
+    last_flag_original = user_profile.objects.filter(user = request.user)[0].last_flag
+    one_min_ago_original = datetime.now() - timedelta(minutes=1)
+    twenty_four_hour_ago_original = datetime.now() - timedelta(hours=24)
 
-    messages.error(request, 'Post successfully reported!')
+    # Update the last flag original time if it is null
+    if (last_flag_original == None):
+        last_flag_original = twenty_four_hour_ago_original
+
+    #Set same timezone
+    last_flag = last_flag_original.astimezone(pytz.timezone('UTC'))
+    one_min_ago = one_min_ago_original.astimezone(pytz.timezone('UTC'))
+    twenty_four_hour_ago = twenty_four_hour_ago_original.astimezone(pytz.timezone('UTC'))
+
+    # reset last flag count if it has been over 24 hours since last flag
+    if (twenty_four_hour_ago > last_flag):
+        profile = user_profile.objects.get(user = request.user)
+        profile.flags_today = 0
+        profile.save()
+
+    # Checks if the user has flagged a post in the last 1 minute
+    if (one_min_ago < last_flag):
+        # flagged an item less than one minute ago
+        messages.error(request, 'Please wait one minute between reporting posts!')
+
+    # Check if user has maxed out on emails today
+    elif (user_profile.objects.filter(user = request.user)[0].flags_today >= 5):
+        time_remaining = timedelta(hours=24) - (datetime.now().astimezone(pytz.timezone('UTC')) - last_flag)
+        messages.error(request, 'You can only report 5 posts per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."))
+
+    else:
+        # Set the reported to true
+        item.reported = "True" # Report this item
+        item.save()
+        messages.error(request, 'Post successfully reported!')
+
+        #Set last email sent time and increment number of emails
+        profile = user_profile.objects.get(user = request.user)
+        profile.last_flag = datetime.now().astimezone(pytz.timezone('UTC'))
+        profile.flags_today = profile.flags_today + 1
+        profile.save()
 
     #Redirects the user to the same webpage (So nothing changes but the success message appearing)
     return HttpResponseRedirect('/catalog/' + str(pk))
@@ -221,7 +257,7 @@ def email(request, pk):
 
         #Set last email sent time and increment number of emails
         profile = user_profile.objects.get(user = request.user)
-        profile.last_email = one_min_ago
+        profile.last_email = datetime.now().astimezone(pytz.timezone('UTC'))
         profile.emails_today = profile.emails_today + 1
         profile.save()
 

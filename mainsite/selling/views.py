@@ -74,7 +74,7 @@ def index(request):
         else:
             pass #this should never happen
 
-    if catalog_form is None and 5 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
+    if catalog_form is None and 10 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
         catalog_form = SellingForm()
     if ride_form is None and 4 >= RideItem.objects.filter(username = request.user, archived='False').count():
         curr_user = user_profile.objects.get(user = request.user)
