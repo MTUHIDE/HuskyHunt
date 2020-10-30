@@ -260,7 +260,7 @@ def email(request, pk):
 
         #Set last email sent time and increment number of emails
         profile = user_profile.objects.get(user = request.user)
-        profile.last_email = one_min_ago
+        profile.last_email = datetime.now().astimezone(pytz.timezone('UTC'))
         profile.emails_today = profile.emails_today + 1
         profile.save()
 
