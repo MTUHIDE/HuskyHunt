@@ -150,9 +150,6 @@ def report(request, pk):
         profile.flags_today = 0
         profile.save()
 
-    print(one_min_ago)
-    print(last_flag)
-
     # Checks if the user has flagged a post in the last 1 minute
     if (one_min_ago < last_flag):
         # flagged an item less than one minute ago
