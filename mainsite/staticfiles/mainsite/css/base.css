@@ -218,6 +218,10 @@ th {
     background-repeat: no-repeat;
 }
 
-.rona-disabled.link {
+body:not(.covid-warning-disabled) .rona-disabled.link {
     color: #808080;
+}
+
+.covid-warning-disabled .rona-disabled-overlay {
+  display: none;
 }
