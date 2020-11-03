@@ -52,7 +52,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'accountant.pipeline.verify_scope'
+    'accountant.pipeline.verify_scope',
+    'accountant.pipeline.update_user_social_data'
 )
 
 INSTALLED_APPS = [
