@@ -10,7 +10,7 @@ class user_profileAdmin(admin.ModelAdmin):
 	actions = ['timeout_user_seven', ]
 
 	def timeout_user_seven(self, request, queryset):
-		// Reset points, timeout user for 7 days
+		# Reset points, timeout user for 7 days
 		queryset.update(points=0)
 		banned_untilDateTime = (datetime.now() + timedelta(days=7)).astimezone(pytz.timezone('UTC'))
 		queryset.update(banned_until = banned_untilDateTime)
