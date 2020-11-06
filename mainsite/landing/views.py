@@ -17,7 +17,7 @@ def index(request):
     template = 'landing/index.html'
     context = {}
     if request.user.is_authenticated:
-        if (isCurrentlyBanned(request.user)):
+        if (not isCurrentlyBanned(request.user)):
             messages.warning(request, 'Your account is currently suspended.')
             logout(request) 
             return HttpResponseRedirect('/')

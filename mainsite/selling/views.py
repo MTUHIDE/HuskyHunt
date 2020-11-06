@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import render
 from catalog.views import isCurrentlyBanned
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from datetime import datetime
 
 from .forms import SellingForm
@@ -19,9 +20,8 @@ from accountant.models import user_profile
 
 
 @login_required(login_url='/')
+@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
 def index(request):
-    if (isCurrentlyBanned(request.user)):
-        return HttpResponseRedirect('/')
     
     template = "selling/combine.html"
     catalog_form = None

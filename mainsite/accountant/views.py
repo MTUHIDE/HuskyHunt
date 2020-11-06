@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import auth
+from django.contrib.auth.decorators import user_passes_test
 from catalog.models import CatalogItem, Category, SubCategory
 from rideSharing.models import RideItem
 from catalog.views import isCurrentlyBanned
@@ -55,10 +56,8 @@ class EditModelForm( ProfFiltered_ModelForm ):
 
 # Handles both GET and POST requests for the user account edit page
 @login_required(login_url='/')
+@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
 def edit(request):
-    if (isCurrentlyBanned(request.user)):
-        return HttpResponseRedirect('/')
-
     currentUser = user_profile.objects.get(user = request.user)
 
     if request.method == "POST":
@@ -93,9 +92,8 @@ def logout(request):
 
 # Loads the primary account page
 @login_required(login_url='/')
+@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
 def index(request):
-    if (isCurrentlyBanned(request.user)):
-        return HttpResponseRedirect('/')
 
     currentUser = user_profile.objects.get(user = request.user)
     template = 'accountant/index.html'
@@ -118,10 +116,8 @@ def index(request):
     return render(request, template, context)
 
 @login_required(login_url='/')
+@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
 def developer(request):
-    if (isCurrentlyBanned(request.user)):
-        return HttpResponseRedirect('/')
-
     current_token = Token.objects.filter(user = request.user).first()
 
     return render(request, 'accountant/developer_settings.html', {
@@ -129,9 +125,8 @@ def developer(request):
     })
 
 @login_required(login_url='/')
+@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
 def developer_generate_token(request):
-    if (isCurrentlyBanned(request.user)):
-        return HttpResponseRedirect('/')
 
     current_token = Token.objects.filter(user = request.user).first()
 
@@ -144,9 +139,8 @@ def developer_generate_token(request):
 
 # Used as an intermediate function to delete an item
 @login_required(login_url='/')
+@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
 def deleteItem(request, pk):
-    if (isCurrentlyBanned(request.user)):
-        return HttpResponseRedirect('/')
 
     # delete item from database
     item = CatalogItem.objects.get(pk=pk)
@@ -162,9 +156,8 @@ def deleteItem(request, pk):
 
 # Used as an intermediate function to delete an item
 @login_required(login_url='/')
+@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
 def deleteRide(request, pk):
-    if (isCurrentlyBanned(request.user)):
-        return HttpResponseRedirect('/')
     
     # delete ride from database
     ride = RideItem.objects.get(pk=pk)
