@@ -1,20 +1,19 @@
-# from django.contrib import admin
-# from django.contrib.auth.admin import UserAdmin
-# from django.contrib.auth.models import User
-# from .models import Account
+from django.contrib import admin
+from accountant.models import user_profile
+from datetime import datetime, timedelta
+import pytz
 
-# # Register your models here.
-# class AccountInline(admin.StackedInline):
-#     model = Account
 
-# class AccountAdmin(UserAdmin):
-#     inlines = (AccountInline,)
-# #     list_display = ('username', 'email', 'last_login')
-# #     fieldsets = [
-# #         (None,     {'fields': ['username', 'first_name', 'last_name', 'email', 'street_address', 'city', 'zipcode', 'common_destination_zipcode', 'picture', 'bio']}),
-# #         ('Permissions',  {'fields': ['password', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined']}),
-# #     ]
-# #     search_fields = ['username', 'email']
+@admin.register(user_profile)
+class user_profileAdmin(admin.ModelAdmin):
+	name = 'test'
+	actions = ['timeout_user_seven', ]
 
-# admin.site.unregister(User)
-# admin.site.register(User, AccountAdmin)
+	def timeout_user_seven(self, request, queryset):
+		// Reset points, timeout user for 7 days
+		queryset.update(points=0)
+		banned_untilDateTime = (datetime.now() + timedelta(days=7)).astimezone(pytz.timezone('UTC'))
+		queryset.update(banned_until = banned_untilDateTime)
+
+	timeout_user_seven.short_description = "Timeout User 7 days"
+
