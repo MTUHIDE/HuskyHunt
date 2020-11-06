@@ -58,13 +58,15 @@ def edit(request):
     currentUser = user_profile.objects.get(user = request.user)
 
     if request.method == "POST":
-        # Check if the user clicked the 'reset' button last; if so, reset their picture
-        if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) == '1':
-            currentUser.picture = None
-
         # Validate the data submitted
         form = EditModelForm(request.POST, request.FILES, instance = currentUser, override_text = "Submit Anyway" )#, profCheck = profCheck )
+
         if form.is_valid():
+            # Check if the user clicked the 'reset' button last; if so, reset their picture
+            if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) == '1':
+                currentUser.picture = None
+                currentUser.save()
+
             form.save()
             return HttpResponseRedirect(reverse('accountant:index'))
 
