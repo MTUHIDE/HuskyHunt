@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from catalog.models import CatalogItem, Category, SubCategory
 from rideSharing.models import RideItem
+from catalog.views import isCurrentlyBanned
 from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -55,6 +56,9 @@ class EditModelForm( ProfFiltered_ModelForm ):
 # Handles both GET and POST requests for the user account edit page
 @login_required(login_url='/')
 def edit(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     currentUser = user_profile.objects.get(user = request.user)
 
     if request.method == "POST":
@@ -90,6 +94,9 @@ def logout(request):
 # Loads the primary account page
 @login_required(login_url='/')
 def index(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     currentUser = user_profile.objects.get(user = request.user)
     template = 'accountant/index.html'
     defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
@@ -112,6 +119,9 @@ def index(request):
 
 @login_required(login_url='/')
 def developer(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     current_token = Token.objects.filter(user = request.user).first()
 
     return render(request, 'accountant/developer_settings.html', {
@@ -120,6 +130,9 @@ def developer(request):
 
 @login_required(login_url='/')
 def developer_generate_token(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     current_token = Token.objects.filter(user = request.user).first()
 
     if current_token:
@@ -132,6 +145,9 @@ def developer_generate_token(request):
 # Used as an intermediate function to delete an item
 @login_required(login_url='/')
 def deleteItem(request, pk):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     # delete item from database
     item = CatalogItem.objects.get(pk=pk)
 
@@ -147,6 +163,9 @@ def deleteItem(request, pk):
 # Used as an intermediate function to delete an item
 @login_required(login_url='/')
 def deleteRide(request, pk):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+    
     # delete ride from database
     ride = RideItem.objects.get(pk=pk)
 

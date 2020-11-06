@@ -11,6 +11,7 @@ from rideSharing.models import RideItem, RideCategory
 from django import forms
 from django.core.paginator import Paginator
 from accountant.models import user_profile
+from catalog.views import isCurrentlyBanned
 
 #This small helper function adds an appropriate error message to the page
 #param: context - the context that's normally passed to the catalog pages;
@@ -43,6 +44,9 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
 def email(request, pk):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     name = request.user.first_name
 
     # Gets the preferred name if not empty
@@ -97,6 +101,8 @@ def email(request, pk):
 #returns: all the items in the database, with the most recently item added at the top
 @login_required(login_url='/')
 def ride(request, pk):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
 
     #The CSS for this function can be found here
     template = 'rideSharing/index.html'
@@ -142,6 +148,9 @@ def ride(request, pk):
 #returns: all the items in the database, with the most recently item added at the top
 @login_required(login_url='/')
 def index(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     return ride(request, -1)
 
 
@@ -177,6 +186,9 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #from the search text field in their name or description
 @login_required(login_url='/')
 def search(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     #The CSS code for this function can be found here
     template = 'rideSharing/index.html'
 
@@ -248,6 +260,9 @@ def search(request):
 #returns: render function that changes the items the user sees based on the category/ies
 @login_required(login_url='/')
 def filter(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+    
     #The CSS code for this function can be found here
     template = 'rideSharing/index.html'
 

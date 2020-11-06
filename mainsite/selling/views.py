@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from catalog.views import isCurrentlyBanned
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
@@ -19,6 +20,9 @@ from accountant.models import user_profile
 
 @login_required(login_url='/')
 def index(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+    
     template = "selling/combine.html"
     catalog_form = None
     ride_form = None

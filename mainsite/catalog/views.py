@@ -13,6 +13,15 @@ from accountant.models import user_profile
 from datetime import datetime, timedelta
 import pytz
 
+# This helper function checks if a user is currently banned / timed out
+def isCurrentlyBanned(username):
+    banned_time = (user_profile.objects.filter(user = username)[0].banned_until).astimezone(pytz.timezone('UTC'))
+    now = datetime.now().astimezone(pytz.timezone('UTC'))
+
+    if (banned_time > now) :
+        return True
+
+    return False
 
 #This small helper function adds an appropriate error message to the page
 #param: context - the context that's normally passed to the catalog pages;
@@ -47,6 +56,9 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #from the search text field in their name or description
 @login_required(login_url='/')
 def search(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+    
     #The CSS code for this function can be found here
     template = 'catalog/index.html'
 
@@ -85,6 +97,9 @@ def search(request):
 #returns: all the items in the database, with the most recently item added at the top
 @login_required(login_url='/')
 def index(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
 
     #The CSS for this function can be found here
     template = 'catalog/index.html'
@@ -127,6 +142,9 @@ def index(request):
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
 def report(request, pk):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     # Get the item
     item = CatalogItem.objects.get(pk=pk)
 
@@ -188,6 +206,9 @@ def strfdelta(tdelta, fmt):
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
 def email(request, pk):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     name = request.user.first_name
 
     # Gets the preferred name if not empty
@@ -279,6 +300,9 @@ def email(request, pk):
 #returns: A new page of the website that contains all information on one item
 @login_required(login_url='/')
 def detail(request, pk):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     #The CSS for this page of the website can be found here
     template = 'catalog/details.html'
 
@@ -312,6 +336,9 @@ def detail(request, pk):
 #returns: render function that changes the items the user sees based on the category/ies
 @login_required(login_url='/')
 def filter(request):
+    if (isCurrentlyBanned(request.user)):
+        return HttpResponseRedirect('/')
+
     #The CSS code for this function can be found here
     template = 'catalog/index.html'
 
