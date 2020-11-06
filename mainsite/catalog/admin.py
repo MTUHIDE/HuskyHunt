@@ -28,9 +28,10 @@ class CatalogItemAdmin(admin.ModelAdmin):
         queryset.update(archived=True)
 
         # Decrement number of points by three
-        profile = user_profile.objects.get(user = request.user)
-        profile.points = profile.points - 3
-        profile.save()
+        for item in queryset:
+            profile = user_profile.objects.get(user = item.username)
+            profile.points = profile.points - 3
+            profile.save()
 
     remove_post.short_description = "Remove offending posts"
 
