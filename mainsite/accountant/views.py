@@ -4,7 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import user_passes_test
 from catalog.models import CatalogItem, Category, SubCategory
 from rideSharing.models import RideItem
-from catalog.views import isCurrentlyBanned
+from catalog.views import isUserNotBanned
 from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -56,7 +56,7 @@ class EditModelForm( ProfFiltered_ModelForm ):
 
 # Handles both GET and POST requests for the user account edit page
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def edit(request):
     currentUser = user_profile.objects.get(user = request.user)
 
@@ -92,7 +92,7 @@ def logout(request):
 
 # Loads the primary account page
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def index(request):
 
     currentUser = user_profile.objects.get(user = request.user)
@@ -116,7 +116,7 @@ def index(request):
     return render(request, template, context)
 
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def developer(request):
     current_token = Token.objects.filter(user = request.user).first()
 
@@ -125,7 +125,7 @@ def developer(request):
     })
 
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def developer_generate_token(request):
 
     current_token = Token.objects.filter(user = request.user).first()
@@ -139,7 +139,7 @@ def developer_generate_token(request):
 
 # Used as an intermediate function to delete an item
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def deleteItem(request, pk):
 
     # delete item from database
@@ -156,7 +156,7 @@ def deleteItem(request, pk):
 
 # Used as an intermediate function to delete an item
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def deleteRide(request, pk):
     
     # delete ride from database

@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 import pytz
 
 # This helper function checks if a user is currently banned / timed out
-def isCurrentlyBanned(username):
+def isUserNotBanned(username):
     banned_time = (user_profile.objects.filter(user = username)[0].banned_until).astimezone(pytz.timezone('UTC'))
     now = datetime.now().astimezone(pytz.timezone('UTC'))
 
@@ -56,7 +56,7 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #returns: all items in the database that contain the string
 #from the search text field in their name or description
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def search(request):
     
     #The CSS code for this function can be found here
@@ -96,7 +96,7 @@ def search(request):
 #param: request - array variable that is passed around the website, kinda like global variables
 #returns: all the items in the database, with the most recently item added at the top
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def index(request):
 
     #The CSS for this function can be found here
@@ -139,7 +139,7 @@ def index(request):
 #param: pk - a int variable that is used as the primary key for the item in the database
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def report(request, pk):
 
     # Get the item
@@ -202,7 +202,7 @@ def strfdelta(tdelta, fmt):
 #param: pk - a int variable that is used as the primary key for the item in the database
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def email(request, pk):
 
     name = request.user.first_name
@@ -295,7 +295,7 @@ def email(request, pk):
 #param: pk - a int variable that is used as the primary key for the item in the database
 #returns: A new page of the website that contains all information on one item
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def detail(request, pk):
 
     #The CSS for this page of the website can be found here
@@ -330,7 +330,7 @@ def detail(request, pk):
 #param: request - array passed throughout a website, kinda like global variables
 #returns: render function that changes the items the user sees based on the category/ies
 @login_required(login_url='/')
-@user_passes_test(isCurrentlyBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def filter(request):
 
     #The CSS code for this function can be found here

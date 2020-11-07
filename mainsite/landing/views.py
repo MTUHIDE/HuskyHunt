@@ -6,7 +6,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from social_core.pipeline.partial import partial
-from catalog.views import isCurrentlyBanned
+from catalog.views import isUserNotBanned
 from django.contrib import messages
 from django.contrib.auth import logout
 
@@ -17,7 +17,7 @@ def index(request):
     template = 'landing/index.html'
     context = {}
     if request.user.is_authenticated:
-        if (not isCurrentlyBanned(request.user)):
+        if (not isUserNotBanned(request.user)):
             messages.warning(request, 'Your account is currently suspended.')
             logout(request) 
             return HttpResponseRedirect('/')
