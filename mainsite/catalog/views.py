@@ -16,11 +16,12 @@ import pytz
 
 # This helper function checks if a user is currently banned / timed out
 def isUserNotBanned(username):
-    banned_time = (user_profile.objects.filter(user = username)[0].banned_until).astimezone(pytz.timezone('UTC'))
-    now = datetime.now().astimezone(pytz.timezone('UTC'))
+    if not (user_profile.objects.filter(user = username)[0].banned_until is None):
+        banned_time = (user_profile.objects.filter(user = username)[0].banned_until).astimezone(pytz.timezone('UTC'))
+        now = datetime.now().astimezone(pytz.timezone('UTC'))
 
-    if (banned_time > now) :
-        return False         # The user is banned and should not be allowed to enter the site
+        if (banned_time > now) :
+            return False         # The user is banned and should not be allowed to enter the site
 
     return True              # The user is not banned
 
