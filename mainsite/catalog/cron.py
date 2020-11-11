@@ -2,7 +2,7 @@ from django_cron import CronJobBase, Schedule
 from catalog.models import CatalogItem
 from datetime import date, timedelta
 from django.utils import timezone
-
+from profanity_check import ArchivedType
 
 # Used to archive items that are old
 class archiveOldItems(CronJobBase):
@@ -14,16 +14,17 @@ class archiveOldItems(CronJobBase):
     def do(self):
         today = timezone.now()
         archive_time = today - timezone.timedelta(weeks=4)  # Considered to be archived 4 weeks before today
- 
+
         # Get the items that left before today
         archive_items = CatalogItem.objects.filter(
-            archived='False',
+            archived=ArchivedType.Q_myContent,
             date_added__lte=archive_time
         )
 
         # For each item, set it to archived
         for item in archive_items:
         	item.archived = "True"
+            item.archivedType = ArchivedType.Types.ARCHIVED
         	item.save()
 
 # Used to delete old archived items

@@ -22,6 +22,7 @@ from django.forms import ModelForm
 from .widgets import PreviewImageWidget
 
 from profanity_check.profanityModels import ProfFiltered_ModelForm
+from profanity_check.models import ArchivedType
 
 # The HTML Form that's submitted on the Edit Account page
 #   the ModelForm is used for data validation and automatic HTML production
@@ -95,8 +96,8 @@ def index(request):
     defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
 
     # load items and rides
-    my_items = CatalogItem.objects.filter(username = request.user, archived='False')
-    ride_items = RideItem.objects.filter(username = request.user, archived='False')
+    my_items = CatalogItem.objects.filter(username = request.user).filter( ArchivedType.Q_myContent )
+    ride_items = RideItem.objects.filter(username = request.user).filter( ArchivedType.Q_myContent )
     filters = Category.objects.all()
     title = 'My items'
 
@@ -138,6 +139,7 @@ def deleteItem(request, pk):
     # delete only if this user owns the item, a precautionary measure
     if item.username == request.user:
       item.archived = "True" # archive this item
+      item.archivedType = ArchivedType.Types.ARCHIVED
       item.save()
 
 
@@ -153,6 +155,7 @@ def deleteRide(request, pk):
     # delete only if this user owns the ride, a precautionary measure
     if ride.username == request.user:
       ride.archived = "True" # archive this ride
+      ride.archivedType = ArchivedType.Types.ARCHIVED
       ride.save()
 
     # redirect to accountant page (refresh)

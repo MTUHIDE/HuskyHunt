@@ -4,7 +4,9 @@ from django.conf import settings
 from accountant.models import user_profile
 from django.dispatch import receiver
 from django.db.models.signals import post_delete, pre_save
-
+from django.utils.translation import ugettext_lazy as _
+from django.db.models import Q
+from profanity_check.models import ArchivedType
 
 #Defines a table of categories
 class Category(models.Model):
@@ -94,6 +96,9 @@ class CatalogItem(models.Model):
     # If the ride is currently reported (flagged to be reviewed) or not
     reported = models.BooleanField(default=False)
 
+    # VIsible, HiDden, REmoved, or ARchived
+    archivedType = ArchivedType.archivedTypeField()
+
     def __str__(self):
         return self.item_title
 
@@ -114,4 +119,3 @@ def delete_changed_photos(sender, instance, **kwargs):
         return #
     if not instance.item_picture == item.item_picture:
         item.item_picture.delete(save=False)
-

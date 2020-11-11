@@ -11,6 +11,8 @@ from rideSharing.models import RideItem, RideCategory
 from django import forms
 from django.core.paginator import Paginator
 from accountant.models import user_profile
+from django.contrib.auth.decorators import login_required
+from catalog.views import report_functionality, email_functionality
 
 #This small helper function adds an appropriate error message to the page
 #param: context - the context that's normally passed to the catalog pages;
@@ -43,52 +45,9 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
 def email(request, pk):
-    name = request.user.first_name
-
-    # Gets the preferred name if not empty
-    profile = user_profile.objects.filter(user = request.user)
-    if (profile[0].preferred_name):
-        name = profile[0].preferred_name
-
-    user_email = request.user.email
-
-    #The body of the email
-    message = (name +
-              ' has messaged you about a ride you posted on HuskyHunt!\n\n' +
-              'Message from ' + name + ': ' + request.GET['message'] +
-              '\n\nYou can respond by replying to this email, or by contacting ' +
-              name + ' directly: ' + user_email)
-
-    #The email that this message is sent from
-    from_email = name + ' via HuskyHunt <admin@huskyhunt.com>'
-    #Gets the item that is currently being viewed
-    ride_list = RideItem.objects.filter(pk=pk)
-    #Gets the sellers email
-    to_email = ride_list[0].username.email
-
-    #Checks if the message is no empty
-    if (request.GET['message'] != ''):
-        # Create the email object
-        email = EmailMessage(
-            'Interested in your ride', # subject
-            message, #body
-            from_email, # from_email
-            [to_email],  # to email
-            reply_to=[user_email],  # reply to email
-            )
-
-        # Sends the email
-        email.send();
-
-        #Displays that the email was sent successfully
-        messages.error(request, 'Message sent successfully!', extra_tags=str(pk))
-
-    #If the message is empty then an error message is displayed
-    else:
-        messages.error(request, 'Please enter a message!', extra_tags=str(pk))
-
-    #Redirects the user to the same webpage (So nothing changes but the success message appearing)
-
+    extra_tags = "E" + str(pk)
+    item = RideItem.objects.filter(pk=pk)[0]
+    email_functionality(request, pk, item, "a", "ride", extra_tags)
     return HttpResponseRedirect('/ridesharing/' + str(pk))
 
 #This function gets all the items from the database
@@ -293,3 +252,10 @@ def filter(request):
 
         #Returns a render function call to display onto the website for the user to see
     return render(request, template, context)
+
+
+@login_required(login_url='/')
+def report(request, pk):
+    ride = RideItem.objects.get(pk=pk)
+    report_functionality(request, pk, ride)
+    return HttpResponseRedirect('/ridesharing/' + str(pk))

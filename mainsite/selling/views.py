@@ -16,6 +16,9 @@ from .forms import RideForm
 from rideSharing.models import RideItem
 from accountant.models import user_profile
 
+from profanity_check.models import ArchivedType
+from django.db.models import Q
+
 
 @login_required(login_url='/')
 def index(request):
@@ -23,12 +26,17 @@ def index(request):
     catalog_form = None
     ride_form = None
 
+    MAX_RIDE_ITEMS = 5
+    MAX_CTLG_ITEMS = 10
+    num_ride_items = RideItem.objects.filter(Q(username = request.user) & ArchivedType.Q_myContent).count()
+    num_ctlg_items = CatalogItem.objects.filter(Q(username = request.user) & ArchivedType.Q_myContent).count()
+
     if request.method == 'POST':
         post_request = request.POST.copy() #make it not immutable
 
         # Ride Form
         submission_type = post_request.pop('submission_type', None)
-        if submission_type == ['ride'] and 4 >= RideItem.objects.filter(username = request.user, archived='False').count():
+        if submission_type == ['ride'] and num_ride_items < MAX_RIDE_ITEMS:
             ride_form = RideForm(post_request, request.FILES)
             if ride_form.is_valid():
                 ride_item = ride_form.save(commit=False)
@@ -51,19 +59,13 @@ def index(request):
                 return HttpResponseRedirect(reverse('rideSharing:index'))
 
         # Catalog Form
-        elif submission_type == ['ctlg'] and 10 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
-            catalog_form = SellingForm(post_request, request.FILES)
+        elif submission_type == ['ctlg'] and num_ctlg_items < MAX_CTLG_ITEMS:
+            catalog_form = SellingForm(post_request, request.FILES, request=request)
             if catalog_form.is_valid():
-                category = catalog_form.cleaned_data['category']
-                item_description = catalog_form.cleaned_data['item_description']
-                item_price = catalog_form.cleaned_data['item_price']
-                if item_price < 0:
-                    item_price = 0
-                item_title = catalog_form.cleaned_data['item_title']
-                username = request.user
-                item_picture = catalog_form.cleaned_data['item_picture']
-                catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
-                catalogItem_instance.save()
+                # who is responsible for doing it this way
+                #catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
+                #catalogItem_instance.save()
+                catalog_form.save()
 
                 # Inrement number of points by one
                 profile = user_profile.objects.get(user = request.user)
@@ -74,9 +76,9 @@ def index(request):
         else:
             pass #this should never happen
 
-    if catalog_form is None and 10 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
+    if catalog_form is None and num_ctlg_items < MAX_CTLG_ITEMS:
         catalog_form = SellingForm()
-    if ride_form is None and 4 >= RideItem.objects.filter(username = request.user, archived='False').count():
+    if ride_form is None and num_ride_items < MAX_RIDE_ITEMS:
         curr_user = user_profile.objects.get(user = request.user)
         ride_form = RideForm(initial = {
             'start_city': "Houghton",

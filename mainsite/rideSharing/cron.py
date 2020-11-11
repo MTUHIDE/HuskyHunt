@@ -2,6 +2,7 @@ from django_cron import CronJobBase, Schedule
 from rideSharing.models import RideItem
 from datetime import date
 from django.utils import timezone
+from profanity_check import ArchivedType
 
 
 # Used to archive rides that have already "left"
@@ -16,7 +17,7 @@ class ArchiveRides(CronJobBase):
 
         # Considered archived after the ride has left
         archive_rides = RideItem.objects.filter(
-            archived='False',
+            archived=ArchivedType.Q_myContent,
             date_leaving__lte=today
         )
 

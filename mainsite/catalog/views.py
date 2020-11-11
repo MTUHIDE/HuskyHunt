@@ -12,6 +12,7 @@ from django.urls import reverse
 from accountant.models import user_profile
 from datetime import datetime, timedelta
 import pytz
+from profanity_check.models import ArchivedType
 
 
 #This small helper function adds an appropriate error message to the page
@@ -127,9 +128,14 @@ def index(request):
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
 def report(request, pk):
-    # Get the item
     item = CatalogItem.objects.get(pk=pk)
+    report_functionality(request, pk, item)
+    return HttpResponseRedirect('/catalog/' + str(pk))
 
+
+def report_functionality(request, pk, item):
+
+    extra_tags = "R" + str(pk)
     # Times to compare
     last_flag_original = user_profile.objects.filter(user = request.user)[0].last_flag
     one_min_ago_original = datetime.now() - timedelta(minutes=1)
@@ -153,18 +159,18 @@ def report(request, pk):
     # Checks if the user has flagged a post in the last 1 minute
     if (one_min_ago < last_flag):
         # flagged an item less than one minute ago
-        messages.error(request, 'Please wait one minute between reporting posts!')
+        messages.error(request, 'Please wait one minute between reporting posts!', extra_tags=extra_tags)
 
     # Check if user has maxed out on emails today
     elif (user_profile.objects.filter(user = request.user)[0].flags_today >= 5):
         time_remaining = timedelta(hours=24) - (datetime.now().astimezone(pytz.timezone('UTC')) - last_flag)
-        messages.error(request, 'You can only report 5 posts per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."))
+        messages.error(request, 'You can only report 5 posts per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."), extra_tags=extra_tags)
 
     else:
         # Set the reported to true
         item.reported = "True" # Report this item
         item.save()
-        messages.error(request, 'Post successfully reported!')
+        messages.error(request, 'Post successfully reported!', extra_tags=extra_tags)
 
         #Set last email sent time and increment number of emails
         profile = user_profile.objects.get(user = request.user)
@@ -172,8 +178,8 @@ def report(request, pk):
         profile.flags_today = profile.flags_today + 1
         profile.save()
 
-    #Redirects the user to the same webpage (So nothing changes but the success message appearing)
-    return HttpResponseRedirect('/catalog/' + str(pk))
+    #Caller should redirect the user to the same webpage (So nothing changes but the success message appearing)
+    return # eg return HttpResponseRedirect('/catalog/' + str(pk))
 
 # Used in formatting timedelta objects
 def strfdelta(tdelta, fmt):
@@ -188,7 +194,15 @@ def strfdelta(tdelta, fmt):
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
 def email(request, pk):
+    item = CatalogItem.objects.filter(pk=pk)[0]
+    email_functionality(request, pk, item, "an", "item", "")
+    #Redirects the user to the same webpage (So nothing changes but the success message appearing)
+    return HttpResponseRedirect('/catalog/' + str(pk))
+
+def email_functionality(request, pk, item, article, shortdesc, extra_tags):
     name = request.user.first_name
+
+    MAX_EMAIL_COUNT = 10 # 5 seemed too little if you're buying and trying to coordinate rides
 
     # Gets the preferred name if not empty
     profile = user_profile.objects.filter(user = request.user)
@@ -199,7 +213,7 @@ def email(request, pk):
 
     #The body of the email
     message = (name +
-              ' has messaged you about an item you posted on HuskyHunt!\n\n' +
+              ' has messaged you about ' + article + " " + shortdesc + ' you posted on HuskyHunt!\n\n' +
               'Message from ' + name + ': ' + request.GET['message'] +
               '\n\nYou can respond by replying to this email, or by contacting ' +
               name + ' directly: ' + user_email)
@@ -207,7 +221,7 @@ def email(request, pk):
     #The email that this message is sent from
     from_email = name + ' via HuskyHunt <admin@huskyhunt.com>'
     #Gets the item that is currently being viewed
-    item_list = CatalogItem.objects.filter(pk=pk)
+    item_list = (type(item)).objects.filter(pk=pk)
     #Gets the sellers email
     to_email = item_list[0].username.email
 
@@ -234,18 +248,18 @@ def email(request, pk):
     # Checks if the user has sent an email in the last 1 minute
     if (one_min_ago < last_email):
         # sent an email less than two minutes ago
-        messages.error(request, 'Please wait one minute between emails!')
+        messages.error(request, 'Please wait one minute between emails!', extra_tags=extra_tags)
 
     # Check if user has maxed out on emails today
-    elif (user_profile.objects.filter(user = request.user)[0].emails_today >= 5):
+    elif (user_profile.objects.filter(user = request.user)[0].emails_today >= MAX_EMAIL_COUNT):
         time_remaining = timedelta(hours=24) - (datetime.now().astimezone(pytz.timezone('UTC')) - last_email)
-        messages.error(request, 'You can only send 5 messages per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."))
+        messages.error(request, 'You can only send ' + MAX_EMAIL_COUNT + ' messages per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."), extra_tags=extra_tags)
 
     #Checks if the message is no empty
     elif (request.GET['message'] != ''):
         # Create the email object
         email = EmailMessage(
-            'Interested in your item', # subject
+            'Interested in your ' + shortdesc, # subject
             message, #body
             from_email, # from_email
             [to_email],  # to email
@@ -262,14 +276,11 @@ def email(request, pk):
         profile.save()
 
         #Displays that the email was sent successfully
-        messages.error(request, 'Message sent successfully!')
+        messages.error(request, 'Message sent successfully!', extra_tags=extra_tags)
 
     #If the message is empty then an error message is displayed
     else:
-        messages.error(request, 'Please enter a message!')
-
-    #Redirects the user to the same webpage (So nothing changes but the success message appearing)
-    return HttpResponseRedirect('/catalog/' + str(pk))
+        messages.error(request, 'Please enter a message!', extra_tags=extra_tags)
 
 
 #This function displays more detailed information about a item
@@ -297,10 +308,9 @@ def detail(request, pk):
 
     # Item is archived
     if item_list[0].archived:
-        request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
-        return HttpResponseRedirect(reverse('catalog:index'))
-
-
+        if not (item_list[0].username == request.user and ArchivedType.myContent(item_list[0].archivedType) ):
+            request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+            return HttpResponseRedirect(reverse('catalog:index'))
 
     #Changes what the user sees to be more detailed information on the one item
     return render(request, template, context)

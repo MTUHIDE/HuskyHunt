@@ -2,6 +2,9 @@ from django.contrib.auth.models import User
 from accountant.models import user_profile
 from django.db import models
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+from profanity_check.models import ArchivedType
+
 
 #Defines a table of categories
 class RideCategory(models.Model):
@@ -99,6 +102,12 @@ class RideItem(models.Model):
 
     # If the ride has been archived or not
     archived = models.BooleanField(default=False)
+
+    # If the ride is currently reported (flagged to be reviewed) or not
+    reported = models.BooleanField(default=False)
+
+    # VIsible, HiDden, REmoved, or ARchived
+    archivedType = ArchivedType.archivedTypeField()
 
     def __str__(self):
         return self.destination_city
