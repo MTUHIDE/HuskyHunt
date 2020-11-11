@@ -1,0 +1,17 @@
+
+
+{% if message.message == "Please enter a message!" or message.message|slice:":27" in 'You can only send 5 messages per day!' or message.message|slice:":27" in 'You can only report 5 posts per day!'  %}
+    <div class="alert" style="background-color:#cc3333">
+        <strong>{{ message }}</strong> </br> Message failed to send!
+{% elif message.message == "Please wait one minute between emails!" or message.message == "Please wait one minute between reporting posts!"  %}
+    <div class="alert" style="background-color:#cc3333">
+        <strong>{{ message }}</strong>
+{% else %}
+    <div class="alert" style="background-color:#33cc33">
+    {% if message.message == "Post successfully reported!" %}
+        <strong>{{ message }}</strong>
+    {% else %}
+        <strong>{{ message }}</strong> </br> Message sent successfully!
+    {% endif %}
+{% endif %}
+    </div>

@@ -200,19 +200,12 @@
                           <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
                             {% if messages %}
                               {% for message in messages %}
-                                {% if message.extra_tags == ride.pk|stringformat:"i" %}
-                                  <!--<p class="alert closebtn">{{ message }}</p>-->
-                                  {% if message.message == "Please enter a message!" %}
-                                    <div class="alert" style="background-color:#cc3333">
-                                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                      <strong>{{message}}</strong> </br> Message failed to send!
-                                    </div>
-                                  {% else %}
-                                    <div class="alert" style="background-color:#33cc33">
-                                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                      <strong>{{message}}</strong> </br> Message sent successfully!
-                                    </div>
-                                  {% endif %}
+                                {% if message.extra_tags|slice:"1:" == ride.pk|stringformat:"i" %}
+                                    {% if message.extra_tags.0 == "E" %}
+
+                                        {% include "catalog/message_response.html" %}
+
+                                    {% endif %}
                                 {% endif%}
                               {% endfor %}
                             {% endif %}
@@ -232,7 +225,51 @@
                         </div>
 
                         <div class="col-lg-6">
-                            <div id="mapid_{{ride.pk}}" name="mapid" style="height: 300px" ></div>
+
+                            <div>
+                                <div id="mapid_{{ride.pk}}" name="mapid" style="height: 300px" ></div>
+                            </div>
+                            <br>
+
+                            <div class="row">
+                                <div>
+                                  <form action={% url 'rideSharing:report' ride.id %} method="GET" onsubmit="reportButton.disabled = true" id="reportForm">
+                                      <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
+                                  </form>
+                                </div>
+
+                                {% if request.user.username|stringformat:"s" == ride.username|stringformat:"s" %}
+                                <div>
+                                    {% include "catalog/delete_button.html" with target_pk=ride.pk title=ride.destination_city href_url='accountant:deleteRide' btn="light" only %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <br>
+
+                            <div class="row">
+                            {% if messages %}
+                              {% for message in messages %}
+                                {% if message.extra_tags|slice:"1:" == ride.pk|stringformat:"i" %}
+                                    {% if message.extra_tags.0 == "R" %}
+                                        {% include "catalog/message_response.html" %}
+                                    {% endif %}
+                                 {% endif %}
+                              {% endfor %}
+                            {% endif %}
+                            </div>
+                            <br>
+
+                            <div class="row">
+                                {% if ride.archivedType == "HD" %}
+                                <div>
+                                    <h4> Warning: item is hidden from other users until a moderator reviews it. </h4>
+                                </div>
+                                {% elif ride.archivedType == "RE" %}
+                                <div >
+                                    <h4> Warning: item was marked in violation of our policies and is hidden from other users. </h4>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
 
                       </div>

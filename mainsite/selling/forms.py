@@ -27,10 +27,23 @@ class SellingForm( ProfFiltered_ModelForm ):
         fields = ('category', 'item_title', 'item_price', 'item_description', 'item_picture')
 
     def __init__(self, *args, **kwargs):
+        self._request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
+
 
         #Gets all the available categories for the new item
         self.fields['category'].queryset = Category.objects.all()
+
+    def save(self, commit=True):
+        item = super().save(commit=False)
+
+        if item.item_price < 0:
+            item.item_price = 0
+        item.username = self._request.user
+
+        if commit:
+            item.save()
+        return item
 
     def clean_item_picture(self):
         pic = self.cleaned_data['item_picture']

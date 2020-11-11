@@ -50,6 +50,15 @@
                                 {{ item.item_title }}
                             </div>
                         </h4>
+                        <h6>
+                        {% if item.archived is not False %}
+                            {% if item.archivedType == "HD" %}
+                            May be awaiting moderator review
+                            {% elif item.archivedType == "RE" %}
+                            Marked in violation by a moderator
+                            {% endif %}
+                        {% endif %}
+                        </h6>
 
                         <!--
                         <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
@@ -59,34 +68,7 @@
                 </div>
                 <div class="card-footer" style="background-color: black;"> <!--black-->
                     <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block " id="viewButton">View</a>
-                    <button role="button" class="btn btn-outline-warning btn-block" data-toggle="modal" data-target="#deleteItemModal{{item.pk}}" id="deleteButton">Delete</button>
-                </div>
-
-                <!-- Modal -->
-                <div id="deleteItemModal{{item.pk}}" class="modal fade" role="dialog">
-                    <div class="modal-dialog modal-dialog-centered">
-
-                     <!-- Modal content-->
-                        <div class="modal-content" style="border: 1px solid #FFCD00;">
-                            <div class="modal-header" style="background-color:black; border-bottom: 1px solid #FFCD00;"> <!-- style="justify-content:center;" this centers title in modal-->
-                                <h4 class="" style="color:#ffcd00;">Delete {{ item.item_title }}</h4>
-                                <button type="button" class="close" style="color:#ffcd00;" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-
-                            <div class="modal-body husky-modal">
-                                <div class="col-lg-6">
-                                    <h5>Are you sure you want to delete this item?</h5>
-                                </div>
-                            </div>
-                            <div class="modal-footer husky-modal">
-                            <a type="button" class="btn btn-primary husky-button-light" href="/accountant/{{ item.pk }}">Delete</a>
-                            <button type="button" class="btn btn-secondary husky-button-dark" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-
-                    </div>
+                    {% include "catalog/delete_button.html" with target_pk=item.pk title=item.item_title href_url='accountant:deleteItem' btn="heavy" only %}
                 </div>
             </div>
         </div>
@@ -124,37 +106,19 @@
                             {{ ride.destination_city }}
                         </div>
                     </h4>
+                    <h6>
+                    {% if ride.archived is not False %}
+                        {% if ride.archivedType == "HD" %}
+                        May be awaiting moderator review
+                        {% elif ride.archivedType == "RE" %}
+                        Marked in violation by a moderator
+                        {% endif %}
+                    {% endif %}
+                    </h6>
                 </div>
                 <div class="card-footer" style="background-color: black;"> <!--black-->
                    <!--  <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block ">View</a> -->
-                    <button role="button" class="btn btn-outline-warning btn-block" data-toggle="modal" data-target="#deleteRideModal{{ride.pk}}" id="deleteButton">Delete</button>
-                </div>
-
-                 <!-- Modal -->
-                <div id="deleteRideModal{{ride.pk}}" class="modal fade" role="dialog">
-                    <div class="modal-dialog modal-dialog-centered">
-
-                     <!-- Modal content-->
-                        <div class="modal-content" style="border: 1px solid #FFCD00;">
-                            <div class="modal-header" style="background-color:black; border-bottom: 1px solid #FFCD00;"> <!-- style="justify-content:center;" this centers title in modal-->
-                                <h4 class="" style="color:#ffcd00;">Delete Ride to {{ ride.destination_city }}</h4>
-                                <button type="button" class="close" style="color:#ffcd00;" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-
-                            <div class="modal-body husky-modal">
-                                <div class="col-lg-6">
-                                    <h5>Are you sure you want to delete this ride?</h5>
-                                </div>
-                            </div>
-                            <div class="modal-footer husky-modal">
-                            <a type="button" class="btn btn-primary husky-button-light" href="/accountant/ride/{{ ride.pk }}">Delete</a>
-                            <button type="button" class="btn btn-secondary husky-button-dark" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-
-                    </div>
+                    {% include "catalog/delete_button.html" with target_pk=ride.pk title=ride.destination_city href_url='accountant:deleteRide' btn="heavy" only %}
                 </div>
             </div>
         </div>
