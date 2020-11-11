@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib import auth
+from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from django.contrib import messages
 from rideSharing.models import RideItem, RideCategory
@@ -13,6 +14,7 @@ from django.core.paginator import Paginator
 from accountant.models import user_profile
 from django.contrib.auth.decorators import login_required
 from catalog.views import report_functionality, email_functionality
+from catalog.views import isUserNotBanned
 
 #This small helper function adds an appropriate error message to the page
 #param: context - the context that's normally passed to the catalog pages;
@@ -44,6 +46,7 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #param: pk - a int variable that is used as the primary key for the item in the database
 #returns: The same page that the user is currently on
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def email(request, pk):
     extra_tags = "E" + str(pk)
     item = RideItem.objects.filter(pk=pk)[0]
@@ -55,6 +58,7 @@ def email(request, pk):
 #param: request - array variable that is passed around the website, kinda like global variables
 #returns: all the items in the database, with the most recently item added at the top
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def ride(request, pk):
 
     #The CSS for this function can be found here
@@ -100,7 +104,9 @@ def ride(request, pk):
 #param: request - array variable that is passed around the website, kinda like global variables
 #returns: all the items in the database, with the most recently item added at the top
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def index(request):
+
     return ride(request, -1)
 
 
@@ -135,7 +141,9 @@ def addErrorOnEmpty(context, type, num_items = 4):
 #returns: all items in the database that contain the string
 #from the search text field in their name or description
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def search(request):
+
     #The CSS code for this function can be found here
     template = 'rideSharing/index.html'
 
@@ -206,6 +214,7 @@ def search(request):
 #param: request - array passed throughout a website, kinda like global variables
 #returns: render function that changes the items the user sees based on the category/ies
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def filter(request):
     #The CSS code for this function can be found here
     template = 'rideSharing/index.html'

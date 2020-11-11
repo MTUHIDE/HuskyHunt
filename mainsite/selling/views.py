@@ -4,7 +4,9 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from catalog.views import isUserNotBanned
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from datetime import datetime
 
 from .forms import SellingForm
@@ -21,7 +23,9 @@ from django.db.models import Q
 
 
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def index(request):
+    
     template = "selling/combine.html"
     catalog_form = None
     ride_form = None
