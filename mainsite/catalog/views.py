@@ -13,6 +13,7 @@ from django.urls import reverse
 from accountant.models import user_profile
 from datetime import datetime, timedelta
 import pytz
+from selling.forms import SellingForm
 
 # This helper function checks if a user is currently banned / timed out
 def isUserNotBanned(username):
@@ -59,7 +60,7 @@ def addErrorOnEmpty(context, type, num_items = 4):
 @login_required(login_url='/')
 @user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def search(request):
-    
+
     #The CSS code for this function can be found here
     template = 'catalog/index.html'
 
@@ -388,4 +389,68 @@ def filter(request):
         context['failed_search'] = "MisformedFilterFail"
 
         #Returns a render function call to display onto the website for the user to see
+    return render(request, template, context)
+
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+def update(request, pk):
+
+    #The CSS for this page of the website can be found here
+    template = 'catalog/update.html'
+
+    #Gets the item from the database
+    item_list = CatalogItem.objects.filter(pk=pk)
+
+    catalog_form = None
+
+    # No page found
+    if item_list.count() == 0:
+        request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+        return HttpResponseRedirect(reverse('catalog:index'))
+
+    # Item is archived
+    if item_list[0].archived:
+        request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+        return HttpResponseRedirect(reverse('catalog:index'))
+
+    if request.method == 'POST':
+        post_request = request.POST.copy() #make it not immutable
+        catalog_form = SellingForm(post_request, request.FILES)
+        if catalog_form.is_valid():
+            item_list[0].category = catalog_form.cleaned_data['category']
+            print(item_list[0].category)
+            item_list[0].item_description = catalog_form.cleaned_data['item_description']
+            print(item_list[0].item_description)
+            item_list[0].item_price = catalog_form.cleaned_data['item_price']
+            if item_list[0].item_price < 0:
+                item_list[0].item_price = 0
+            print(item_list[0].item_price)
+            item_list[0].item_title = catalog_form.cleaned_data['item_title']
+            #item_list[0].username = request.user
+            item_list[0].item_picture = catalog_form.cleaned_data['item_picture']
+            # catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
+            #catalogItem_instance.save()
+            item_list[0].save()
+
+            # Inrement number of points by one
+            # profile = user_profile.objects.get(user = request.user)
+            # profile.points = profile.points + 1
+            # profile.save()
+
+            return HttpResponseRedirect(reverse('catalog:index'))
+
+    if catalog_form is None and 10 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
+        catalog_form = SellingForm({'category': item_list[0].category,
+                                    'item_title': item_list[0].item_title,
+                                    'item_price': item_list[0].item_price,
+                                    'item_description': item_list[0].item_description,
+                                    'item_picture': item_list[0].item_picture})
+
+    #Packages the information to be displayed into context
+    context = {
+            'item_list': item_list,
+            'catalog_form': catalog_form,
+    }
+
+    #Changes what the user sees to be more detailed information on the one item
     return render(request, template, context)
