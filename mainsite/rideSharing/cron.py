@@ -22,7 +22,7 @@ class ArchiveRides(CronJobBase):
         )
 
         # For each ride, set it to archived
-        for ride in old_rides:
+        for ride in archive_rides:
         	ride.archived = "True"
         	ride.save()
 
