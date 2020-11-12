@@ -416,7 +416,7 @@ def update(request, pk):
         if catalog_form.is_valid():
             catalog_form.save()
 
-            return HttpResponseRedirect(reverse('catalog:index'))
+            return HttpResponseRedirect('/catalog/' + str(pk))
         else:
             return render(request, template, {
                 'catalog_form': catalog_form
