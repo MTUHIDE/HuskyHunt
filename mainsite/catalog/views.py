@@ -228,7 +228,7 @@ def email(request, pk):
     #Gets the item that is currently being viewed
     item_list = CatalogItem.objects.filter(pk=pk)
     #Gets the sellers email
-    to_email = item_list[0].username.email
+    to_email = item.username.email
 
     # Times to compare
     last_email_original = user_profile.objects.filter(user = request.user)[0].last_email
@@ -399,17 +399,18 @@ def update(request, pk):
     template = 'catalog/update.html'
 
     #Gets the item from the database
-    item_list = CatalogItem.objects.filter(pk=pk)
-
-    catalog_form = None
-
-    # No page found
-    if item_list.count() == 0:
+    item = None
+    
+    try:
+        item = CatalogItem.objects.get(pk=pk)
+    except CatalogItem.DoesNotExist:
         request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
         return HttpResponseRedirect(reverse('catalog:index'))
 
+    catalog_form = None
+
     # Item is archived
-    if item_list[0].archived:
+    if item.archived:
         request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
         return HttpResponseRedirect(reverse('catalog:index'))
 
@@ -417,20 +418,20 @@ def update(request, pk):
         post_request = request.POST.copy() #make it not immutable
         catalog_form = SellingForm(post_request, request.FILES)
         if catalog_form.is_valid():
-            item_list[0].category = catalog_form.cleaned_data['category']
-            print(item_list[0].category)
-            item_list[0].item_description = catalog_form.cleaned_data['item_description']
-            print(item_list[0].item_description)
-            item_list[0].item_price = catalog_form.cleaned_data['item_price']
-            if item_list[0].item_price < 0:
-                item_list[0].item_price = 0
-            print(item_list[0].item_price)
-            item_list[0].item_title = catalog_form.cleaned_data['item_title']
-            #item_list[0].username = request.user
-            item_list[0].item_picture = catalog_form.cleaned_data['item_picture']
+            item.category = catalog_form.cleaned_data['category']
+            print(item.category)
+            item.item_description = catalog_form.cleaned_data['item_description']
+            print(item.item_description)
+            item.item_price = catalog_form.cleaned_data['item_price']
+            if item.item_price < 0:
+                item.item_price = 0
+            print(item.item_price)
+            item.item_title = catalog_form.cleaned_data['item_title']
+            #item.username = request.user
+            item.item_picture = catalog_form.cleaned_data['item_picture']
             # catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
             #catalogItem_instance.save()
-            item_list[0].save()
+            item.save()
 
             # Inrement number of points by one
             # profile = user_profile.objects.get(user = request.user)
@@ -440,16 +441,18 @@ def update(request, pk):
             return HttpResponseRedirect(reverse('catalog:index'))
 
     if catalog_form is None and 10 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
-        catalog_form = SellingForm({'category': item_list[0].category,
-                                    'item_title': item_list[0].item_title,
-                                    'item_price': item_list[0].item_price,
-                                    'item_description': item_list[0].item_description,
-                                    'item_picture': item_list[0].item_picture})
+        catalog_form = SellingForm({'category': item.category,
+                                    'item_title': item.item_title,
+                                    'item_price': item.item_price,
+                                    'item_description': item.item_description,
+                                    'item_picture': item.item_picture})
+
+    print(item.item_picture)
 
     #Packages the information to be displayed into context
     context = {
-            'item_list': item_list,
-            'catalog_form': catalog_form,
+            'item': item,
+            'catalog_form': catalog_form
     }
 
     #Changes what the user sees to be more detailed information on the one item
