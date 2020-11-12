@@ -394,11 +394,9 @@ def filter(request):
 @login_required(login_url='/')
 @user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def update(request, pk):
-
-    #The CSS for this page of the website can be found here
     template = 'catalog/update.html'
 
-    #Gets the item from the database
+    # Gets the item from the database
     item = None
     
     try:
@@ -407,53 +405,24 @@ def update(request, pk):
         request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
         return HttpResponseRedirect(reverse('catalog:index'))
 
-    catalog_form = None
-
     # Item is archived
     if item.archived:
         request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
         return HttpResponseRedirect(reverse('catalog:index'))
 
     if request.method == 'POST':
-        post_request = request.POST.copy() #make it not immutable
-        catalog_form = SellingForm(post_request, request.FILES)
-        if catalog_form.is_valid():
-            item.category = catalog_form.cleaned_data['category']
-            print(item.category)
-            item.item_description = catalog_form.cleaned_data['item_description']
-            print(item.item_description)
-            item.item_price = catalog_form.cleaned_data['item_price']
-            if item.item_price < 0:
-                item.item_price = 0
-            print(item.item_price)
-            item.item_title = catalog_form.cleaned_data['item_title']
-            #item.username = request.user
-            item.item_picture = catalog_form.cleaned_data['item_picture']
-            # catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
-            #catalogItem_instance.save()
-            item.save()
+        catalog_form = SellingForm(request.POST, request.FILES, instance=item)
 
-            # Inrement number of points by one
-            # profile = user_profile.objects.get(user = request.user)
-            # profile.points = profile.points + 1
-            # profile.save()
+        if catalog_form.is_valid():
+            catalog_form.save()
 
             return HttpResponseRedirect(reverse('catalog:index'))
+        else:
+            return render(request, template, {
+                'catalog_form': catalog_form
+            })
 
-    if catalog_form is None and 10 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
-        catalog_form = SellingForm({'category': item.category,
-                                    'item_title': item.item_title,
-                                    'item_price': item.item_price,
-                                    'item_description': item.item_description,
-                                    'item_picture': item.item_picture})
-
-    print(item.item_picture)
-
-    #Packages the information to be displayed into context
-    context = {
-            'item': item,
-            'catalog_form': catalog_form
-    }
-
-    #Changes what the user sees to be more detailed information on the one item
-    return render(request, template, context)
+    elif request.method == 'GET':
+        return render(request, template, {
+                'catalog_form': SellingForm(instance=item)
+        })
