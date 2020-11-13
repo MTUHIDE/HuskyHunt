@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import pytz
 from django.core.mail import BadHeaderError, send_mail, EmailMessage
 
-
 @admin.register(user_profile)
 class user_profileAdmin(admin.ModelAdmin):
 	name = 'test'
@@ -86,4 +85,11 @@ class user_profileAdmin(admin.ModelAdmin):
 	timeout_user_seven.short_description = "Timeout 7 Days"
 	timeout_user_thirty.short_description = "Timeout 30 Days"
 	ban_user.short_description = "Ban User"
+
+	def get_actions(self, request):
+		#https://stackoverflow.com/questions/34152261/remove-the-default-delete-action-in-django-admin
+		actions = super().get_actions(request)
+		if 'delete_selected' in actions:
+			del actions['delete_selected']
+		return actions;
 
