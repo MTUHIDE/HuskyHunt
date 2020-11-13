@@ -221,9 +221,12 @@ def email_functionality(request, pk, item, article, shortdesc, extra_tags):
 
     MAX_EMAIL_COUNT = 10 # 5 seemed too little if you're buying and trying to coordinate rides
 
-    # Gets the preferred name if not empty
+    # Gets the preferred name if not empty, or called 'admin', 'administrator'
     profile = user_profile.objects.filter(user = request.user)
-    if (profile[0].preferred_name):
+    if (profile[0].preferred_name
+        and profile[0].preferred_name.lower() != 'admin'
+        and profile[0].preferred_name.lower() != 'administrator'):
+
         name = profile[0].preferred_name
 
     user_email = request.user.email
