@@ -3,6 +3,13 @@ from accountant.models import user_profile
 from datetime import datetime, timedelta
 import pytz
 from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from catalog.models import CatalogItem
+
+def archiveAllUserPosts(user):
+	items = CatalogItem.objects.filter(archived='False', username=user.user)
+	for item in items:
+		item.archived=True
+		item.save()
 
 @admin.register(user_profile)
 class user_profileAdmin(admin.ModelAdmin):
@@ -17,6 +24,8 @@ class user_profileAdmin(admin.ModelAdmin):
 
 		# Send emails
 		for user in queryset:
+			archiveAllUserPosts(user)
+
 			#The body of the email
 			message = ('Your account on HuskyHunt has been suspended for seven days.\n\n\nThis is an automated message.')
 
@@ -42,6 +51,8 @@ class user_profileAdmin(admin.ModelAdmin):
 
 		# Send emails
 		for user in queryset:
+			archiveAllUserPosts(user)
+
 			#The body of the email
 			message = ('Your account on HuskyHunt has been suspended for thirty days.\n\n\nThis is an automated message.')
 
@@ -66,6 +77,8 @@ class user_profileAdmin(admin.ModelAdmin):
 
 		# Send emails
 		for user in queryset:
+			archiveAllUserPosts(user)
+
 			#The body of the email
 			message = ('Your account on HuskyHunt has been banned.\n\n\nThis is an automated message.')
 
