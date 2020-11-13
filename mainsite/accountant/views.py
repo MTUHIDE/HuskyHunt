@@ -50,7 +50,7 @@ class EditModelForm( ProfFiltered_ModelForm ):
 
     def clean_picture(self):
         pic = self.cleaned_data['picture']
-        if pic.size > settings.MAX_UPLOAD_SIZE:
+        if (pic != None and pic.size > settings.MAX_UPLOAD_SIZE):
             raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
             params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
         return pic
