@@ -27,7 +27,8 @@ class user_profileAdmin(admin.ModelAdmin):
 			archiveAllUserPosts(user)
 
 			#The body of the email
-			message = ('Your account on HuskyHunt has been suspended for seven days.\n\n\nThis is an automated message.')
+			message = ('Your account on HuskyHunt has been suspended for seven days.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
 
 			#The email that this message is sent from
 			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
@@ -38,7 +39,7 @@ class user_profileAdmin(admin.ModelAdmin):
 		        message, #body
 		        from_email, # from_email
 		        [to_email],  # to email
-		        reply_to=[to_email],  # reply to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
 		        )
 			email.send();
 
@@ -54,7 +55,8 @@ class user_profileAdmin(admin.ModelAdmin):
 			archiveAllUserPosts(user)
 
 			#The body of the email
-			message = ('Your account on HuskyHunt has been suspended for thirty days.\n\n\nThis is an automated message.')
+			message = ('Your account on HuskyHunt has been suspended for thirty days.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
 
 			#The email that this message is sent from
 			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
@@ -65,7 +67,7 @@ class user_profileAdmin(admin.ModelAdmin):
 		        message, #body
 		        from_email, # from_email
 		        [to_email],  # to email
-		        reply_to=[to_email],  # reply to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
 		        )
 			email.send();
 
@@ -80,7 +82,8 @@ class user_profileAdmin(admin.ModelAdmin):
 			archiveAllUserPosts(user)
 
 			#The body of the email
-			message = ('Your account on HuskyHunt has been banned.\n\n\nThis is an automated message.')
+			message = ('Your account on HuskyHunt has been banned.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
 
 			#The email that this message is sent from
 			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
@@ -91,7 +94,7 @@ class user_profileAdmin(admin.ModelAdmin):
 		        message, #body
 		        from_email, # from_email
 		        [to_email],  # to email
-		        reply_to=[to_email],  # reply to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
 		        )
 			email.send();
 
