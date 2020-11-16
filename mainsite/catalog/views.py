@@ -14,6 +14,7 @@ from accountant.models import user_profile
 from datetime import datetime, timedelta
 import pytz
 from profanity_check.models import ArchivedType
+from selling.forms import SellingForm
 
 # This helper function checks if a user is currently banned / timed out
 def isUserNotBanned(username):
@@ -243,7 +244,7 @@ def email_functionality(request, pk, item, article, shortdesc, extra_tags):
     #Gets the item that is currently being viewed
     item_list = (type(item)).objects.filter(pk=pk)
     #Gets the sellers email
-    to_email = item_list[0].username.email
+    to_email = item.username.email
 
     # Times to compare
     last_email_original = user_profile.objects.filter(user = request.user)[0].last_email
@@ -401,3 +402,39 @@ def filter(request):
 
         #Returns a render function call to display onto the website for the user to see
     return render(request, template, context)
+
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+def update(request, pk):
+    template = 'catalog/update.html'
+
+    # Gets the item from the database
+    item = None
+    
+    try:
+        item = CatalogItem.objects.get(pk=pk)
+    except CatalogItem.DoesNotExist:
+        request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+        return HttpResponseRedirect(reverse('catalog:index'))
+
+    # Item is archived
+    if item.archived:
+        request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
+        return HttpResponseRedirect(reverse('catalog:index'))
+
+    if request.method == 'POST':
+        catalog_form = SellingForm(request.POST, request.FILES, instance=item)
+
+        if catalog_form.is_valid():
+            catalog_form.save()
+
+            return HttpResponseRedirect('/catalog/' + str(pk))
+        else:
+            return render(request, template, {
+                'catalog_form': catalog_form
+            })
+
+    elif request.method == 'GET':
+        return render(request, template, {
+                'catalog_form': SellingForm(instance=item)
+        })

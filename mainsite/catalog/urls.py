@@ -10,6 +10,9 @@ urlpatterns = [
     #...an integer then execute the detail method in views
     path('<int:pk>/', views.detail, name='detail'),
 
+    #...an integer then execute the update method in views
+    path('<int:pk>/update/', views.update, name='update'),
+
     #...blank then execute the index methon in views
     path('', views.index, name='index'),
 
