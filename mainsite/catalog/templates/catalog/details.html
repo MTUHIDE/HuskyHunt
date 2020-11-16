@@ -15,13 +15,16 @@
             <br>
             {% if request.user.username|stringformat:"s" == item.username|stringformat:"s" %}
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-4" style="width: 150px;">
                 <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="sendButton.disabled = true" id="reportForm">
                     <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
                 </form>
               </div>
-              <div class="col-md-6">
-                <button role="button" class="btn btn-default husky-button-light"  style="width: 150px;" data-toggle="modal" data-target="#deleteItemModal{{item.pk}}" id="deleteButton">Delete Item</button>
+              <div class="col-md-4" style="width: 150px;">
+                <a role="button" class="btn btn-default husky-button-light"  style="width: 150px;" id="updatedButton" href="/catalog/{{item.id}}/update/">Update Post</a>
+              </div>
+              <div class="col-md-4" style="width: 150px;">
+                <button role="button" class="btn btn-default husky-button-light"  style="width: 150px;" data-toggle="modal" data-target="#deleteItemModal{{item.pk}}" id="deleteButton">Delete Post</button>
               </div>
             </div>
 
