@@ -4,6 +4,9 @@
 python3 mainsite/manage.py migrate
 python3 mainsite/manage.py migrate django_cron
 
+# Add cron jobs
+python3 mainsite/manage.py crontab add
+
 if [ "$DEBUG" = 'true' ]
 then
   # Also install fixtures
