@@ -3,7 +3,13 @@ from accountant.models import user_profile
 from datetime import datetime, timedelta
 import pytz
 from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from catalog.models import CatalogItem
 
+def archiveAllUserPosts(user):
+	items = CatalogItem.objects.filter(archived='False', username=user.user)
+	for item in items:
+		item.archived=True
+		item.save()
 
 @admin.register(user_profile)
 class user_profileAdmin(admin.ModelAdmin):
@@ -18,8 +24,11 @@ class user_profileAdmin(admin.ModelAdmin):
 
 		# Send emails
 		for user in queryset:
+			archiveAllUserPosts(user)
+
 			#The body of the email
-			message = ('Your account on HuskyHunt has been suspended for seven days.\n')
+			message = ('Your account on HuskyHunt has been suspended for seven days.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
 
 			#The email that this message is sent from
 			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
@@ -30,7 +39,7 @@ class user_profileAdmin(admin.ModelAdmin):
 		        message, #body
 		        from_email, # from_email
 		        [to_email],  # to email
-		        reply_to=[],  # reply to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
 		        )
 			email.send();
 
@@ -43,8 +52,11 @@ class user_profileAdmin(admin.ModelAdmin):
 
 		# Send emails
 		for user in queryset:
+			archiveAllUserPosts(user)
+
 			#The body of the email
-			message = ('Your account on HuskyHunt has been suspended for thirty days.\n')
+			message = ('Your account on HuskyHunt has been suspended for thirty days.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
 
 			#The email that this message is sent from
 			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
@@ -55,7 +67,7 @@ class user_profileAdmin(admin.ModelAdmin):
 		        message, #body
 		        from_email, # from_email
 		        [to_email],  # to email
-		        reply_to=[],  # reply to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
 		        )
 			email.send();
 
@@ -67,8 +79,11 @@ class user_profileAdmin(admin.ModelAdmin):
 
 		# Send emails
 		for user in queryset:
+			archiveAllUserPosts(user)
+
 			#The body of the email
-			message = ('Your account on HuskyHunt has been banned.\n')
+			message = ('Your account on HuskyHunt has been banned.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
 
 			#The email that this message is sent from
 			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
@@ -79,11 +94,18 @@ class user_profileAdmin(admin.ModelAdmin):
 		        message, #body
 		        from_email, # from_email
 		        [to_email],  # to email
-		        reply_to=[],  # reply to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
 		        )
 			email.send();
 
 	timeout_user_seven.short_description = "Timeout 7 Days"
 	timeout_user_thirty.short_description = "Timeout 30 Days"
 	ban_user.short_description = "Ban User"
+
+	def get_actions(self, request):
+		#https://stackoverflow.com/questions/34152261/remove-the-default-delete-action-in-django-admin
+		actions = super().get_actions(request)
+		if 'delete_selected' in actions:
+			del actions['delete_selected']
+		return actions;
 
