@@ -1,3 +1,4 @@
+from PIL import Image
 from django import forms
 from catalog.models import CatalogItem, Category, SubCategory
 from django.forms import ModelForm
@@ -50,6 +51,13 @@ class SellingForm( ProfFiltered_ModelForm ):
         if pic.size > settings.MAX_UPLOAD_SIZE:
             raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
             params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
+
+        im = Image.open(pic)
+
+        if im.format.lower() not in settings.ALLOWED_UPLOAD_IMAGES:
+            raise forms.ValidationError(_("Unsupported file format. Supported formats are %s."
+                                          % ", ".join(settings.ALLOWED_UPLOAD_IMAGES)))
+
         return pic
 
     def clean_item_price(self):

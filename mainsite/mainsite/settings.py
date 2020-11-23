@@ -173,3 +173,5 @@ LOGOUT_REDIRECT_URL = '/'
 
 #For images uploaded for items/etc
 MAX_UPLOAD_SIZE = 5242880
+
+ALLOWED_UPLOAD_IMAGES = ('jpg', 'png', 'jpeg')
