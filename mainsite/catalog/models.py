@@ -82,7 +82,17 @@ class CatalogItem(models.Model):
     item_description = models.CharField(max_length=1500, blank=True)
 
     #Picture that is uploaded on item creation
-    item_picture = models.ImageField(upload_to='catalog/%Y/%m/%d/', height_field=None, width_field=None)
+    # now represented by separate models with a foreignkey relation
+    #  item_picture = models.ImageField(upload_to='catalog/%Y/%m/%d/', height_field=None, width_field=None)
+    @property
+    def item_picture(self):
+        return self.pictures.first().picture
+    @item_picture.setter
+    def item_picture(self, value):
+        if self.pictures:
+            raise FieldError("Temporary for now!")
+        else:
+            CatalogItemPicture.objects.create(picture=value, item=self, position=1 )
 
     #The price that the user wants to sell the item at
     item_price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
@@ -104,6 +114,17 @@ class CatalogItem(models.Model):
 
     def __getName__(self):
         return self.username.first_name
+
+class CatalogItemPicture(models.Model):
+    picture = models.ImageField(upload_to='catalog/%Y/%m/%d/', height_field=None, width_field=None)
+
+    # https://stackoverflow.com/questions/14814999/django-foreign-key-ordering-position
+    item = models.ForeignKey(CatalogItem, on_delete=models.CASCADE, related_name="pictures")
+    position = models.PositiveIntegerField()
+    class Meta:
+        unique_together = ('item', 'position')
+        ordering = ['position']
+
 
 @receiver(post_delete, sender=CatalogItem)
 def delete_ondelete_photos(sender, instance, **kwargs):

@@ -24,7 +24,7 @@ class SellingForm( ProfFiltered_ModelForm ):
         }
 
         #The normal input areas
-        fields = ('category', 'item_title', 'item_price', 'item_description', 'item_picture')
+        fields = ('category', 'item_title', 'item_price', 'item_description' )#, 'item_picture')
 
     def __init__(self, *args, **kwargs):
         self._request = kwargs.pop('request', None)
