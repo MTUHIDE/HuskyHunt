@@ -7,6 +7,7 @@ from django.db.models.signals import post_delete, pre_save
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 from profanity_check.models import ArchivedType
+from django.core.exceptions import FieldError
 
 #Defines a table of categories
 class Category(models.Model):
@@ -87,12 +88,16 @@ class CatalogItem(models.Model):
     @property
     def item_picture(self):
         return self.pictures.first().picture
-    @item_picture.setter
+    '''@item_picture.setter
     def item_picture(self, value):
-        if self.pictures:
+        if self.pictures.exists():
+            print("1")
+            for pic in self.pictures.all():
+                print(pic)
+            print("2")
             raise FieldError("Temporary for now!")
-        else:
-            CatalogItemPicture.objects.create(picture=value, item=self, position=1 )
+        else:'''
+    #CatalogItemPicture.objects.create(picture=value, item=self, position=1 )
 
     #The price that the user wants to sell the item at
     item_price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)

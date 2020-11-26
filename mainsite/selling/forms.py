@@ -1,5 +1,5 @@
 from django import forms
-from catalog.models import CatalogItem, Category, SubCategory
+from catalog.models import CatalogItem, Category, SubCategory, CatalogItemPicture
 from django.forms import ModelForm
 from rideSharing.models import RideItem, RideCategory
 from django.forms import TextInput
@@ -13,6 +13,9 @@ from profanity_check.profanityModels import ProfFiltered_ModelForm
 
 #Defines the form to create an item
 class SellingForm( ProfFiltered_ModelForm ):
+
+    curr_picture = forms.ImageField()
+
     class Meta:
 
         #The table that the information will go into
@@ -24,7 +27,7 @@ class SellingForm( ProfFiltered_ModelForm ):
         }
 
         #The normal input areas
-        fields = ('category', 'item_title', 'item_price', 'item_description' )#, 'item_picture')
+        fields = ('category', 'item_title', 'item_price', 'item_description')
 
     def __init__(self, *args, **kwargs):
         self._request = kwargs.pop('request', None)
@@ -41,12 +44,17 @@ class SellingForm( ProfFiltered_ModelForm ):
             item.item_price = 0
         item.username = self._request.user
 
+        # to be changed
+        #item.item_picture = self.cleaned_data['curr_picture']
+        item_picture = CatalogItemPicture(picture=self.cleaned_data['curr_picture'], item=item, position=1 )
+
         if commit:
             item.save()
+            item_picture.save()
         return item
 
-    def clean_item_picture(self):
-        pic = self.cleaned_data['item_picture']
+    def clean_curr_picture(self):
+        pic = self.cleaned_data['curr_picture']
         if pic.size > settings.MAX_UPLOAD_SIZE:
             raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
             params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
