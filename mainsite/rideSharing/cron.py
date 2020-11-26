@@ -24,6 +24,7 @@ class ArchiveRides(CronJobBase):
         # For each ride, set it to archived
         for ride in archive_rides:
         	ride.archived = "True"
+            ride.archivedType = ArchivedType.Types.ARCHIVED
         	ride.save()
 
 # Used to delete old archived rides
