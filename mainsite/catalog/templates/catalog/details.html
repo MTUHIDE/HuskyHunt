@@ -12,24 +12,25 @@
     <div class="col-md-4 align-middle text-center">
 
         <div class="row">
-            <img class="img-end" src="{{item.item_picture.url}}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+            <img class="img-end" src="{% if item.item_picture is not None %}{{item.item_picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
         </div>
 
         <div class="row"><div class="col">
             <br>
             <div class="row">
-              <div class="col-md-4">
-                <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="reportButton.disabled = true" id="reportForm">
-                    <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
-                </form>
-              </div>
             {% if request.user.username|stringformat:"s" == item.username|stringformat:"s" %}
-            <div class="col-md-4" style="width: 150px;">
-                <a role="button" class="btn btn-default husky-button-light"  style="width: 150px;" id="updatedButton" href="/catalog/{{item.id}}/update/">Update Post</a>
-            </div>
-            <div class="col-md-4">
-                {% include "catalog/delete_button.html" with target_pk=item.pk title=item.item_title href_url='accountant:deleteItem' btn="light" only %}
-            </div>
+                <div class="col-md-6">
+                    <a role="button" class="btn btn-default husky-button-light"  style="width: 150px;" id="updatedButton" href="/catalog/{{item.id}}/update/">Update Post</a>
+                </div>
+                <div class="col-md-6">
+                    {% include "catalog/delete_button.html" with target_pk=item.pk title=item.item_title href_url='accountant:deleteItem' btn="light" only %}
+                </div>
+            {% else %}
+                <div class="col-md-4">
+                    <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="reportButton.disabled = true" id="reportForm">
+                        <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
+                    </form>
+                </div>
             {% endif %}
             </div>
 
@@ -85,6 +86,11 @@
                         </div>
                 {% endfor %}
             {% endif %}
+
+            {% if request.user.username|stringformat:"s" == item.username|stringformat:"s" %}
+            <p><i>This is your own item; this page shows how it appears to others.</i></p>
+            <div class="row">
+            {% else %}
             <h6>Message {{item.first_name}}:</h6>
             <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
             <div class="row">
@@ -93,6 +99,7 @@
                         <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
                     </form>
                 </div>
+            {% endif %}
 
                 <div class="col-lg-4">
                     <h6> Owner: {{item.first_name}} </h6>

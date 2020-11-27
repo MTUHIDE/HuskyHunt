@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 from profanity_check.models import ArchivedType
 from django.core.exceptions import FieldError
+from django.contrib import admin
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 #Defines a table of categories
 class Category(models.Model):
@@ -87,7 +89,12 @@ class CatalogItem(models.Model):
     #  item_picture = models.ImageField(upload_to='catalog/%Y/%m/%d/', height_field=None, width_field=None)
     @property
     def item_picture(self):
-        return self.pictures.first().picture
+        if self.pictures.exists():
+            return self.pictures.first().picture
+        else:
+            return None
+            #SimpleUploadedFile(name="imagenotfound.jpg",
+                #content=open("/static/mainsite/images/imagenotfound.jpg", 'rb').read(), content_type='image/jpeg')
     '''@item_picture.setter
     def item_picture(self, value):
         if self.pictures.exists():
@@ -129,6 +136,8 @@ class CatalogItemPicture(models.Model):
     class Meta:
         unique_together = ('item', 'position')
         ordering = ['position']
+
+admin.site.register(CatalogItemPicture)
 
 
 @receiver(post_delete, sender=CatalogItem)
