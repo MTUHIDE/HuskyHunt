@@ -423,7 +423,7 @@ def update(request, pk):
         return HttpResponseRedirect(reverse('catalog:index'))
 
     if request.method == 'POST':
-        catalog_form = SellingForm(request.POST, request.FILES, instance=item)
+        catalog_form = SellingForm(request.POST, request.FILES, instance=item, request=request)
 
         if catalog_form.is_valid():
             catalog_form.save()
