@@ -31,8 +31,8 @@ Instead we display our custom error message -->
   <!-----------------------------------
   Catalog Form
   ----------------------------------->
-
-   {% include "catalog/update.html" %}
+   {% static 'mainsite/images/imagenotfound.png' as default_image_target %}
+   {% include "catalog/update_actual_content.html" with default_image_target=default_image_target %}
 
    <!-----------------------------------
    Ridesharing Form
@@ -233,134 +233,12 @@ Instead we display our custom error message -->
  </div>
 
 
-<template id="pic_upload_template">
-    <div class="row">
-        <div class="col-md-2">
-            <div style="height: 100%;  display: flex; flex-direction: column; flex-flow: column noWrap; justify-content: space-between; align-items: stretch;">
-                <button class="up_button" style="display: block;">↑</button>
-                <button class="delete_button">X</button>
-                <button class="down_button" style="display: block;">↓</button>
-            </div>
-        </div>
 
-        <div class="col-md-5">
-            <img height="200" width="200" src={% static 'mainsite/images/imagenotfound.png' %}>
-        </div>
+ <p>TESTING 1, 2, 3</p>
+ <div class="container" id="blahblah">
 
-        <div class="col-md-5">
-            <label for="id_curr_picture">Curr picture:
-                <input type="file" name="curr_picture" accept="image/*" required="" class="form-control">
-            </label>
-        </div>
-    </div>
-</template>
-
-<template id="pic_upload_intermediate_template">
-    <div class="row">
-        <div class="col-md-4">
-            <button class="add_button" style="display: block;">+</button>
-        </div>
-    </div>
-</template>
-
-<p>TESTING 1, 2, 3</p>
-<div class="container" id="blahblah">
-
-</div>
-<p>ENDTEST AYOOO</p>
-
-<script type="text/javascript">
-
-    var table = document.getElementById("blahblah");
-    var templ = document.getElementById("pic_upload_template");
-    var inter = document.getElementById("pic_upload_intermediate_template");
-
-
-    function getRowFromButton_3(el) {
-        return el.parentNode.parentNode.parentNode;
-    };
-    function getRowFromButton_I(el) {
-        return el.parentNode.parentNode;
-    };
-    /*function resetEnablers() {
-        for(let i = 0; i < table.children.length; ++i ) {
-            table.children[i].querySelector(".up_button").enabled = true;
-            table.children[i].querySelector(".down_button").enabled = true;
-        }
-        table.children[0].querySelector(".up_button").enabled = false;
-        table.children[table.children.length - 1].querySelector(".down_button").enabled = false;
-    };*/
-
-
-    function constructRow() {
-        let clone = templ.content.cloneNode(true);
-
-        clone.querySelector(".up_button").onclick = up_func;
-        clone.querySelector(".delete_button").onclick = delete_func;
-        clone.querySelector(".down_button").onclick = down_func;
-
-        return clone;
-    };
-
-    function constructIntermediate() {
-        let clone = inter.content.cloneNode(true);
-        clone.querySelector(".add_button").onclick = add_func;
-        return clone;
-    };
-
-
-    function up_func() {
-        let myRow = getRowFromButton_3(this);
-        prev = myRow.previousElementSibling.previousElementSibling;
-        if(prev == null) return;
-        parent = myRow.parentElement;
-        parent.removeChild(myRow);
-        parent.insertBefore(myRow, prev.previousElementSibling);
-    };
-
-    function delete_func() {
-        let myRow = getRowFromButton_3(this);
-        myRow.parentNode.removeChild(myRow.previousElementSibling);    // remove the intermediate
-        myRow.parentNode.removeChild(myRow);
-    };
-
-    function down_func() {
-        let myRow = getRowFromButton_3(this);
-        next = myRow.nextElementSibling.nextElementSibling;
-        if( next == null) return;
-        parent = myRow.parentElement;
-        parent.removeChild(myRow);
-        parent.insertBefore(myRow, next.nextElementSibling);
-    };
-
-    function add_func() {
-        let myInt = getRowFromButton_I(this);
-
-        let clone_i = constructIntermediate();
-        myInt.parentElement.insertBefore(clone_i, myInt);
-        let clone_r = constructRow();
-        myInt.parentElement.insertBefore(clone_r, myInt);
-    };
-
-
-    function reset() {
-        table.innerHTML = '';
-        let clone = constructIntermediate();
-        table.appendChild(clone);
-    {% for pic in item.pictures.all %}
-
-        clone = constructRow();
-        clone.querySelector("img").src = "{{ pic.picture.url }}";
-        table.appendChild(clone);
-        clone = constructIntermediate();
-        table.appendChild(clone);
-    {% endfor %}
-    };
-
-    document.addEventListener("DOMContentLoaded", function() {
-        reset();
-    });
-</script>
+ </div>
+ <p>ENDTEST AYOOO</p>
 
 
 {% endblock %}
