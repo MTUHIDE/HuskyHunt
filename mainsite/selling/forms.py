@@ -38,16 +38,16 @@ class SellingForm( ProfFiltered_ModelForm ):
     def clean(self):
         super().clean()
 
+
+        uplPos = self._request.POST.getlist('uplPos').copy()
+        currUpl = self._request.POST.getlist('currUpl').copy()
         cleanedPics = []
         validationErrors = []
-        print(self._request.POST)
-        print(self._request.FILES)
         for pic in self._request.FILES.getlist('curr_picture'):
             # please, god, deliver these unto me in source ordering
             #  despite not mentioning this feature anywhere in your holy texts, the Django docs,
             #   which I guess in this metaphor makes StackExchange the equivalent of rabbinic commentaries
             try:
-                print(pic)
                 result = self._clean_a_picture(pic)
                 if result is not None:
                     cleanedPics.append(result)
@@ -55,10 +55,30 @@ class SellingForm( ProfFiltered_ModelForm ):
                 validationErrors.append(e)
         if len(validationErrors) > 0:
             raise forms.ValidationError(validationErrors)
-        if len(cleanedPics) == 0:
-            raise forms.ValidationError( "No nonempty pictures submitted!", code="empty")
+        if len(cleanedPics) + len(currUpl) == 0:
+            raise forms.ValidationError( "At least one picture is needed!", code="empty")
 
-        self.cleaned_data["pictures"] = cleanedPics
+        item = self.instance  # ?
+
+        self.otherPictures = item.pictures
+        self.specialPictures = []
+        self.cleaned_data["pictures"] = []
+        i = 1
+        catpic = None
+        while(1):
+            if len(uplPos) > 0 and str(i) == uplPos[0]:
+                uplPos.pop(0)
+                pk = currUpl.pop(0)
+                catpic = CatalogItemPicture.objects.get(pk=pk)     #item.pictures.filter
+                self.otherPictures = self.otherPictures.exclude(pk=pk)
+                self.specialPictures.append(catpic)
+                catpic.position = i
+            elif len(cleanedPics) > 0:
+                catpic = CatalogItemPicture(picture=cleanedPics.pop(0), item=item, position=i )
+            else:
+                break
+            self.cleaned_data["pictures"].append(catpic)
+            i += 1
 
     def save(self, commit=True):
         item = super().save(commit=False)
@@ -69,10 +89,20 @@ class SellingForm( ProfFiltered_ModelForm ):
 
         if commit:
             item.save()
-            i = 1
+
+            # we have to be careful about order here, because of the
+            #  unique_together constraint and sqlite doesn't allow deferred
+            for pic in self.otherPictures.all():
+                pic.delete()    # clear out taken positions
+            for pic in self.specialPictures:
+                pic.position += 2*len(self.cleaned_data["pictures"])
+                pic.save()  # move them up to guaranteed-untaken positions
+            for pic in self.specialPictures:
+                pic.position -= 2*len(self.cleaned_data["pictures"])
+                pic.save()      # move still-around ones to new positions
             for pic in self.cleaned_data["pictures"]:
-                CatalogItemPicture.objects.create(picture=pic, item=item, position=i )
-                i += 1
+                pic.save()      # save everything
+
         return item
 
     def _clean_a_picture(self, pic):
