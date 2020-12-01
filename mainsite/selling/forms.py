@@ -14,8 +14,6 @@ from profanity_check.profanityModels import ProfFiltered_ModelForm
 #Defines the form to create an item
 class SellingForm( ProfFiltered_ModelForm ):
 
-    curr_picture = forms.ImageField()
-
     class Meta:
 
         #The table that the information will go into
