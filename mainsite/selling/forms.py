@@ -35,6 +35,31 @@ class SellingForm( ProfFiltered_ModelForm ):
         #Gets all the available categories for the new item
         self.fields['category'].queryset = Category.objects.all()
 
+    def clean(self):
+        super().clean()
+
+        cleanedPics = []
+        validationErrors = []
+        print(self._request.POST)
+        print(self._request.FILES)
+        for pic in self._request.FILES.getlist('curr_picture'):
+            # please, god, deliver these unto me in source ordering
+            #  despite not mentioning this feature anywhere in your holy texts, the Django docs,
+            #   which I guess in this metaphor makes StackExchange the equivalent of rabbinic commentaries
+            try:
+                print(pic)
+                result = self._clean_a_picture(pic)
+                if result is not None:
+                    cleanedPics.append(result)
+            except forms.ValidationError as e:
+                validationErrors.append(e)
+        if len(validationErrors) > 0:
+            raise forms.ValidationError(validationErrors)
+        if len(cleanedPics) == 0:
+            raise forms.ValidationError( "No nonempty pictures submitted!", code="empty")
+
+        self.cleaned_data["pictures"] = cleanedPics
+
     def save(self, commit=True):
         item = super().save(commit=False)
 
@@ -42,20 +67,22 @@ class SellingForm( ProfFiltered_ModelForm ):
             item.item_price = 0
         item.username = self._request.user
 
-        # to be changed
-        #item.item_picture = self.cleaned_data['curr_picture']
-        item_picture = CatalogItemPicture(picture=self.cleaned_data['curr_picture'], item=item, position=1 )
-
         if commit:
             item.save()
-            item_picture.save()
+            i = 1
+            for pic in self.cleaned_data["pictures"]:
+                CatalogItemPicture.objects.create(picture=pic, item=item, position=i )
+                i += 1
         return item
 
-    def clean_curr_picture(self):
-        pic = self.cleaned_data['curr_picture']
+    def _clean_a_picture(self, pic):
+        #pic = self.cleaned_data['curr_picture']
         if pic.size > settings.MAX_UPLOAD_SIZE:
             raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
             params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
+
+        if pic.name == "/static/mainsite/images/imagenotfound.png": # TODO change this to use a back lookup
+            return None
         return pic
 
     def clean_item_price(self):

@@ -17,9 +17,13 @@ because I don't understand what's going on with 'load static' {% endcomment %}
                 {% endwith %}
 
                 <input type="hidden" name="submission_type" value="ctlg">
-
+                <hr size="4">
                 {{ catalog_form.as_p}}
+                <hr size="4" >
+                <div class="container" id="blahblah">
 
+                </div>
+                <hr size="4" >
                 <button type="submit" class="btn btn-primary husky-button-light" id="btnRealButton">Submit</button>
             </form>
 
@@ -83,9 +87,10 @@ because I don't understand what's going on with 'load static' {% endcomment %}
         </div>
 
         <div class="col-md-5">
-            <label for="id_curr_picture">Curr picture:
+            <label for="id_curr_picture">Picture:
                 <input type="file" name="curr_picture" accept="image/*" required="" class="form-control">
             </label>
+
         </div>
     </div>
 </template>
@@ -128,6 +133,8 @@ because I don't understand what's going on with 'load static' {% endcomment %}
         clone.querySelector(".delete_button").onclick = delete_func;
         clone.querySelector(".down_button").onclick = down_func;
 
+        clone.querySelector("input[name='curr_picture']").onchange = input_func;
+
         return clone;
     };
 
@@ -169,6 +176,16 @@ because I don't understand what's going on with 'load static' {% endcomment %}
         myInt.parentElement.insertBefore(clone_i, myInt);
         let clone_r = constructRow();
         myInt.parentElement.insertBefore(clone_r, myInt);
+    };
+
+    function input_func() {
+        let myRow = this.parentNode.parentNode.parentNode;
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            myRow.querySelector("img").src = e.target.result;
+        };
+        reader.readAsDataURL(this.files[0]);
     };
 
 
