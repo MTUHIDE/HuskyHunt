@@ -12,15 +12,7 @@
 
     <br>
 
-    {% static 'mainsite/images/imagenotfound.png' as default_image_target %}
-    {% include "catalog/update_actual_content.html" with default_image_target=default_image_target %}
-
-
-    <p>TESTING 1, 2, 3</p>
-    <div class="container" id="blahblah">
-
-    </div>
-    <p>ENDTEST AYOOO</p>
+    {% include "catalog/update_actual_content.html" %}
 
 
 {% endblock %}

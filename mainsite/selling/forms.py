@@ -59,9 +59,15 @@ class SellingForm( ProfFiltered_ModelForm ):
         if len(cleanedPics) + len(currUpl) == 0:
             raise forms.ValidationError( "At least one picture is needed!", code="empty")
 
-        item = self.instance  # ?
 
-        self.otherPictures = item.pictures
+        '''
+        The loops are intertwined: uplPos is *only* for the preexisting images,
+        which are already in the database. So the loops are combined because the
+        position tracker i is updated after each step -- each loop *either*
+        pulls in an already-uploaded image, *or* makes a new CatalogItemPicture,
+        but either way the relevant position is assigned and i is incremented.
+        '''
+        self.otherPictures = self.instance.pictures
         self.specialPictures = []
         self.cleaned_data["pictures"] = []
         i = 1
@@ -75,7 +81,7 @@ class SellingForm( ProfFiltered_ModelForm ):
                 self.specialPictures.append(catpic)
                 catpic.position = i
             elif len(cleanedPics) > 0:
-                catpic = CatalogItemPicture(picture=cleanedPics.pop(0), item=item, position=i )
+                catpic = CatalogItemPicture(picture=cleanedPics.pop(0), item=self.instance, position=i )
             else:
                 break
             self.cleaned_data["pictures"].append(catpic)
@@ -116,9 +122,9 @@ class SellingForm( ProfFiltered_ModelForm ):
         if im.format.lower() not in settings.ALLOWED_UPLOAD_IMAGES:
             raise forms.ValidationError(_("Unsupported file format. Supported formats are %s."
                                           % ", ".join(settings.ALLOWED_UPLOAD_IMAGES)))
-
-        if pic.name == "/static/mainsite/images/imagenotfound.png": # TODO change this to use a back lookup
-            return None
+        # removed the below because fields *should* be marked required
+        #if pic.name == "/static/mainsite/images/imagenotfound.png":
+        #    return None        # -- uncomment if that ever changes
         return pic
 
     def clean_item_price(self):

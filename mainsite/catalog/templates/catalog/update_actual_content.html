@@ -1,5 +1,5 @@
-{% comment %} Required additional vars to pass in: default_image_target,
-because I don't understand what's going on with 'load static' {% endcomment %}
+{% load static %}
+
 
   <!-----------------------------------
   Catalog Form
@@ -84,7 +84,7 @@ because I don't understand what's going on with 'load static' {% endcomment %}
         </div>
 
         <div class="col-md-5">
-            <img height="200" width="200" src= {{ default_image_target }} >
+            <img height="200" width="200" src="{% static 'mainsite/images/imagenotfound.png' %}" >
         </div>
 
         <div class="col-md-5">
@@ -118,9 +118,9 @@ because I don't understand what's going on with 'load static' {% endcomment %}
 
 <script type="text/javascript">
 
-    var table = null; //document.getElementById("blahblah");
-    var templ = null; //document.getElementById("pic_upload_template");
-    var inter = null; //document.getElementById("pic_upload_intermediate_template");
+    var table = null;
+    var templ = null;
+    var inter = null;
     var sscui = null;
     var cupth = null;
 
@@ -131,16 +131,6 @@ because I don't understand what's going on with 'load static' {% endcomment %}
     function getRowFromButton_I(el) {
         return el.parentNode.parentNode.parentNode;
     };
-
-    /*function resetEnablers() {
-        for(let i = 0; i < table.children.length; ++i ) {
-            table.children[i].querySelector(".up_button").enabled = true;
-            table.children[i].querySelector(".down_button").enabled = true;
-        }
-        table.children[0].querySelector(".up_button").enabled = false;
-        table.children[table.children.length - 1].querySelector(".down_button").enabled = false;
-    };*/
-
 
     function constructRow() {
         let clone = templ.content.cloneNode(true);
