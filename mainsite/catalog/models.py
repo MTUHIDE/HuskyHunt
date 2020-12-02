@@ -93,18 +93,6 @@ class CatalogItem(models.Model):
             return self.pictures.first().picture
         else:
             return None
-            #SimpleUploadedFile(name="imagenotfound.jpg",
-                #content=open("/static/mainsite/images/imagenotfound.jpg", 'rb').read(), content_type='image/jpeg')
-    '''@item_picture.setter
-    def item_picture(self, value):
-        if self.pictures.exists():
-            print("1")
-            for pic in self.pictures.all():
-                print(pic)
-            print("2")
-            raise FieldError("Temporary for now!")
-        else:'''
-    #CatalogItemPicture.objects.create(picture=value, item=self, position=1 )
 
     #The price that the user wants to sell the item at
     item_price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
