@@ -321,7 +321,7 @@ def detail(request, pk):
 
     #Packages the information to be displayed into context
     context = {
-            'item_list': item_list,
+            'item_list': item_list
     }
 
     # No page found
@@ -410,7 +410,7 @@ def update(request, pk):
 
     # Gets the item from the database
     item = None
-    
+
     try:
         item = CatalogItem.objects.get(pk=pk)
     except CatalogItem.DoesNotExist:
@@ -431,10 +431,12 @@ def update(request, pk):
             return HttpResponseRedirect('/catalog/' + str(pk))
         else:
             return render(request, template, {
-                'catalog_form': catalog_form
+                'catalog_form': catalog_form,
+                'item': item
             })
 
     elif request.method == 'GET':
         return render(request, template, {
-                'catalog_form': SellingForm(instance=item)
+                'catalog_form': SellingForm(instance=item),
+                'item': item
         })

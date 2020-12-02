@@ -1,0 +1,252 @@
+{% load static %}
+
+
+  <!-----------------------------------
+  Catalog Form
+  ----------------------------------->
+   <div role="tabpanel" class="tab-pane active" id="ctlg">
+     <div class='row justify-content-center'>
+         <div class='col-lg-5' style='margin: 10px;'>
+            <!-- Catalog Form Errors -->
+
+            <form role="form" method="post" enctype="multipart/form-data" style='border: 2xp;' onsubmit="return ItemInputSubmit() && submitInterceptor();">
+                {% csrf_token %}
+
+                {% with form=catalog_form %}
+                    {% include "profanity_check/errors.html" %}
+                {% endwith %}
+
+                <input type="hidden" name="submission_type" value="ctlg">
+                <hr size="4">
+                {{ catalog_form.as_p}}
+                <hr size="4" >
+                <div class="container" id="official_table">
+
+                </div>
+                <hr size="4" >
+                <button type="submit" class="btn btn-primary husky-button-light" id="btnRealButton">Submit</button>
+            </form>
+
+            <!-- General Form Formatting -->
+            {% for field in catalog_form %}
+              <script type="text/javascript">
+                document.getElementById("{{field.id_for_label}}").classList.add('form-control');
+              </script>
+            {% endfor %}
+
+            <script type="text/javascript">
+              document.getElementById("id_item_picture").classList.add('file-field');
+              document.getElementById("id_item_picture").style.backgroundColor = 'transparent';
+              document.getElementById("id_item_picture").style.border = 'transparent';
+              document.getElementById("id_item_picture").style.color = '#a6b1b7';
+              document.getElementById("id_item_picture").style.padding = '0px';
+            </script>
+
+            <!-- Highlight Fields -->
+            {% if catalog_form.errors %}
+              {% for field in catalog_form %}
+                  {% if field.errors %}
+                    <script type="text/javascript">
+                      document.getElementById("{{field.id_for_label}}").classList.add('is-invalid');
+                    </script>
+                  {% else %}
+                    <script type="text/javascript">
+                      document.getElementById("{{field.id_for_label}}").classList.add('is-valid');
+                    </script>
+                  {% endif %}
+              {% endfor %}
+            {% endif %}
+         </div>
+     </div>
+   </div>
+
+<!-- Used to prevent multiple submits -->
+<script type="text/javascript">
+  function ItemInputSubmit() {
+    document.getElementById("btnRealButton").disabled = true;
+    return true;
+  }
+</script>
+
+
+
+
+
+
+<template id="pic_upload_template">
+    <div class="row">
+        <div class="col-md-2">
+            <div style="height: 100%;  display: flex; flex-direction: column; flex-flow: column noWrap; justify-content: space-between; align-items: stretch;">
+                <button type="button" class="up_button" style="display: block;">↑</button>
+                <button type="button" class="delete_button">X</button>
+                <button type="button" class="down_button" style="display: block;">↓</button>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <img height="200" width="200" src="{% static 'mainsite/images/imagenotfound.png' %}" >
+        </div>
+
+        <div class="col-md-5">
+            <label for="id_curr_picture">Picture:
+                <input type="file" name="curr_picture" accept="image/*" required="" class="form-control">
+            </label>
+
+        </div>
+    </div>
+</template>
+
+<template id="pic_upload_intermediate_template">
+    <div class="row">
+        <br> {% comment %} Yeah this should be done w/ CSS. #TODO {% endcomment %}
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;"><button class="add_button" style="display: block; width: 100%; ">+</button></div>
+        </div>
+        <div class="col-md-4"></div>
+        <br>
+    </div>
+</template>
+
+<template id="super_secret_currently_uploaded_indicator">
+    <input type="hidden" name="currUpl" value="">
+</template>
+
+<template id="currently_uploaded_position_tracker_hack">
+    <input type="hidden" name="uplPos" value="">
+</template>
+
+<script type="text/javascript">
+
+    var table = null;
+    var templ = null;
+    var inter = null;
+    var sscui = null;
+    var cupth = null;
+
+
+    function getRowFromButton_3(el) {
+        return el.parentNode.parentNode.parentNode;
+    };
+    function getRowFromButton_I(el) {
+        return el.parentNode.parentNode.parentNode;
+    };
+
+    function constructRow() {
+        let clone = templ.content.cloneNode(true);
+
+        clone.querySelector(".up_button").onclick = up_func;
+        clone.querySelector(".delete_button").onclick = delete_func;
+        clone.querySelector(".down_button").onclick = down_func;
+
+        clone.querySelector("input[name='curr_picture']").onchange = input_func;
+
+        return clone;
+    };
+
+    function constructIntermediate() {
+        let clone = inter.content.cloneNode(true);
+        clone.querySelector(".add_button").onclick = add_func;
+        return clone;
+    };
+
+
+    function up_func() {
+        let myRow = getRowFromButton_3(this);
+        let interm = myRow.previousElementSibling;
+        let prev = myRow.previousElementSibling.previousElementSibling;
+        if(prev == null) return;
+
+        let parent = myRow.parentElement;
+        parent.insertBefore(prev, myRow);
+        parent.insertBefore(myRow, interm);
+    };
+
+    function delete_func() {
+        let myRow = getRowFromButton_3(this);
+        myRow.parentNode.removeChild(myRow.previousElementSibling);    // remove the intermediate
+        myRow.parentNode.removeChild(myRow);
+    };
+
+    function down_func() {
+        let myRow = getRowFromButton_3(this);
+        let interm = myRow.nextElementSibling;
+        let next = myRow.nextElementSibling.nextElementSibling;
+        if( next == null) return;
+
+        let parent = myRow.parentElement;
+        parent.insertBefore(myRow, next);
+        parent.insertBefore(next, interm);
+    };
+
+    function add_func() {
+        let myInt = getRowFromButton_I(this);
+
+        let clone_i = constructIntermediate();
+        myInt.parentElement.insertBefore(clone_i, myInt);
+        let clone_r = constructRow();
+        myInt.parentElement.insertBefore(clone_r, myInt);
+    };
+
+    function input_func() {
+        let myRow = this.parentNode.parentNode.parentNode;
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            myRow.querySelector("img").src = e.target.result;
+        };
+        reader.readAsDataURL(this.files[0]);
+    };
+
+
+    function reset() {
+        table.innerHTML = '';
+        let clone = constructIntermediate();
+        table.appendChild(clone);
+        let theimg = null; let sscui_clone = null; let imgp = null;
+    {% for pic in catalog_form.instance.pictures.all %}
+
+        clone = constructRow();
+
+        theimg = clone.querySelector("img")
+        theimg.src = "{{ pic.picture.url }}";
+        theimg.required = false;
+
+        imgp = clone.querySelector("input[name='curr_picture']");
+        imgp.required = false;
+
+        sscui_clone = sscui.content.cloneNode(true);
+        sscui_clone.firstElementChild.value = "{{ pic.pk }}";
+        imgp.parentNode.parentNode.appendChild(sscui_clone);
+        clone.appendChild(sscui_clone);
+
+        table.appendChild(clone);
+        clone = constructIntermediate();
+        table.appendChild(clone);
+    {% endfor %}
+    };
+
+    function submitInterceptor() {
+        for(let i = 1; i < table.children.length; i += 2) {
+            let myRow = table.children[i];
+            let special = myRow.querySelector("input[name='currUpl']");
+            if( special != null) {
+                let cupth_clone = cupth.content.cloneNode(true);
+                cupth_clone.firstElementChild.value = (i-1)/2+1;
+                special.parentNode.insertBefore(cupth_clone, special);
+            }
+        }
+        return true;
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+        table = document.getElementById("official_table");
+
+        templ = document.getElementById("pic_upload_template");
+        inter = document.getElementById("pic_upload_intermediate_template");
+        sscui = document.getElementById("super_secret_currently_uploaded_indicator");
+        cupth = document.getElementById("currently_uploaded_position_tracker_hack");
+
+        reset();
+    });
+</script>

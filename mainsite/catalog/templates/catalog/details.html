@@ -12,24 +12,56 @@
     <div class="col-md-4 align-middle text-center">
 
         <div class="row">
-            <img class="img-end" src="{{item.item_picture.url}}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+            {% if item.item_picture is None %}
+            <img class="img-end" src="{% static 'mainsite/images/imagenotfound.png' %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+            {% else %}
+
+            {% comment %} https://getbootstrap.com/docs/4.0/components/carousel/ {% endcomment %}
+            <div id="pic_carousel" class="carousel slide" data-interval="false">
+
+              <ol class="carousel-indicators">
+              {% for picEl in item.pictures.all %}
+                <li data-target="#pic_carouselIndicators" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %} ></li>
+              {% endfor %}
+              </ol>
+
+              <div class="carousel-inner">
+              {% for picEl in item.pictures.all %}
+                <div class="carousel-item{% if forloop.first %} active{% endif %}" >
+                    <img class="d-block w-100" src="{% if picEl is not None and picEl.picture is not None %}{{picEl.picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+                </div>
+              {% endfor %}
+              </div>
+
+              <a class="carousel-control-prev" href="#pic_carousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#pic_carousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+
+            {% endif %}
         </div>
 
         <div class="row"><div class="col">
             <br>
             <div class="row">
-              <div class="col-md-4">
-                <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="reportButton.disabled = true" id="reportForm">
-                    <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
-                </form>
-              </div>
             {% if request.user.username|stringformat:"s" == item.username|stringformat:"s" %}
-            <div class="col-md-4" style="width: 150px;">
-                <a role="button" class="btn btn-default husky-button-light"  style="width: 150px;" id="updatedButton" href="/catalog/{{item.id}}/update/">Update Post</a>
-            </div>
-            <div class="col-md-4">
-                {% include "catalog/delete_button.html" with target_pk=item.pk title=item.item_title href_url='accountant:deleteItem' btn="light" only %}
-            </div>
+                <div class="col-md-6">
+                    <a role="button" class="btn btn-default husky-button-light"  style="width: 150px;" id="updatedButton" href="/catalog/{{item.id}}/update/">Update Post</a>
+                </div>
+                <div class="col-md-6">
+                    {% include "catalog/delete_button.html" with target_pk=item.pk title=item.item_title href_url='accountant:deleteItem' btn="light" only %}
+                </div>
+            {% else %}
+                <div class="col-md-4">
+                    <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="reportButton.disabled = true" id="reportForm">
+                        <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
+                    </form>
+                </div>
             {% endif %}
             </div>
 
@@ -85,6 +117,11 @@
                         </div>
                 {% endfor %}
             {% endif %}
+
+            {% if request.user.username|stringformat:"s" == item.username|stringformat:"s" %}
+            <p><i>This is your own item; this page shows how it appears to others.</i></p>
+            <div class="row">
+            {% else %}
             <h6>Message {{item.first_name}}:</h6>
             <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
             <div class="row">
@@ -93,6 +130,7 @@
                         <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
                     </form>
                 </div>
+            {% endif %}
 
                 <div class="col-lg-4">
                     <h6> Owner: {{item.first_name}} </h6>

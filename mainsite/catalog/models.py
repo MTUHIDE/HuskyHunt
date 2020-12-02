@@ -7,6 +7,9 @@ from django.db.models.signals import post_delete, pre_save
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 from profanity_check.models import ArchivedType
+from django.core.exceptions import FieldError
+from django.contrib import admin
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 #Defines a table of categories
 class Category(models.Model):
@@ -82,7 +85,14 @@ class CatalogItem(models.Model):
     item_description = models.CharField(max_length=1500, blank=True)
 
     #Picture that is uploaded on item creation
-    item_picture = models.ImageField(upload_to='catalog/%Y/%m/%d/', height_field=None, width_field=None)
+    # now represented by separate models with a foreignkey relation
+    #  item_picture = models.ImageField(upload_to='catalog/%Y/%m/%d/', height_field=None, width_field=None)
+    @property
+    def item_picture(self):
+        if self.pictures.exists():
+            return self.pictures.first().picture
+        else:
+            return None
 
     #The price that the user wants to sell the item at
     item_price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
@@ -104,6 +114,19 @@ class CatalogItem(models.Model):
 
     def __getName__(self):
         return self.username.first_name
+
+class CatalogItemPicture(models.Model):
+    picture = models.ImageField(upload_to='catalog/%Y/%m/%d/', height_field=None, width_field=None)
+
+    # https://stackoverflow.com/questions/14814999/django-foreign-key-ordering-position
+    item = models.ForeignKey(CatalogItem, on_delete=models.CASCADE, related_name="pictures")
+    position = models.PositiveIntegerField()
+    class Meta:
+        unique_together = ('item', 'position')
+        ordering = ['position']
+
+admin.site.register(CatalogItemPicture)
+
 
 @receiver(post_delete, sender=CatalogItem)
 def delete_ondelete_photos(sender, instance, **kwargs):
