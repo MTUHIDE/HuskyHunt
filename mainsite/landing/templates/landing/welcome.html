@@ -23,26 +23,16 @@
         }
 
         .disclaimer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            color: white;
-            text-align: center;
-            margin-bottom: 10px
-        }
-
-        .disclaimer > p {
-            opacity: 50%;
+            position: fixed !important;
         }
 
         @media screen and (max-width: 1060px) {
             .main {
-                flex-direction: column;
+                flex-direction: column; 
                 position: static;
             }
             .disclaimer {
-                position: static;
+                position: static !important;
             }
         }
         @media screen and (min-width: 1061px) {
@@ -124,6 +114,9 @@
 <div class="disclaimer">
     <p>Please be aware when you message a seller your MTU email address will be shared with that seller.  We do not guarantee any reliablity <br>
      or accuracy regarding items or rides. Any action taken outside of the HuskyHunt website (such as through emailing) is strictly at your own risk.
+    </p>
+    <p>
+        For issues regarding the website, please contact our development team at <a href="mailto:huskyhunt-l@mtu.edu">huskyhunt-l@mtu.edu</a>
     </p>
 </div>
 
