@@ -24,7 +24,7 @@ class CatalogItemAdmin(admin.ModelAdmin):
     actions = ['remove_post', 'allow_post', 'ignore_post', ]
 
     def remove_post(self, request, queryset):
-        queryset.update(reported=False)
+        queryset.update(reported=True)
         queryset.update(archived=True)
         queryset.update(archivedType=ArchivedType.Types.REMOVED)
         # Decrement number of points by three
@@ -33,17 +33,17 @@ class CatalogItemAdmin(admin.ModelAdmin):
             profile.points = profile.points - 3
             profile.save()
 
-    remove_post.short_description = "Remove offending posts"
+    remove_post.short_description = "Remove offending posts (reported=True, archived=True, type=Removed)"
 
     def allow_post(self, request, queryset):
         queryset.update(reported=False)
         queryset.update(archived=False)
         queryset.update(archivedType=ArchivedType.Types.VISIBLE)
-    allow_post.short_description = "Unarchive: mark acceptable"
+    allow_post.short_description = "Unarchive: mark acceptable (reported=True, archived=False, type=visble)"
 
     def ignore_post(self, request, queryset):
         queryset.update(reported=False)
-    ignore_post.short_description = "Ignore report (don't use this, unarchive instead)"
+    ignore_post.short_description = "Ignore report (reported=False)"
 
     def get_actions(self, request):
         #https://stackoverflow.com/questions/34152261/remove-the-default-delete-action-in-django-admin
