@@ -49,7 +49,7 @@ class CatalogItemAdmin(admin.ModelAdmin):
         queryset.update(reported=False)
         queryset.update(archived=False)
         queryset.update(archivedType=ArchivedType.Types.VISIBLE)
-    allow_post.short_description = "Unarchive: mark acceptabel (reported=False, archived=False, type=visble)"
+    allow_post.short_description = "Make public (reported=False, archived=False, type=visble)"
 
     def ignore_post(self, request, queryset):
         queryset.update(reported=False)
