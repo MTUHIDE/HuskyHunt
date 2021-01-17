@@ -21,7 +21,7 @@ class CatalogItemAdmin(admin.ModelAdmin):
     list_display = ('reported', 'archived', 'archivedType', 'pk', 'date_added', 'username', 'item_price', 'item_title', 'item_description')
     list_filter = ['reported', 'archived', 'category', 'date_added', 'username']
     search_fields = ['item_title', 'item_description']
-    actions = ['remove_post', 'allow_post', 'ignore_post', ]
+    actions = ['remove_post', 'allow_post', 'ignore_post', 'delete_post']
 
     def remove_post(self, request, queryset):
         queryset.update(reported=True)
@@ -35,11 +35,21 @@ class CatalogItemAdmin(admin.ModelAdmin):
 
     remove_post.short_description = "Remove offending posts (reported=True, archived=True, type=Removed)"
 
+    def delete_post(self, request, queryset):
+        queryset.update(archived=True)
+        queryset.update(archivedType=ArchivedType.Types.ARCHIVED)
+        # Decrement number of points by three
+        for item in queryset:
+            profile = user_profile.objects.get(user = item.username)
+            profile.points = profile.points - 3
+            profile.save()
+    delete_post.short_description = "Delete posts (archived=True, type=archived)"
+
     def allow_post(self, request, queryset):
         queryset.update(reported=False)
         queryset.update(archived=False)
         queryset.update(archivedType=ArchivedType.Types.VISIBLE)
-    allow_post.short_description = "Unarchive: mark acceptable (reported=True, archived=False, type=visble)"
+    allow_post.short_description = "Unarchive: mark acceptabel (reported=False, archived=False, type=visble)"
 
     def ignore_post(self, request, queryset):
         queryset.update(reported=False)
