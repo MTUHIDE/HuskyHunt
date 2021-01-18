@@ -3,17 +3,37 @@
 }
 
 :root {
-  --main-bg-color: #000000;
+  --mtu-yellow: #ffcd00;
+  --black: #000000;
+  --dark: #1c1c21;
+  --white: #ffffff;
+  --main-sidebarBackground-color: var(--black);
+  --main-pg-bg-color: var(--dark);
+  --main-btn-bg-color: var(--black);
+  --main-border-color: var(--mtu-yellow);
+  --main-catalogName-color: var(--mtu-yellow);
+  --main-title-color:var(--mtu-yellow);
+  --main-itemTitle-color: var(--white);
   --main-txt-color: #bfbfbf;
-  --main-border-color: #FFCD00;
-  --main-catalogName-color:#ffcd00;
-  --main-itemTitle-color: white;
-  --main-title-color:#ffcd00;
-  --main-sidebarBackground-color:black;
+  --main-tab-txt-color: var(--mtu-yellow);
+  --main-error-color: #ff0000;
+  --main-disclaimer-color: rgba(255,255,255,0.5);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --main-pg-bg-color: var(--white);
+    --main-btn-bg-color: var(--white);
+    --main-border-color: #7a7a7a;
+    --main-itemTitle-color: var(--black);
+    --main-txt-color: #404040;
+    --main-tab-txt-color: var(--dark);
+    --main-disclaimer-color: var(--main-txt-color);
+  }
 }
 
 body {
-    background: #1C1C21;
+    background: var(--main-pg-bg-color);
 }
 
 p {
@@ -21,7 +41,7 @@ p {
 }
 
 .top-links a, .my-account a, .logout a{
-  color: #FFCD00;
+  color: var(--mtu-yellow);
   padding-left: 1rem;
 }
 
@@ -49,7 +69,7 @@ p {
 
 .filters-mobile {
   display: none;
-  color: #FFCD00;
+  color: var(--mtu-yellow);
   width: 0px;
   height: 0px;
   margin-bottom: 8px;
@@ -101,24 +121,6 @@ p {
 #sidebar{
   background-color: var(--main-sidebarBackground-color);
 }
-#btnRealButton{
-  color: black;
-}
-#btnRealButtonRide{
-  color: black;
-}
-#MarketplaceButton{
-  color: var(--main-title-color);
-}
-#RidesharingButton{
-  color: var(--main-title-color);
-}
-#deleteButton{
-
-}
-#viewButton{
-
-}
 h1,
 h2,
 h3,
@@ -133,39 +135,44 @@ label{
 th {
   font-weight: 400;
 }
+.nav-link {
+  color: var(--main-tab-txt-color);
+}
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
-  background-color: var(--main-bg-color);
+  background-color: var(--main-btn-bg-color);
   border-color: var(--main-border-color);
   border-radius: 0rem;
+  color: var(--main-tab-txt-color);
 }
 .nav-tabs{
   border-color: transparent;
 }
 .nav-tabs .nav-link:hover{
+  color: var(--main-tab-txt-color);
   border-color: var(--main-border-color);
   border-radius: 0rem;
 }
 
 .husky-button-dark, .husky-button-light:hover {
   color: var(--main-border-color);
-  background-color: var(--main-bg-color);
+  background-color: var(--main-btn-bg-color);
   border-color: var(--main-border-color);
 }
 
 
 .husky-button-light, .husky-button-dark:hover {
-  color: var(--main-bg-color);
+  color: var(--main-btn-bg-color);
   background-color: var(--main-border-color);
-  border-color: var(--main-bg-color);
+  border-color: var(--main-btn-bg-color);
 }
 .modal-conent{
-  background-color: #1C1C21;
+  background-color: var(--dark);
 }
 .account-card{
   border-radius: calc(.25rem - 1px);
   border: 1px solid var(--main-border-color);
   width: 90%;
-  background-color: var(--main-bg-color);
+  background-color: var(--main-btn-bg-color);
   margin: auto;
   padding: 5px;
 }
@@ -173,24 +180,24 @@ th {
   border-radius: calc(.25rem - 1px);
   border: 1px solid var(--main-border-color);
   width: 90%;
-  background-color: var(--main-bg-color);
+  background-color: var(--main-btn-bg-color);
   margin: auto;
   padding: 5px;
 }
 
 .husky-card-foot {
-  background-color: #1C1C21;
+  background-color: var(--dark);
   margin: 10px;
 }
 /* .card{
-  background-color: #1c1c21;
+  background-color: var(--dark);
 } */
 .card.text{
   color: #1c1c21;
 }
 
 .husky-modal{
-  background-color: #1C1C21;
+  background-color: var(--dark);
   border: none;
 }
 
@@ -208,7 +215,7 @@ th {
     z-index: 10;
 
     opacity: 40%;
-    background-color: rgb(0, 0, 0, 1);
+    background-color: var(--black);
 }
 
 :not(.link) > .rona-disabled-overlay {
@@ -231,14 +238,19 @@ body:not(.covid-warning-disabled) .rona-disabled.link {
     left: 0;
     bottom: 0;
     width: 100%;
-    color: white;
+    color: var(--white);
     text-align: center;
     margin-bottom: 10px
 }
 .disclaimer a {
-    color: #FFCD00;
+    color: var(--mtu-yellow);
     opacity: 90%;
 }
+@media (prefers-color-scheme: light) {
+  .disclaimer a {
+    color: #007bff;
+  }
+}
 .disclaimer p {
-    color: rgba(255, 255, 255, .5);
+    color: var(--main-disclaimer-color);
 } 
