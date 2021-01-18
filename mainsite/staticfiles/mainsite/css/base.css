@@ -9,6 +9,7 @@
   --white: #ffffff;
   --main-sidebarBackground-color: var(--black);
   --main-pg-bg-color: var(--dark);
+  --main-modal-bg-color: var(--dark);
   --main-btn-bg-color: var(--black);
   --main-border-color: var(--mtu-yellow);
   --main-catalogName-color: var(--mtu-yellow);
@@ -23,6 +24,7 @@
 @media (prefers-color-scheme: light) {
   :root {
     --main-pg-bg-color: var(--white);
+    --main-modal-bg-color: var(--white);
     --main-btn-bg-color: var(--white);
     --main-border-color: #7a7a7a;
     --main-itemTitle-color: var(--black);
@@ -37,7 +39,7 @@ body {
 }
 
 p {
-  color: white;
+  color: var(--main-itemTitle-color);
 }
 
 .top-links a, .my-account a, .logout a{
@@ -197,7 +199,7 @@ th {
 }
 
 .husky-modal{
-  background-color: var(--dark);
+  background-color: var(--main-modal-bg-color);
   border: none;
 }
 
