@@ -69,25 +69,54 @@
 </script>
 
 
+<style>
+
+    .row {
+        justify-content: center;
+    }
+    
+    #upload_button {
+        background-color: black;
+        border-color: #FFCD00;
+        color: #FFCD00;
+        border-radius: 12px;
+    }
+
+    #file_upload {
+        background-color: black;
+        border-color: #ffc107;
+        color: #ffc107;
+        width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #pic_placeholder {
+        border-radius: 12px;
+    }
+
+    
+
+</style>
 
 
-
-
+<!-- TODO: Fix -->
 <template id="pic_upload_template">
     <div class="row">
         <div class="col-md-2">
             <div style="height: 100%;  display: flex; flex-direction: column; flex-flow: column noWrap; justify-content: space-between; align-items: stretch;">
-                <button type="button" class="up_button" style="display: block;">↑</button>
-                <button type="button" class="delete_button">X</button>
-                <button type="button" class="down_button" style="display: block;">↓</button>
+                <button type="button" class="up_button" style="display: block;" id="upload_button">↑</button>
+                <button type="button" class="delete_button" id="upload_button">X</button>
+                <button type="button" class="down_button" style="display: block;" id="upload_button">↓</button>
             </div>
         </div>
 
         <div class="col-md-5">
-            <img height="200" width="200" src="{% static 'mainsite/images/imagenotfound.png' %}" >
+            <img height="200" width="200" id="pic_placeholder" src="{% static 'mainsite/images/imagenotfound.png' %}" >
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-6">
             <label for="id_curr_picture">Picture:
                 <input type="file" name="curr_picture" accept="image/*" required="" class="form-control">
             </label>
@@ -101,7 +130,7 @@
         <br> {% comment %} Yeah this should be done w/ CSS. #TODO {% endcomment %}
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;"><button class="add_button" style="display: block; width: 100%; ">+</button></div>
+            <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;"><button class="add_button" style="display: block; width: 100%; " id="upload_button">+</button></div>
         </div>
         <div class="col-md-4"></div>
         <br>
