@@ -417,8 +417,9 @@ def update(request, pk):
         request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
         return HttpResponseRedirect(reverse('catalog:index'))
 
-    # Item is archived
-    if item.archived:
+    # Item is archived and the archive type is archived.
+    # It shouldn't be updated and can't be viewed.
+    if item.archived and item.archivedType == ArchivedType.Types.ARCHIVED:
         request.session['index_redirect_failed_search'] = 'PageNotFoundFail'
         return HttpResponseRedirect(reverse('catalog:index'))
 
