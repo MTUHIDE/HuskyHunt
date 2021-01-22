@@ -15,7 +15,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #1C1C21;
+            background-color: var(--main-pg-bg-color);
             margin-bottom: 50px;
             overflow-y: auto;
             min-height: calc(100vh - 56px);
@@ -44,13 +44,12 @@
         .item {
             width: 300px;
             height: 300px;
-            border: 2px solid #FFCD00;
+            border: 2px solid var(--main-border-color);
             display: flex;
             align-items: center;
             flex-direction: column;
             justify-content: center;
-            background-color: black;
-            color: rgb(191, 191, 191);
+            background-color: var(--main-btn-bg-color);
             text-align: center;
             margin: 40px;
             padding: 20px;
@@ -66,6 +65,11 @@
             height: 100px;
             /* background-color: white; */
         }
+        @media (prefers-color-scheme: light) {
+            .item img {
+                filter: invert(100%);
+            }
+        }
         /* unvisited link */
 
         a:link,
@@ -78,7 +82,7 @@
 
         .item:hover,
         .item:hover h2 {
-            color: #ffffff;
+            color: var(--main-itemTitle-color);
         }
     </style>
 

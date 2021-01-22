@@ -18,6 +18,7 @@
                 background-image: url("/static/mainsite/images/header.jpg");
                 background-size: cover;
                 overflow: hidden;
+                height: 100vh;
             }
             
             h1 {
@@ -70,15 +71,15 @@
                     <h1>Welcome to HuskyHunt!</h1>
                     <br>
 
-                    <div class="desc" style="">
+                    <div class="desc">
                         HuskyHunt allows you to sell your used stuff, as well as carpool services, to the Michigan Tech community.
                         <br>
                         <br> Use your MTU account to sign in:</div>
                     <a href="{% url 'social:begin' 'google-oauth2' %}"><img class="login-btn" src="/static/mainsite/gauth.png"></a>
                     <div class="row justify-content-md-center">
-                        <div class="col-auto text-center" style="color: red;">
+                        <div class="col-auto text-center" style="color: #ff0000;">
                             {% if messages %} <br>There was an error:<br> {% for message in messages %}
-                            <p class="{{ message.tags }}">{{ message }}</p>
+                            <p class="{{ message.tags }}" style="color: #000000;">{{ message }}</p>
                             {% endfor %} {% endif %}
                         </div>
                     </div>

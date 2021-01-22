@@ -53,10 +53,10 @@
 
 <div class="row" style="width: 100%;">
   <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
- <div class="col align-center" style="-ms-flex: 0 0 230px; flex: 0 0 230px;">
+ <div class="main-split col align-center">
   <div class="wrapper">
     <!--Fixes the size of the side bar so it doent grow or shink. -->
-    <div id="sidebar" style="text-align: center; height: 100%;width:230px; position: fixed; top: 0px; padding-top: 50px; overflow: scroll;">
+    <div id="sidebar">
       <div class="sidebar-header">
         <h1 id="title" class="my-4" style="text-align: center;">Catalog</h1>
       </div>
@@ -138,12 +138,12 @@
         <div class="row" style="margin: 0px;">
             {% if items %}
             {% for item in items %}
-            <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 justify-content-center" style="margin: 5px 0px 5px 0px; padding: 0px;">
+            <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 justify-content-center catalog-item-wrap">
                 <div class="card h-100 husky-card">
                     <a href="\catalog\{{item.id}}"><img class="product-icon" src="{% if item.item_picture is not None %}{{item.item_picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" alt=""></a>
                     <div class="card-body">
                         <h3 class="card-title">
-                            <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: white;">
+                            <div class="text-overflow">
                                 <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title }}</a>
                             </div>
                         </h3>
