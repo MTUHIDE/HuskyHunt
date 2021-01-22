@@ -2,21 +2,44 @@
 {% load static %}
 
 {% block content %}
+<style type="text/css">
+.masthead {
+  border-bottom: 1px solid var(--main-pg-divider-color);
+  margin-bottom: 16px !important;
+  padding-bottom: 32px;
+}
+.pfp {
+  width: 150px;
+  height: 150px;
+  margin-left: 15px;
+  margin-right: 25px;
+  border-radius: 50%;
+  border: 2px solid black;
+}
+.text-overflow {
+  width: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: normal;
+}
+</style>
 
-<div class="row justify-content-center mt-2 mb-5">
-    <div class='col*-lg-auto'>
-      <img style="width: 150px; height:150px; border-radius: 50%; border: 2px solid black;" src="{{defaultPicture}}" alt="Profile Picture">
-    </div>
-    <div class='col-lg-auto'>
-      <h1 class="text-center">{{request.user.first_name}} {{request.user.last_name}}</h1>
-      <h2 class="text-center">{{request.user.email}}</h2>
-    </div>
-    <div class="row align-items-end">
-    <div class="col-lg-auto">
-      <a href="{% url 'accountant:edit' %}" method="get" class="btn btn-warning">Edit Account</a>
-      <a href="{% url 'accountant:developer' %}" method="get" class="btn btn-primary">Developer</a>
-    </div>
+<div class="row justify-content-center mt-2 mb-5 masthead">
+  <div class='col*-lg-auto'>
+    <img class="pfp" src="{{defaultPicture}}" alt="Profile Picture">
   </div>
+  <div class='col-lg-auto' style="text-align: center;">
+    <h1 class="text-center">{{request.user.first_name}} {{request.user.last_name}}</h1>
+    <h2 class="text-center">{{request.user.email}}</h2>
+    <a href="{% url 'accountant:edit' %}" method="get" class="btn btn-warning" style="margin-top: 8px;">Edit Account</a>
+    <a href="{% url 'accountant:developer' %}" method="get" class="btn btn-primary" style="margin-top: 8px;">Developer</a>
+  </div>
+  <!-- <div class="row align-items-end">
+    <div class="col-lg-auto">
+      buttons previously lived here
+    </div>
+  </div> -->
 </div>
 
 {% if item_list %}
@@ -103,7 +126,7 @@
                 <!-- <a href="\catalog\{{item.id}}"><img class="product-icon" style="height:100px;" src="{{ item.item_picture.url }}" alt=""> -->
                 <div class="card-body">
                     <h4 class="card-title">
-                        <div style="width: auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; line-height: normal;">
+                        <div class="text-overflow">
                             {{ ride.destination_city }}
                         </div>
                     </h4>

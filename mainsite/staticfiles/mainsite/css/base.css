@@ -8,7 +8,9 @@
   --dark: #1c1c21;
   --white: #ffffff;
   --main-sidebarBackground-color: var(--black);
+  --main-topbarBackground-color: var(--black);
   --main-pg-bg-color: var(--dark);
+  --main-pg-divider-color: #333333;
   --main-modal-bg-color: var(--dark);
   --main-btn-bg-color: var(--black);
   --main-border-color: var(--mtu-yellow);
@@ -23,9 +25,12 @@
 
 @media (prefers-color-scheme: light) {
   :root {
+    --main-sidebarBackground-color: #2e2e2e;
+    --main-topbarBackground-color: #232323;
     --main-pg-bg-color: var(--white);
+    --main-pg-divider-color: #eeeeee;
     --main-modal-bg-color: var(--white);
-    --main-btn-bg-color: var(--white);
+    --main-btn-bg-color: #f7f7f7;
     --main-border-color: #7a7a7a;
     --main-itemTitle-color: var(--black);
     --main-txt-color: #404040;
@@ -63,6 +68,10 @@ p {
 }
 #title {
     color: var(--main-title-color);
+}
+
+.navbar {
+  background-color: var(--main-topbarBackground-color);
 }
 
 .navbar-toggler:focus {
