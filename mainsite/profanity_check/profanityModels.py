@@ -35,6 +35,7 @@ class ProfFiltered_ModelForm( ModelForm ):
         # But no profanity was found this time.
         elif retval.archived == True and retval.archivedType == ArchivedType.Types.REMOVED:
             # Move the item's status back to hidden so it can be reviewed again.
+            retval.reported = "True"
             retval.archivedType = ArchivedType.Types.HIDDEN
 
         if commit:
