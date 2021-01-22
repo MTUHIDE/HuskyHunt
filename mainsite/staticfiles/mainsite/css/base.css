@@ -69,6 +69,13 @@ p {
 #title {
     color: var(--main-title-color);
 }
+.text-overflow {
+  width: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: normal;
+}
 
 .navbar {
   background-color: var(--main-topbarBackground-color);
