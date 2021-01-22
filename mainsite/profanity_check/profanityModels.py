@@ -25,9 +25,16 @@ class ProfFiltered_ModelForm( ModelForm ):
     def save(self, commit=True):
         retval = super().save(commit=False)
 
+        # Item has been flagged by the profanity filter.
         if self.profResult:
+            # Report the item, mark it as archived, and hide it.
             retval.reported = "True"
             retval.archived = "True"
+            retval.archivedType = ArchivedType.Types.HIDDEN
+        # Item was previously flagged by the profanity filter and removed,
+        # But no profanity was found this time.
+        elif retval.archived == True and retval.archivedType == ArchivedType.Types.REMOVED:
+            # Move the item's status back to hidden so it can be reviewed again.
             retval.archivedType = ArchivedType.Types.HIDDEN
 
         if commit:
@@ -44,6 +51,7 @@ class ProfFiltered_ModelForm( ModelForm ):
             tokens = value.split(' ') # there are fancier tokenizing schemes but eh, split on space works
             profane_tokens = [ t[0] for t in zip(tokens, predict(tokens)) if t[1] ]
 
+            # We found some profanity.
             if len(profane_tokens) > 0:
                 self.profResult = True
 
