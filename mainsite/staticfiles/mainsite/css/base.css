@@ -275,6 +275,7 @@ body:not(.covid-warning-disabled) .rona-disabled.link {
     color: var(--white);
     text-align: center;
     margin-bottom: 10px;
+    padding: 0 16px;
     position: relative;
     bottom: 0;
 }
