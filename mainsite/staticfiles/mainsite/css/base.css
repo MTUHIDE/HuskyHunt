@@ -203,9 +203,8 @@ th {
   padding: 5px;
 }
 
-.husky-card-foot {
-  background-color: var(--dark);
-  margin: 10px;
+.card-footer {
+  background-color: var(--main-sidebarBackground-color);
 }
 /* .card{
   background-color: var(--dark);

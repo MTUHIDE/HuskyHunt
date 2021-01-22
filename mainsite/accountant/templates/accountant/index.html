@@ -83,7 +83,7 @@
                         </div>
                     -->
                 </div>
-                <div class="card-footer" style="background-color: black;"> <!--black-->
+                <div class="card-footer"> <!--black-->
                     <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block " id="viewButton">View</a>
                     {% include "catalog/delete_button.html" with target_pk=item.pk title=item.item_title href_url='accountant:deleteItem' btn="heavy" only %}
                 </div>
@@ -133,7 +133,7 @@
                     {% endif %}
                     </h6>
                 </div>
-                <div class="card-footer" style="background-color: black;"> <!--black-->
+                <div class="card-footer"> <!--black-->
                    <!--  <a role="button" href="\catalog\{{item.id}}" class="btn btn-outline-warning btn-block ">View</a> -->
                     {% include "catalog/delete_button.html" with target_pk=ride.pk title=ride.destination_city href_url='accountant:deleteRide' btn="heavy" only %}
                 </div>
