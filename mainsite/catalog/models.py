@@ -27,29 +27,9 @@ class Category(models.Model):
     def __str__(self):
         return self.category_name
 
-#Defines a table of subcategories
-class SubCategory(models.Model):
-    #Each subcategory has a name, parent category, date of creation and the last update
-
-    #The subcategory name can be up to 200 letters in length
-    category_name = models.CharField(max_length=200)
-
-    #The subcategory is tied to one of the main categories
-    #and is deleted if the parent is deleted
-    subcategory_of = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    #The date created is automatically filled in with the current date
-    date_created = models.DateField(auto_now=False, auto_now_add=True)
-
-    #The date updated is automatically filled in with the current date and time
-    date_updated = models.DateTimeField(auto_now=False, auto_now_add=True)
-
-    def __str__(self):
-        return self.category_name
-
 #Defines a table of Items
 class CatalogItem(models.Model):
-    #Each item has a username, category, subcategory, date added, title, description
+    #Each item has a username, category, date added, title, description
     #picture, and price associated to it
 
     #The username is automatically set to the user that added the item
@@ -71,9 +51,6 @@ class CatalogItem(models.Model):
 
     #The category is set by the user and the item is deleted if its category is deleted
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    #The item has a subcategory that I don't believe does anything
-    subcategory = models.ManyToManyField(SubCategory)
 
     #The date added is automatically set to the current date and time
     date_added = models.DateTimeField(auto_now=False, auto_now_add=True)

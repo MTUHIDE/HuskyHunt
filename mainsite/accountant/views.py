@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import user_passes_test
-from catalog.models import CatalogItem, Category, SubCategory
+from catalog.models import CatalogItem, Category
 from rideSharing.models import RideItem
 from catalog.views import isUserNotBanned
 from rest_framework.authtoken.models import Token
