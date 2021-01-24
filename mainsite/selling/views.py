@@ -77,9 +77,14 @@ def index(request):
         elif submission_type == ['ctlg'] and num_ctlg_items < MAX_CTLG_ITEMS:
             catalog_form = SellingForm(post_request, request.FILES, request=request)
             if catalog_form.is_valid():
-                # who is responsible for doing it this way
-                #catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
-                #catalogItem_instance.save()
+                catalog_item = catalog_form.save(commit=False);
+
+                if (manual_review):
+                    catalog_item.archived = True
+                    catalog_item.archivedType = ArchivedType.Types.REMOVED
+                    catalog_item.reported = True
+
+                catalog_item.save()
                 catalog_form.save()
 
                 # Inrement number of points by one
