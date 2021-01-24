@@ -30,10 +30,16 @@ def index(request):
     catalog_form = None
     ride_form = None
 
+    MANUAL_REVIEW_THRESHOLD = 2 # This is the number of points a user must exceed to be "verified" and not require manual review by default
     MAX_RIDE_ITEMS = 5
     MAX_CTLG_ITEMS = 10
     num_ride_items = RideItem.objects.filter(Q(username = request.user) & ArchivedType.Q_myContent).count()
     num_ctlg_items = CatalogItem.objects.filter(Q(username = request.user) & ArchivedType.Q_myContent).count()
+
+    # Determine if the post needs to be manually reviewed
+    manual_review = False;
+    if (user_profile.objects.get(user=request.user).points <= MANUAL_REVIEW_THRESHOLD):
+        manual_review = True;
 
     if request.method == 'POST':
         post_request = request.POST.copy() #make it not immutable
@@ -51,6 +57,11 @@ def index(request):
 
                 ride_item.destination_coordinates_lat, ride_item.destination_coordinates_lon = getLocationByRequest(ride_item)
                 ride_item.start_coordinates_lat, ride_item.start_coordinates_lon = getStartByRequest(ride_item)
+
+                if (manual_review):
+                    ride_item.archived = True
+                    ride_item.archivedType = ArchivedType.Types.REMOVED
+                    ride_item.reported = True
 
                 ride_item.save()       #error?
 
@@ -109,6 +120,7 @@ def index(request):
         'ride_form': ride_form,
         'too_many_items': too_many_items,
         'too_many_rides': too_many_rides,
+        'manual_review': manual_review,
     }
     return render(request, template, context)
 
