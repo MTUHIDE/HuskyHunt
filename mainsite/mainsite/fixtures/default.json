@@ -433,42 +433,6 @@
 },
 {
   "model": "auth.permission",
-  "pk": 49,
-  "fields": {
-    "name": "Can add sub category",
-    "content_type": 13,
-    "codename": "add_subcategory"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 50,
-  "fields": {
-    "name": "Can change sub category",
-    "content_type": 13,
-    "codename": "change_subcategory"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 51,
-  "fields": {
-    "name": "Can delete sub category",
-    "content_type": 13,
-    "codename": "delete_subcategory"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 52,
-  "fields": {
-    "name": "Can view sub category",
-    "content_type": 13,
-    "codename": "view_subcategory"
-  }
-},
-{
-  "model": "auth.permission",
   "pk": 53,
   "fields": {
     "name": "Can add ride item",

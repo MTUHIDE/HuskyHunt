@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from catalog.models import CatalogItem, Category, SubCategory
+from catalog.models import CatalogItem, Category
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib import auth

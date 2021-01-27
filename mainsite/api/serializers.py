@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from catalog.models import Category, SubCategory, CatalogItem
+from catalog.models import Category, CatalogItem
 from rest_framework import serializers
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -10,11 +10,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
-
-class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = SubCategory
         fields = '__all__'
 
 class CatalogItemSerializer(serializers.HyperlinkedModelSerializer):

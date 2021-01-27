@@ -28,6 +28,17 @@ Instead we display our custom error message -->
 <!-- Tab contents -->
 <div class="tab-content">
 
+  <!-- Manual review warning -->
+  {% if manual_review %}
+  <div class='row justify-content-center'>
+    <div class='col-lg-5' style='margin: 10px;'>
+      <div class="alert alert-info" role="alert">
+        <strong>It looks like you haven't made many accepted posts to the site yet. For quality purposes, this post will be manually reviewed by our moderation team.<br></strong>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <!-----------------------------------
   Catalog Form
   ----------------------------------->

@@ -1,6 +1,6 @@
 from PIL import Image
 from django import forms
-from catalog.models import CatalogItem, Category, SubCategory, CatalogItemPicture
+from catalog.models import CatalogItem, Category, CatalogItemPicture
 from django.forms import ModelForm
 from rideSharing.models import RideItem, RideCategory
 from django.forms import TextInput
