@@ -81,30 +81,25 @@
   }
 </script>
 
-
-
-
-
-
+<!-- TODO: Fix -->
 <template id="pic_upload_template">
-    <div class="row">
+    <div class="row row_center">
         <div class="col-md-2">
             <div style="height: 100%;  display: flex; flex-direction: column; flex-flow: column noWrap; justify-content: space-between; align-items: stretch;">
-                <button type="button" class="up_button" style="display: block;">↑</button>
-                <button type="button" class="delete_button">X</button>
-                <button type="button" class="down_button" style="display: block;">↓</button>
+                <button type="button" class="up_button husky-button-dark" style="display: block;">Move Up</button>
+                <button type="button" class="delete_button husky-button-dark">Delete</button>
+                <button type="button" class="down_button husky-button-dark" style="display: block;">Move Down</button>
             </div>
         </div>
-
+      
         <div class="col-md-5">
-            <img height="200" width="200" src="{% static 'mainsite/images/imagenotfound.png' %}" >
+            <img height="200" width="200" class="pic_placeholder" src="{% static 'mainsite/images/imagenotfound.png' %}" >
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-6">
             <label for="id_curr_picture">Picture:
                 <input type="file" name="curr_picture" accept="image/*" required="" class="form-control">
             </label>
-
         </div>
     </div>
 </template>
@@ -114,7 +109,7 @@
         <br> {% comment %} Yeah this should be done w/ CSS. #TODO {% endcomment %}
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;"><button class="add_button" style="display: block; width: 100%; ">+</button></div>
+            <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;"><button class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button></div>
         </div>
         <div class="col-md-4"></div>
         <br>

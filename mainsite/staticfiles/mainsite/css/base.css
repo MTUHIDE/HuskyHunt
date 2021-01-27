@@ -197,6 +197,13 @@ th {
   border-color: var(--main-border-color);
 }
 
+.row_center {
+  justify-content: center !important;
+}
+
+.pic_placeholder {
+  border-radius: 12px !important;
+}
 
 .husky-button-light, .husky-button-dark:hover {
   color: var(--main-btn-bg-color);
