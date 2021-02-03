@@ -52,7 +52,7 @@ def index(request):
     title = "MTU Moderation"
 
     reported_items = CatalogItem.objects.filter(
-        archived='True', reported='True'#, archivedType=ArchivedType.
+        archived='True', reported='True', archivedType=ArchivedType.Types.REMOVED
     ).order_by('-date_added')[:500]
     
 
