@@ -158,6 +158,7 @@ p {
   top: 0px;
   padding-top: 50px;
   overflow: scroll;
+  z-index: 2;
 }
 h1,
 h2,
@@ -285,6 +286,7 @@ body:not(.covid-warning-disabled) .rona-disabled.link {
     padding: 0 16px;
     position: relative;
     bottom: 0;
+    z-index: 1;
 }
 .disclaimer a {
     color: var(--mtu-yellow);
