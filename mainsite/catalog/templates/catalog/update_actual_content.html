@@ -73,12 +73,27 @@
 
 
 
-<!-- Used to prevent multiple submits -->
 <script type="text/javascript">
-  function ItemInputSubmit() {
+// Used to prevent multiple submits
+function ItemInputSubmit() {
     document.getElementById("btnRealButton").disabled = true;
     return true;
-  }
+}
+
+// Prevent negative numbers
+var number = document.getElementById('id_item_price');
+if (number) {
+    // Prevent spinner arrows from allowing negative
+    number.setAttribute("min", "0");
+    // Prevent user from entering negative sign
+    number.onkeydown = function(e) {
+        if(!((e.keyCode > 95 && e.keyCode < 106)
+        || (e.keyCode > 47 && e.keyCode < 58) 
+        || e.keyCode == 8)) {
+            return false;
+        }
+    }
+}
 </script>
 
 <!-- TODO: Fix -->
