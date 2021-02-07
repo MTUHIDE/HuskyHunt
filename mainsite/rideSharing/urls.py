@@ -1,6 +1,6 @@
 from django.urls import path, re_path
-from . import views
 from django.conf import settings
+from . import views
 
 app_name = 'rideSharing'
 
@@ -8,7 +8,6 @@ app_name = 'rideSharing'
 if not settings.DISABLE_RIDESHARING:
   urlpatterns = [
       #If the next token in the url is...
-
       #...blank then execute the index methon in views
       path('', views.index, name='index'),
 
@@ -29,6 +28,6 @@ if not settings.DISABLE_RIDESHARING:
   ]
 else:
   urlpatterns = [
+    path('', views.disabled, name="index"),
     re_path(r'^.*/$', views.disabled, name='index'),
-
-    ]
+  ]
