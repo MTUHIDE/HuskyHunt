@@ -441,3 +441,20 @@ def update(request, pk):
                 'catalog_form': SellingForm(instance=item),
                 'item': item
         })
+
+# Disabled Page
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+def disabled(request):
+    
+    #The CSS for this function can be found here
+    template = 'catalog/disabled.html'
+    #The title for the webpage
+    title = "Forbidden"
+
+    #Packages the information to be displayed into context
+    context = {
+        'title': title
+    }
+
+    return render(request, template, context)
