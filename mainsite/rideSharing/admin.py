@@ -17,10 +17,10 @@ class RideItemAdmin(admin.ModelAdmin):
     	'destination_state', 'date_leaving', 'return_date' )
     list_filter = ['reported', 'archived', 'date_added', 'username']
     # search_fields ?
-    actions = ['remove_post', 'allow_post', 'ignore_post', ]
+    actions = ['remove_post', 'allow_post', 'ignore_post', 'delete_post']
 
     def remove_post(self, request, queryset):
-        queryset.update(reported=False)
+        queryset.update(reported=True)
         queryset.update(archived=True)
         queryset.update(archivedType=ArchivedType.Types.REMOVED)
         # Decrement number of points by three
@@ -28,17 +28,27 @@ class RideItemAdmin(admin.ModelAdmin):
             profile = user_profile.objects.get(user = item.username)
             profile.points = profile.points - 3
             profile.save()
-    remove_post.short_description = "Remove offending posts"
+    remove_post.short_description = "Remove offending posts (reported=True, archived=True, type=Removed)"
+
+    def delete_post(self, request, queryset):
+        queryset.update(archived=True)
+        queryset.update(archivedType=ArchivedType.Types.ARCHIVED)
+        # Decrement number of points by three
+        for item in queryset:
+            profile = user_profile.objects.get(user = item.username)
+            profile.points = profile.points - 3
+            profile.save()
+    delete_post.short_description = "Delete posts (archived=True, type=archived)"
 
     def allow_post(self, request, queryset):
         queryset.update(reported=False)
         queryset.update(archived=False)
         queryset.update(archivedType=ArchivedType.Types.VISIBLE)
-    allow_post.short_description = "Unarchive: mark acceptable"
+    allow_post.short_description = "Make public (reported=False, archived=False, type=visble)"
 
     def ignore_post(self, request, queryset):
         queryset.update(reported=False)
-    ignore_post.short_description = "Ignore report (don't use this, unarchive instead)"
+    ignore_post.short_description = "Ignore report (reported=False)"
 
     def get_actions(self, request):
         #https://stackoverflow.com/questions/34152261/remove-the-default-delete-action-in-django-admin

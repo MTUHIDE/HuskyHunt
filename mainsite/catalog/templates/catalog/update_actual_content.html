@@ -71,8 +71,6 @@
      </div>
    </div>
 
-
-
 <script type="text/javascript">
 // Used to prevent multiple submits
 function ItemInputSubmit() {
@@ -98,7 +96,7 @@ if (number) {
 
 <!-- TODO: Fix -->
 <template id="pic_upload_template">
-    <div class="row row_center">
+    <div class="row row_center mb-4">
         <div class="col-md-2">
             <div style="height: 100%;  display: flex; flex-direction: column; flex-flow: column noWrap; justify-content: space-between; align-items: stretch;">
                 <button type="button" class="up_button husky-button-dark" style="display: block;">Move Up</button>
@@ -112,6 +110,7 @@ if (number) {
         </div>
 
         <div class="col-md-6">
+            <br>
             <label for="id_curr_picture">Picture:
                 <input type="file" name="curr_picture" accept="image/*" required="" class="form-control">
             </label>
@@ -123,9 +122,11 @@ if (number) {
     <div class="row">
         <br> {% comment %} Yeah this should be done w/ CSS. #TODO {% endcomment %}
         <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;"><button class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button></div>
-        </div>
+            <div class="col-md-4">
+                <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;">
+                    <button class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button>
+                </div>
+            </div>
         <div class="col-md-4"></div>
         <br>
     </div>
@@ -206,7 +207,6 @@ if (number) {
         let myInt = getRowFromButton_I(this);
 
         let clone_i = constructIntermediate();
-        myInt.parentElement.insertBefore(clone_i, myInt);
         let clone_r = constructRow();
         myInt.parentElement.insertBefore(clone_r, myInt);
     };
