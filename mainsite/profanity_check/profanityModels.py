@@ -25,18 +25,22 @@ class ProfFiltered_ModelForm( ModelForm ):
     def save(self, commit=True):
         retval = super().save(commit=False)
 
-        # Item has been flagged by the profanity filter.
-        if self.profResult:
-            # Report the item, mark it as archived, and hide it.
-            retval.reported = "True"
-            retval.archived = "True"
-            retval.archivedType = ArchivedType.Types.HIDDEN
-        # Item was previously flagged by the profanity filter and removed,
-        # But no profanity was found this time.
-        elif retval.archived == True and retval.archivedType == ArchivedType.Types.REMOVED:
-            # Move the item's status back to hidden so it can be reviewed again.
-            retval.reported = "True"
-            retval.archivedType = ArchivedType.Types.HIDDEN
+        try:
+            # Item has been flagged by the profanity filter.
+            if self.profResult:
+                # Report the item, mark it as archived, and hide it.
+                retval.reported = "True"
+                retval.archived = "True"
+                retval.archivedType = ArchivedType.Types.HIDDEN
+            # Item was previously flagged by the profanity filter and removed,
+            # But no profanity was found this time.
+            elif retval.archived == True and retval.archivedType == ArchivedType.Types.REMOVED:
+                # Move the item's status back to hidden so it can be reviewed again.
+                retval.reported = "True"
+                retval.archivedType = ArchivedType.Types.HIDDEN
+        except AttributeError:
+            # User was reported
+            pass
 
         if commit:
             retval.save()
