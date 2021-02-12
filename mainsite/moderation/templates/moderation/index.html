@@ -2,9 +2,73 @@
 {% load static %}
 
 {% block content %}
-<p>Hello world</p>
 <!--Display Reported catalog items. - flagged, hidden, requires approval
     Rides
     Users picture, sorts,- sort by most points and currently banned.-->
+
+<div class="row" style="width:100%;">
+
+  <div class="col" style="position: static;height: 100%;">
+    <div class="row" style="margin: 0px;">
+      {% if reported_items %}
+        {% for item in reported_items %}
+          <div class="card h-100 husky-card mb-3">
+            <div class="row no-gutters">
+              <div class="col">
+                <div id="pic_carousel_{{item.id}}" class="carousel slide" style="max-width:200px;" data-interval="false" >
+
+                  <ol class="carousel-indicators">
+                  {% for picEl in item.pictures.all %}
+                    <li data-target="#pic_carousel_{{item.id}}Indicators" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %} ></li>
+                  {% endfor %}
+                  </ol>
+
+                  <div class="carousel-inner">
+                  {% for picEl in item.pictures.all %}
+                    <div class="carousel-item{% if forloop.first %} active{% endif %}" >
+                        <img class="d-block w-100" src="{% if picEl is not None and picEl.picture is not None %}{{picEl.picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 200px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+                    </div>
+                  {% endfor %}
+                  </div>
+
+                  <a class="carousel-control-prev" href="#pic_carousel_{{item.id}}" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                  <a class="carousel-control-next" href="#pic_carousel_{{item.id}}" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </div>
+              </div>
+              <div class="col">
+                <label>Title: {{item.item_title}}</label><br/>
+              
+                <label>Description: {{item.item_description}}</label>
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-warning mb-3 mt-3 mr-3" type="button" onclick="window.location.href='/moderation/{{item.id}}/approve'" >Approve</button>
+                <br/>
+                <button class="btn btn-outline-danger mr-3" type="button" onclick="window.location.href='/moderation/{{item.id}}/deny'" >Deny</button>
+              </div>
+            </div>
+          </div>
+          <script type="text/javascript">
+            $(document).ready(function(){
+    		      $('#pic_carousel_{{item.id}}').carousel();
+    	      })
+          </script>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>
+
+<script type="text/javascript">
+
+
+</script>
 
 {% endblock %}

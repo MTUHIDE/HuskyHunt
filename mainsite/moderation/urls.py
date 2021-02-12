@@ -8,4 +8,6 @@ urlpatterns = [
     #If the next token in the url is...
     #...blank then execute the index methon in views
     path('', views.index, name='index'),
+    path('<int:pk>/approve/', views.approve, name='approve'),
+    path('<int:pk>/deny/', views.deny, name='deny'),
 ]

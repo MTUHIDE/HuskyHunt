@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from catalog.views import isUserNotBanned
 from catalog.models import CatalogItem
+from accountant.models import user_profile
 from profanity_check.models import ArchivedType
 
 # Create your views here.
@@ -52,17 +53,72 @@ def index(request):
     title = "MTU Moderation"
 
     reported_items = CatalogItem.objects.filter(
-        archived='True', reported='True', archivedType=ArchivedType.Types.REMOVED
+        archived='True', reported='True', archivedType=ArchivedType.Types.HIDDEN
     ).order_by('-date_added')[:500]
     
+    reported_items_pictures = {}
 
     first = reported_items.first()
 
     #Packages the information to be displayed into context
     context = {
-        'title': title
+        'title': title,
+        'reported_items': reported_items,
+        'reported_items_pictures': reported_items_pictures,
     }
 
     #Displays all the items from the database with repect to the CSS template
     return render(request, template, context)
 
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserModerator, login_url='/', redirect_field_name='/')
+def approve(request, pk):
+    template = 'moderation/index.html'
+    title = 'MTU Moderation'
+
+    try:
+        item = CatalogItem.objects.get(pk=pk)
+    except CatalogItem.DoesNotExist:
+        return HttpResponseRedirect(reverse('moderation:index'))
+
+    item.reported = False
+    item.archived = False
+    item.archivedType=ArchivedType.Types.VISIBLE
+
+
+    item.save()
+
+    context = {
+        'title': title,
+    }
+
+    return index(request)
+
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserModerator, login_url='/', redirect_field_name='/')
+def deny(request, pk):
+    template = 'moderation/index.html'
+    title = 'MTU Moderation'
+
+    try:
+        item = CatalogItem.objects.get(pk=pk)
+    except CatalogItem.DoesNotExist:
+        return HttpResponseRedirect(reverse('moderation:index'))
+
+    item.reported = True
+    item.archived = True
+    item.archivedType=ArchivedType.Types.REMOVED
+
+    profile = user_profile.objects.get(user = item.username)
+    profile.points = profile.points - 3
+    profile.save()
+
+    item.save()
+
+    context = {
+        'title': title,
+    }
+
+    return index(request)
