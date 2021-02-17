@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load profile_searching %}
 
 {% block content %}
 <!--Display Reported catalog items. - flagged, hidden, requires approval
@@ -11,9 +12,13 @@
   <div class="col" style="position: static;height: 100%;">
     <div class="row" style="margin: 0px;">
       {% if reported_items %}
+        {#  #}
         {% for item in reported_items %}
           <div class="card h-100 husky-card mb-3">
             <div class="row no-gutters">
+              <div class="col">
+                <img src="{{reported_profiles|getPFPFromDict:item.username_id }}" />
+              </div>
               <div class="col">
                 <div id="pic_carousel_{{item.id}}" class="carousel slide" style="max-width:200px;" data-interval="false" >
 
