@@ -2,12 +2,14 @@
 
 {% block content %}
 
-<!-- <h1> {{ account.username }} </h1>  <!---->
+<!-- <h1> {{ account.username }} </h1>  -->
 
 <form action="{% url 'accountant:edit' %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 
+{% with account_detail="account_detail" %}
 {% include "profanity_check/errors.html" %}
+{% endwith %}
 
   <div class="col-lg-12 col-md-9 col-sm-8" align="center" style="position: static;">
     <div class="row justify-content-center align-end">
