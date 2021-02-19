@@ -182,7 +182,7 @@ def report_functionality(request, pk, item):
     elif (user_profile.objects.filter(user = request.user)[0].flags_today >= 5):
         time_remaining = timedelta(hours=24) - (datetime.now().astimezone(pytz.timezone('UTC')) - last_flag)
         messages.error(request, 'You can only report 5 posts per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."), extra_tags=extra_tags)
-
+    
     else:
         # Set the reported to true
         item.reported = "True" # Report this item
