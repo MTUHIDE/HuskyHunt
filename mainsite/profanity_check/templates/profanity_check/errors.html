@@ -14,8 +14,14 @@
                     <br>
                 {% endif %}
             {% endfor %}
-            If you think our profanity checker made a mistake, click here to submit anyway (this will also flag for moderator review):
-            <input type="submit" name="submit_btn" value="Submit Anyway" class="btn btn-outline-warning husky-button-light">
+            
+            {% if not account_detail %}
+                If you think our profanity checker made a mistake, click here to submit anyway (this will also flag for moderator review):
+                <input type="submit" name="submit_btn" value="Submit Anyway" class="btn btn-outline-warning husky-button-light">
+            {% endif %}
+            {% if account_detail %}
+                If you think our profanity checker made a mistake, please contact our development team at <a href="mailto:huskyhunt-l@mtu.edu">huskyhunt-l@mtu.edu</a>
+            {% endif %}
 
         </div>
     {% endif %}
