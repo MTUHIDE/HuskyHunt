@@ -17,7 +17,17 @@
           <div class="card h-100 husky-card mb-3">
             <div class="row no-gutters">
               <div class="col">
-                <img src="{{reported_profiles|getPFPFromDict:item.username_id }}" />
+                <div class="row no-gutters">
+                  <div class="col">
+                    <img src="{{reported_profiles|getPFPFromUserDict:item.username_id }}" class="rounded"/>
+                  </div>
+                  <div class="col">
+                    <button class="btn btn-outline-danger w-100" onclick="window.location.href='/moderation/{{item.username_id}}/ban'">Ban</button>
+                  </div>
+                </div>
+                <label>Username:</label><label>{{item.username}}</label><br/>
+                <label>Points:</label><label>{{reported_profiles|getPointsFromUserDict:item.username_id }}</label><br/>
+                <label>Flags Today:</label><label>{{reported_profiles|getFlagsFromUserDict:item.username_id }}</label>
               </div>
               <div class="col">
                 <div id="pic_carousel_{{item.id}}" class="carousel slide" style="max-width:200px;" data-interval="false" >

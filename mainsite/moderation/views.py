@@ -4,8 +4,12 @@ from django.contrib.auth.decorators import user_passes_test
 from catalog.views import isUserNotBanned
 from catalog.models import CatalogItem
 from accountant.models import user_profile
+from accountant.admin import archiveAllUserPosts
 from profanity_check.models import ArchivedType
 from rideSharing.models import RideItem
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from datetime import datetime, timedelta
+import pytz
 import math
 # Create your views here.
 
@@ -201,20 +205,11 @@ def approve(request, pk):
     title = 'MTU Moderation'
 
     try:
-        item = CatalogItem.objects.get(pk=pk)
+        user = CatalogItem.objects.get(pk=pk)
     except CatalogItem.DoesNotExist:
         return HttpResponseRedirect(reverse('moderation:index'))
 
-    item.reported = False
-    item.archived = False
-    item.archivedType=ArchivedType.Types.VISIBLE
-
-
-    item.save()
-
-    context = {
-        'title': title,
-    }
+    ban_user(queryset=user)
 
     return index(request)
 
@@ -239,6 +234,50 @@ def deny(request, pk):
     profile.save()
 
     item.save()
+
+    context = {
+        'title': title,
+    }
+
+    return index(request)
+
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserModerator, login_url='/', redirect_field_name='/')
+def ban(request, pk):
+    template = 'moderation/index.html'
+    title = 'MTU Moderation'
+
+    try:
+        users = user_profile.objects.filter(pk=pk)
+    except CatalogItem.DoesNotExist:
+        return HttpResponseRedirect(reverse('moderation:index'))
+
+    # Reset points, ban user(s) for 1000 days
+    users.update(points=0)
+    banned_untilDateTime = (datetime.now() + timedelta(days=1000)).astimezone(pytz.timezone('UTC'))
+    users.update(banned_until = banned_untilDateTime)
+
+    # Send emails
+    for user in users:
+        archiveAllUserPosts(user)
+
+        #The body of the email
+        message = ('Your account on HuskyHunt has been banned.\n'
+            + 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
+
+        #The email that this message is sent from
+        from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
+        to_email = user.user.email
+
+        email = EmailMessage(
+            'Account Banned', # subject
+            message, #body
+            from_email, # from_email
+            [to_email],  # to email
+            reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
+            )
+        email.send();
 
     context = {
         'title': title,

@@ -10,4 +10,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<int:pk>/approve/', views.approve, name='approve'),
     path('<int:pk>/deny/', views.deny, name='deny'),
+    path('<int:pk>/ban/', views.ban, name='ban'),
 ]
