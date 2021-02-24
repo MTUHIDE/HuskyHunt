@@ -33,6 +33,13 @@
 
                 {% endif %}
             {% endfor %}
+
+            {% if form.non_field_errors %}
+                <strong>Errors:</strong><br>
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            {% endif %}
         </div>
     {% endif %}
 {% endif %}

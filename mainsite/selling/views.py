@@ -4,7 +4,9 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from catalog.views import isUserNotBanned
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from datetime import datetime
 
 from .forms import SellingForm
@@ -16,19 +18,35 @@ from .forms import RideForm
 from rideSharing.models import RideItem
 from accountant.models import user_profile
 
+from profanity_check.models import ArchivedType
+from django.db.models import Q
+
 
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def index(request):
+    
     template = "selling/combine.html"
     catalog_form = None
     ride_form = None
+
+    MANUAL_REVIEW_THRESHOLD = 2 # This is the number of points a user must exceed to be "verified" and not require manual review by default
+    MAX_RIDE_ITEMS = 5
+    MAX_CTLG_ITEMS = 10
+    num_ride_items = RideItem.objects.filter(Q(username = request.user) & ArchivedType.Q_myContent).count()
+    num_ctlg_items = CatalogItem.objects.filter(Q(username = request.user) & ArchivedType.Q_myContent).count()
+
+    # Determine if the post needs to be manually reviewed
+    manual_review = False;
+    if (user_profile.objects.get(user=request.user).points <= MANUAL_REVIEW_THRESHOLD):
+        manual_review = True;
 
     if request.method == 'POST':
         post_request = request.POST.copy() #make it not immutable
 
         # Ride Form
         submission_type = post_request.pop('submission_type', None)
-        if submission_type == ['ride'] and 4 >= RideItem.objects.filter(username = request.user, archived='False').count():
+        if submission_type == ['ride'] and num_ride_items < MAX_RIDE_ITEMS:
             ride_form = RideForm(post_request, request.FILES)
             if ride_form.is_valid():
                 ride_item = ride_form.save(commit=False)
@@ -39,6 +57,11 @@ def index(request):
 
                 ride_item.destination_coordinates_lat, ride_item.destination_coordinates_lon = getLocationByRequest(ride_item)
                 ride_item.start_coordinates_lat, ride_item.start_coordinates_lon = getStartByRequest(ride_item)
+
+                if (manual_review):
+                    ride_item.archived = True
+                    ride_item.archivedType = ArchivedType.Types.REMOVED
+                    ride_item.reported = True
 
                 ride_item.save()       #error?
 
@@ -51,19 +74,18 @@ def index(request):
                 return HttpResponseRedirect(reverse('rideSharing:index'))
 
         # Catalog Form
-        elif submission_type == ['ctlg'] and 10 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
-            catalog_form = SellingForm(post_request, request.FILES)
+        elif submission_type == ['ctlg'] and num_ctlg_items < MAX_CTLG_ITEMS:
+            catalog_form = SellingForm(post_request, request.FILES, request=request)
             if catalog_form.is_valid():
-                category = catalog_form.cleaned_data['category']
-                item_description = catalog_form.cleaned_data['item_description']
-                item_price = catalog_form.cleaned_data['item_price']
-                if item_price < 0:
-                    item_price = 0
-                item_title = catalog_form.cleaned_data['item_title']
-                username = request.user
-                item_picture = catalog_form.cleaned_data['item_picture']
-                catalogItem_instance = CatalogItem.objects.create(username=username, category=category, item_description=item_description, item_price=item_price, item_title=item_title, item_picture=item_picture)
-                catalogItem_instance.save()
+                catalog_item = catalog_form.save(commit=False);
+
+                if (manual_review):
+                    catalog_item.archived = True
+                    catalog_item.archivedType = ArchivedType.Types.REMOVED
+                    catalog_item.reported = True
+
+                catalog_item.save()
+                catalog_form.save()
 
                 # Inrement number of points by one
                 profile = user_profile.objects.get(user = request.user)
@@ -74,9 +96,9 @@ def index(request):
         else:
             pass #this should never happen
 
-    if catalog_form is None and 5 >= CatalogItem.objects.filter(username = request.user, archived='False').count():
+    if catalog_form is None and num_ctlg_items < MAX_CTLG_ITEMS:
         catalog_form = SellingForm()
-    if ride_form is None and 4 >= RideItem.objects.filter(username = request.user, archived='False').count():
+    if ride_form is None and num_ride_items < MAX_RIDE_ITEMS:
         curr_user = user_profile.objects.get(user = request.user)
         ride_form = RideForm(initial = {
             'start_city': "Houghton",
@@ -103,6 +125,7 @@ def index(request):
         'ride_form': ride_form,
         'too_many_items': too_many_items,
         'too_many_rides': too_many_rides,
+        'manual_review': manual_review,
     }
     return render(request, template, context)
 
@@ -142,3 +165,20 @@ def getStartByRequest(ride_item):
 
         lon, lat = (req.json())["features"][0]["center"]
         return lat, lon;
+
+# Disabled Page
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+def disabled(request):
+    
+    #The CSS for this function can be found here
+    template = 'selling/disabled.html'
+    #The title for the webpage
+    title = "Forbidden"
+
+    #Packages the information to be displayed into context
+    context = {
+        'title': title
+    }
+
+    return render(request, template, context)

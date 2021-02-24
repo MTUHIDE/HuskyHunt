@@ -8,5 +8,5 @@ whitenoise
 mysqlclient
 djangorestframework
 
-scikit-learn>=0.20.2
+scikit-learn==0.23.2
 joblib==0.14.1

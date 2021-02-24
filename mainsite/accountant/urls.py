@@ -1,7 +1,10 @@
 from django.urls import path
 from . import views
+from django.contrib import admin
 
 #from .views import AccountDetailView
+admin.autodiscover()
+admin.site.enable_nav_sidebar = False
 
 app_name = 'accountant'
 urlpatterns = [

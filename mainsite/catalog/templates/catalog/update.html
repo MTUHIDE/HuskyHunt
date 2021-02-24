@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+    <!-- Does not display the above-line default validation errors for the forms
+    Instead we display our custom error message -->
+    <style>
+    .errorlist {
+        display: none;
+    }
+    </style>
+
+    <br>
+
+    {% include "catalog/update_actual_content.html" %}
+
+
+{% endblock %}

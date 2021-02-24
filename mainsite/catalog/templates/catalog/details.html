@@ -10,54 +10,78 @@
 {% for item in item_list %}
 <div class="row" style="margin: 0;">
     <div class="col-md-4 align-middle text-center">
-        <img class="img-end" src="{{item.item_picture.url}}" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
-        <div>
-            <br>
-            {% if request.user.username|stringformat:"s" == item.username|stringformat:"s" %}
-            <div class="row">
-              <div class="col-md-6">
-                <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="sendButton.disabled = true" id="reportForm">
-                    <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
-                </form>
-              </div>
-              <div class="col-md-6">
-                <button role="button" class="btn btn-default husky-button-light"  style="width: 150px;" data-toggle="modal" data-target="#deleteItemModal{{item.pk}}" id="deleteButton">Delete Item</button>
-              </div>
-            </div>
 
-            <!-- Modal -->
-            <div id="deleteItemModal{{item.pk}}" class="modal fade" role="dialog">
-                <div class="modal-dialog modal-dialog-centered">
-
-                 <!-- Modal content-->
-                    <div class="modal-content" style="border: 1px solid #FFCD00;">
-                        <div class="modal-header" style="background-color:black; border-bottom: 1px solid #FFCD00;"> <!-- style="justify-content:center;" this centers title in modal-->
-                            <h4 class="" style="color:#ffcd00;">Delete {{ item.item_title }}</h4>
-                            <button type="button" class="close" style="color:#ffcd00;" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body husky-modal">
-                            <div class="col-lg-6">
-                                <h5>Are you sure you want to delete this item?</h5>
-                            </div>
-                        </div>
-                        <div class="modal-footer husky-modal">
-                        <a type="button" class="btn btn-primary husky-button-light" href="/accountant/{{ item.pk }}">Delete</a>
-                        <button type="button" class="btn btn-secondary husky-button-dark" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+        <div class="row">
+            {% if item.item_picture is None %}
+            <img class="img-end" src="{% static 'mainsite/images/imagenotfound.png' %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
             {% else %}
-            <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="sendButton.disabled = true" id="reportForm">
-                <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
-            </form>
+
+            {% comment %} https://getbootstrap.com/docs/4.0/components/carousel/ {% endcomment %}
+            <div id="pic_carousel" class="carousel slide" data-interval="false">
+
+              <ol class="carousel-indicators">
+              {% for picEl in item.pictures.all %}
+                <li data-target="#pic_carouselIndicators" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %} ></li>
+              {% endfor %}
+              </ol>
+
+              <div class="carousel-inner">
+              {% for picEl in item.pictures.all %}
+                <div class="carousel-item{% if forloop.first %} active{% endif %}" >
+                    <img class="d-block w-100" src="{% if picEl is not None and picEl.picture is not None %}{{picEl.picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+                </div>
+              {% endfor %}
+              </div>
+
+              <a class="carousel-control-prev" href="#pic_carousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#pic_carousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+
             {% endif %}
         </div>
-    </div>
+
+        <div class="row"><div class="col">
+            <br>
+            <div class="row">
+            {% if request.user.username|stringformat:"s" == item.username|stringformat:"s" %}
+                <div class="col-md-6">
+                    <a role="button" class="btn btn-default husky-button-light"  style="width: 150px;" id="updatedButton" href="/catalog/{{item.id}}/update/">Update Post</a>
+                </div>
+                <div class="col-md-6">
+                    {% include "catalog/delete_button.html" with target_pk=item.pk title=item.item_title href_url='accountant:deleteItem' btn="light" only %}
+                </div>
+            {% else %}
+                <div class="col-md-4">
+                    <form action="/catalog/{{item.id}}/report" method="GET" onsubmit="reportButton.disabled = true" id="reportForm">
+                        <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
+                    </form>
+                </div>
+            {% endif %}
+            </div>
+
+            {% comment %} NOTE: idk wth is up with Bootstrap's column height
+                        seemingly not updating when the image loads in
+                        (without this hack, stuff overflowed off the bottom)
+             {% endcomment %}
+
+            {% comment %} \/ may need changing if ArchivedType changes {% endcomment %}
+            {% if item.archivedType == "HD" %}
+            <div class="row" style="overflow: auto;">
+                <h4> Warning: item is hidden from other users until a moderator reviews it. </h4>
+            </div>
+            {% elif item.archivedType == "RE" %}
+            <div class="row" style="overflow: visible;">
+                <h4> Warning: item was marked in violation of our policies and is hidden from other users. </h4>
+            </div>
+            {% endif %}
+        </div>
+    </div></div>
     <div class="col-md-8">
         <div class="row">
             <div class="col-lg-9">
@@ -76,43 +100,37 @@
 
             {% if messages %}
                 {% for message in messages %}
-                  <!--<p class="alert closebtn">{{ message }}</p>-->
-                  {% if message.message == "Please enter a message!" %}
-                      <div class="alert" style="background-color:#cc3333">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        <strong>{{message}}</strong> </br> Message failed to send!
-                    </div>
-                      {% elif message.message|slice:":27" in 'You can only send 5 messages per day!' %}
-                      <div class="alert" style="background-color:#cc3333">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        <strong>{{message}}</strong> </br> Message failed to send!
-                      </div>
-                      {% elif message.message == "Please wait one minute between emails!" %}
-                      <div class="alert" style="background-color:#cc3333">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        <strong>{{message}}</strong>
-                      </div>
-                  {% elif message.message == "Post successfully reported!" %}
-                      <div class="alert" style="background-color:#33cc33">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        <strong>{{message}}</strong>
-                      </div>
-                  {% else %}
-                      <div class="alert" style="background-color:#33cc33">
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        <strong>{{message}}</strong> </br> Message sent successfully!
-                      </div>
-                  {% endif %}
+                    {% if message.message == "Please enter a message!" or message.message|slice:":27" in 'You can only send 5 messages per day!' or message.message|slice:":27" in 'You can only report 5 posts per day!'  %}
+                        <div class="alert" style="background-color:#cc3333">
+                            <strong>{{ message }}</strong> </br> Message failed to send!
+                    {% elif message.message == "Please wait one minute between emails!" or message.message == "Please wait one minute between reporting posts!"  %}
+                        <div class="alert" style="background-color:#cc3333">
+                            <strong>{{ message }}</strong>
+                    {% else %}
+                        <div class="alert" style="background-color:#33cc33">
+                        {% if message.message == "Post successfully reported!" %}
+                            <strong>{{ message }}</strong>
+                        {% else %}
+                            <strong>{{ message }}</strong> </br> Message sent successfully!
+                        {% endif %}
+                    {% endif %}
+                        </div>
                 {% endfor %}
             {% endif %}
+
+            {% if request.user.username|stringformat:"s" == item.username|stringformat:"s" %}
+            <p><i>This is your own item; this page shows how it appears to others.</i></p>
+            <div class="row">
+            {% else %}
             <h6>Message {{item.first_name}}:</h6>
             <textarea class="form-control" rows="5" id="message" placeholder="Ask the owner something..." name="message" form="emailform" maxlength="1000" style="border: 1px solid black;"></textarea>
             <div class="row">
                 <div class="col-lg-4">
                     <form action="/catalog/{{item.id}}/email" method="get" onsubmit="sendButton.disabled = true" id="emailform">
-                        <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
+                        <input type="submit" class="btn btn-default husky-button-light" name="sendButton" style="min-width: 100px;" value="Send">
                     </form>
                 </div>
+            {% endif %}
 
                 <div class="col-lg-4">
                     <h6> Owner: {{item.first_name}} </h6>

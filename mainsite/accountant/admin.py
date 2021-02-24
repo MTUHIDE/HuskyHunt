@@ -1,20 +1,111 @@
-# from django.contrib import admin
-# from django.contrib.auth.admin import UserAdmin
-# from django.contrib.auth.models import User
-# from .models import Account
+from django.contrib import admin
+from accountant.models import user_profile
+from datetime import datetime, timedelta
+import pytz
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from catalog.models import CatalogItem
 
-# # Register your models here.
-# class AccountInline(admin.StackedInline):
-#     model = Account
+def archiveAllUserPosts(user):
+	items = CatalogItem.objects.filter(archived='False', username=user.user)
+	for item in items:
+		item.archived=True
+		item.save()
 
-# class AccountAdmin(UserAdmin):
-#     inlines = (AccountInline,)
-# #     list_display = ('username', 'email', 'last_login')
-# #     fieldsets = [
-# #         (None,     {'fields': ['username', 'first_name', 'last_name', 'email', 'street_address', 'city', 'zipcode', 'common_destination_zipcode', 'picture', 'bio']}),
-# #         ('Permissions',  {'fields': ['password', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined']}),
-# #     ]
-# #     search_fields = ['username', 'email']
+@admin.register(user_profile)
+class user_profileAdmin(admin.ModelAdmin):
+	name = 'test'
+	actions = ['timeout_user_seven', 'timeout_user_thirty', 'ban_user']
 
-# admin.site.unregister(User)
-# admin.site.register(User, AccountAdmin)
+	def timeout_user_seven(self, request, queryset):
+		# Reset points, timeout user(s) for 7 days
+		queryset.update(points=0)
+		banned_untilDateTime = (datetime.now() + timedelta(days=7)).astimezone(pytz.timezone('UTC'))
+		queryset.update(banned_until = banned_untilDateTime)
+
+		# Send emails
+		for user in queryset:
+			archiveAllUserPosts(user)
+
+			#The body of the email
+			message = ('Your account on HuskyHunt has been suspended for seven days.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
+
+			#The email that this message is sent from
+			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
+			to_email = user.user.email
+
+			email = EmailMessage(
+		    	'Account Suspended', # subject
+		        message, #body
+		        from_email, # from_email
+		        [to_email],  # to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
+		        )
+			email.send();
+
+
+	def timeout_user_thirty(self, request, queryset):
+		# Reset points, timeout user(s) for 30 days
+		queryset.update(points=0)
+		banned_untilDateTime = (datetime.now() + timedelta(days=30)).astimezone(pytz.timezone('UTC'))
+		queryset.update(banned_until = banned_untilDateTime)
+
+		# Send emails
+		for user in queryset:
+			archiveAllUserPosts(user)
+
+			#The body of the email
+			message = ('Your account on HuskyHunt has been suspended for thirty days.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
+
+			#The email that this message is sent from
+			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
+			to_email = user.user.email
+
+			email = EmailMessage(
+		    	'Account Suspended', # subject
+		        message, #body
+		        from_email, # from_email
+		        [to_email],  # to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
+		        )
+			email.send();
+
+	def ban_user(self, request, queryset):
+		# Reset points, ban user(s) for 1000 days
+		queryset.update(points=0)
+		banned_untilDateTime = (datetime.now() + timedelta(days=1000)).astimezone(pytz.timezone('UTC'))
+		queryset.update(banned_until = banned_untilDateTime)
+
+		# Send emails
+		for user in queryset:
+			archiveAllUserPosts(user)
+
+			#The body of the email
+			message = ('Your account on HuskyHunt has been banned.\n'
+				+ 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
+
+			#The email that this message is sent from
+			from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
+			to_email = user.user.email
+
+			email = EmailMessage(
+		    	'Account Banned', # subject
+		        message, #body
+		        from_email, # from_email
+		        [to_email],  # to email
+		        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
+		        )
+			email.send();
+
+	timeout_user_seven.short_description = "Timeout 7 Days"
+	timeout_user_thirty.short_description = "Timeout 30 Days"
+	ban_user.short_description = "Ban User"
+
+	def get_actions(self, request):
+		#https://stackoverflow.com/questions/34152261/remove-the-default-delete-action-in-django-admin
+		actions = super().get_actions(request)
+		if 'delete_selected' in actions:
+			del actions['delete_selected']
+		return actions;
+

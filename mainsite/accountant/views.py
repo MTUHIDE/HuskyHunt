@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import auth
-from catalog.models import CatalogItem, Category, SubCategory
+from django.contrib.auth.decorators import user_passes_test
+from catalog.models import CatalogItem, Category
 from rideSharing.models import RideItem
+from catalog.views import isUserNotBanned
 from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -22,6 +24,7 @@ from django.forms import ModelForm
 from .widgets import PreviewImageWidget
 
 from profanity_check.profanityModels import ProfFiltered_ModelForm
+from profanity_check.models import ArchivedType
 
 # The HTML Form that's submitted on the Edit Account page
 #   the ModelForm is used for data validation and automatic HTML production
@@ -47,24 +50,27 @@ class EditModelForm( ProfFiltered_ModelForm ):
 
     def clean_picture(self):
         pic = self.cleaned_data['picture']
-        if pic.size > settings.MAX_UPLOAD_SIZE:
+        if (pic != None and pic.size > settings.MAX_UPLOAD_SIZE):
             raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
             params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
         return pic
 
 # Handles both GET and POST requests for the user account edit page
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def edit(request):
     currentUser = user_profile.objects.get(user = request.user)
 
     if request.method == "POST":
-        # Check if the user clicked the 'reset' button last; if so, reset their picture
-        if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) == '1':
-            currentUser.picture = None
-
         # Validate the data submitted
         form = EditModelForm(request.POST, request.FILES, instance = currentUser, override_text = "Submit Anyway" )#, profCheck = profCheck )
+
         if form.is_valid():
+            # Check if the user clicked the 'reset' button last; if so, reset their picture
+            if request.POST.get( PreviewImageWidget.reset_check_name(None, 'picture') ) == '1':
+                currentUser.picture = None
+                currentUser.save()
+
             form.save()
             return HttpResponseRedirect(reverse('accountant:index'))
 
@@ -89,14 +95,16 @@ def logout(request):
 
 # Loads the primary account page
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def index(request):
+
     currentUser = user_profile.objects.get(user = request.user)
     template = 'accountant/index.html'
     defaultPicture = 'https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg'
 
     # load items and rides
-    my_items = CatalogItem.objects.filter(username = request.user, archived='False')
-    ride_items = RideItem.objects.filter(username = request.user, archived='False')
+    my_items = CatalogItem.objects.filter(username = request.user).filter( ArchivedType.Q_myContent )
+    ride_items = RideItem.objects.filter(username = request.user).filter( ArchivedType.Q_myContent )
     filters = Category.objects.all()
     title = 'My items'
 
@@ -111,6 +119,7 @@ def index(request):
     return render(request, template, context)
 
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def developer(request):
     current_token = Token.objects.filter(user = request.user).first()
 
@@ -119,7 +128,9 @@ def developer(request):
     })
 
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def developer_generate_token(request):
+
     current_token = Token.objects.filter(user = request.user).first()
 
     if current_token:
@@ -131,13 +142,16 @@ def developer_generate_token(request):
 
 # Used as an intermediate function to delete an item
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def deleteItem(request, pk):
+
     # delete item from database
     item = CatalogItem.objects.get(pk=pk)
 
     # delete only if this user owns the item, a precautionary measure
     if item.username == request.user:
       item.archived = "True" # archive this item
+      item.archivedType = ArchivedType.Types.ARCHIVED
       item.save()
 
 
@@ -146,13 +160,16 @@ def deleteItem(request, pk):
 
 # Used as an intermediate function to delete an item
 @login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 def deleteRide(request, pk):
+    
     # delete ride from database
     ride = RideItem.objects.get(pk=pk)
 
     # delete only if this user owns the ride, a precautionary measure
     if ride.username == request.user:
       ride.archived = "True" # archive this ride
+      ride.archivedType = ArchivedType.Types.ARCHIVED
       ride.save()
 
     # redirect to accountant page (refresh)

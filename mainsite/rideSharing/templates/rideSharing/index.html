@@ -31,9 +31,9 @@
 
 <div class="row">
   <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
-  <div class="col align-center" style="-ms-flex: 0 0 250px; flex: 0 0 250px;">
+  <div class="main-split col align-center">
     <!--Fixes the size of the side bar so it doent grow or shink. The width is 10 px less so then there margin between the start of the rides. -->
-  <div id="sidebar" style="text-align: center;background-color: black; height: 100%;width:240px; position: fixed; top: 0px; padding-top: 50px; overflow: scroll; ">
+  <div id="sidebar">
       <h1 class="my-4" style="color: #ffcd00; text-align: center;">Ride Sharing</h1>
       <div style="display: inline-block;">
 				<!--filters on sidebar-->
@@ -119,7 +119,7 @@
 
       <br>
 
-      <div id="primary_map" name="primary_map" style="height: 300px" ></div>
+      <div id="primary_map" name="primary_map" style="height: 300px; margin-right: 15px;" ></div>
 
       <br>
 
@@ -135,7 +135,7 @@
                             </div>
                         </h4>
                 </div>
-                <div class="card-footer husky-card-foot"> <!--black-->
+                <div class="card-footer" style="margin: 10px;"> <!--black-->
                     <div style="text-align: center; width: auto;">
                         <h5 class="card-text" style="color: #ffcd00;">{{ ride.first_name }}</h5>
                     </div>
@@ -200,19 +200,12 @@
                           <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
                             {% if messages %}
                               {% for message in messages %}
-                                {% if message.extra_tags == ride.pk|stringformat:"i" %}
-                                  <!--<p class="alert closebtn">{{ message }}</p>-->
-                                  {% if message.message == "Please enter a message!" %}
-                                    <div class="alert" style="background-color:#cc3333">
-                                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                      <strong>{{message}}</strong> </br> Message failed to send!
-                                    </div>
-                                  {% else %}
-                                    <div class="alert" style="background-color:#33cc33">
-                                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                      <strong>{{message}}</strong> </br> Message sent successfully!
-                                    </div>
-                                  {% endif %}
+                                {% if message.extra_tags|slice:"1:" == ride.pk|stringformat:"i" %}
+                                    {% if message.extra_tags.0 == "E" %}
+
+                                        {% include "catalog/message_response.html" %}
+
+                                    {% endif %}
                                 {% endif%}
                               {% endfor %}
                             {% endif %}
@@ -221,7 +214,7 @@
                             <div class="row">
                                 <div class="col-lg-4">
                                 <form action='/ridesharing/{{ride.id}}/email' method="GET" onsubmit="sendButton.disabled = true" id="emailform{{ride.id}}">
-                                    <input type="submit" class="btn btn-default" name="sendButton" style="background-color: #ffcd00; color: black; width: 100px; border: 1px solid black;" value="Send">
+                                    <input type="submit" class="btn btn-default husky-button-light" name="sendButton" style="min-width: 100px;" value="Send">
                                     </form>
                                 </div>
                                 <div class="col-lg-4">
@@ -232,7 +225,51 @@
                         </div>
 
                         <div class="col-lg-6">
-                            <div id="mapid_{{ride.pk}}" name="mapid" style="height: 300px" ></div>
+
+                            <div>
+                                <div id="mapid_{{ride.pk}}" name="mapid" style="height: 300px" ></div>
+                            </div>
+                            <br>
+
+                            <div class="row">
+                                <div>
+                                  <form action={% url 'rideSharing:report' ride.id %} method="GET" onsubmit="reportButton.disabled = true" id="reportForm">
+                                      <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
+                                  </form>
+                                </div>
+
+                                {% if request.user.username|stringformat:"s" == ride.username|stringformat:"s" %}
+                                <div>
+                                    {% include "catalog/delete_button.html" with target_pk=ride.pk title=ride.destination_city href_url='accountant:deleteRide' btn="light" only %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <br>
+
+                            <div class="row">
+                            {% if messages %}
+                              {% for message in messages %}
+                                {% if message.extra_tags|slice:"1:" == ride.pk|stringformat:"i" %}
+                                    {% if message.extra_tags.0 == "R" %}
+                                        {% include "catalog/message_response.html" %}
+                                    {% endif %}
+                                 {% endif %}
+                              {% endfor %}
+                            {% endif %}
+                            </div>
+                            <br>
+
+                            <div class="row">
+                                {% if ride.archivedType == "HD" %}
+                                <div>
+                                    <h4> Warning: item is hidden from other users until a moderator reviews it. </h4>
+                                </div>
+                                {% elif ride.archivedType == "RE" %}
+                                <div >
+                                    <h4> Warning: item was marked in violation of our policies and is hidden from other users. </h4>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
 
                       </div>

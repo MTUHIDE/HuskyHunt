@@ -1,6 +1,7 @@
 from django import forms
 from django.template.defaulttags import register
 from django import template
+from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
@@ -30,3 +31,14 @@ def normal_filter(dict):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+@stringfilter
+def split(string, sep):
+    # https://code.djangoproject.com/ticket/21367
+    """Return the string split by sep.
+
+    Example usage: {{ value|split:"/" }}
+    """
+    return string.split(sep)

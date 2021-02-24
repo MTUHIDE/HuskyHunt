@@ -25,6 +25,9 @@ EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
 EMAIL_PORT = env.int('EMAIL_PORT')
 
 SHOW_COMING_SOON = env.bool('SHOW_COMING_SOON', False)
+DISABLE_RIDESHARING = env.bool('DISABLE_RIDESHARING', False)
+DISABLE_CATALOG = env.bool('DISABLE_CATALOG', False)
+DISABLE_SELLING = env.bool('DISABLE_SELLING', False)
 
 DATABASES = {
     'default': env.db('DATABASE_URL', default='sqlite:///huskydb')
@@ -52,7 +55,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'accountant.pipeline.verify_scope'
+    'accountant.pipeline.verify_scope',
+    'accountant.pipeline.update_user_social_data'
 )
 
 INSTALLED_APPS = [
@@ -117,6 +121,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'mainsite.context_processors.export_covid_var'
             ],
         },
     },
@@ -171,3 +176,5 @@ LOGOUT_REDIRECT_URL = '/'
 
 #For images uploaded for items/etc
 MAX_UPLOAD_SIZE = 5242880
+
+ALLOWED_UPLOAD_IMAGES = ('jpg', 'png', 'jpeg')

@@ -12,15 +12,21 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 upload_directory = 'account/profilepics/'
 
 class user_profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    preferred_name = models.CharField(max_length=50, blank = True, null=True)
-    home_city = models.CharField(max_length=50, blank = True, null=True)
-    home_state = models.CharField(max_length=50, blank = True, null=True)
-    zipcode = models.IntegerField(blank = True, null=True)
-    picture = models.ImageField(upload_to=upload_directory, height_field=None, width_field=None, blank = True, null=True)
-    last_email = models.DateTimeField(null=True, auto_now_add=False)
-    emails_today = models.IntegerField(blank = False, null=False, default=0)
-    points = models.IntegerField(blank = False, null=False, default=0)
+    user = models.OneToOneField(User, on_delete=models.CASCADE);
+    preferred_name = models.CharField(max_length=50, blank = True, null=True);
+    home_city = models.CharField(max_length=50, blank = True, null=True);
+    home_state = models.CharField(max_length=50, blank = True, null=True);
+    zipcode = models.IntegerField(blank = True, null=True);
+    picture = models.ImageField(upload_to=upload_directory, height_field=None, width_field=None, blank = True, null=True);
+    last_email = models.DateTimeField(null=True, auto_now_add=False);
+    emails_today = models.IntegerField(blank = False, null=False, default=0);
+    last_flag = models.DateTimeField(null=True, auto_now_add=False);
+    flags_today = models.IntegerField(blank = False, null=False, default=0);
+    points = models.IntegerField(blank = False, null=False, default=0);
+    banned_until = models.DateTimeField(null=True, auto_now_add=False);
+
+    def __str__(self):
+        return self.user.username
 
 @receiver(pre_save, sender=user_profile)
 def delete_changed_photos(sender, instance, **kwargs):

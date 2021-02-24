@@ -1,5 +1,6 @@
+from PIL import Image
 from django import forms
-from catalog.models import CatalogItem, Category, SubCategory
+from catalog.models import CatalogItem, Category, CatalogItemPicture
 from django.forms import ModelForm
 from rideSharing.models import RideItem, RideCategory
 from django.forms import TextInput
@@ -13,6 +14,7 @@ from profanity_check.profanityModels import ProfFiltered_ModelForm
 
 #Defines the form to create an item
 class SellingForm( ProfFiltered_ModelForm ):
+
     class Meta:
 
         #The table that the information will go into
@@ -24,19 +26,105 @@ class SellingForm( ProfFiltered_ModelForm ):
         }
 
         #The normal input areas
-        fields = ('category', 'item_title', 'item_price', 'item_description', 'item_picture')
+        fields = ('category', 'item_title', 'item_price', 'item_description')
 
     def __init__(self, *args, **kwargs):
+        self._request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
+
 
         #Gets all the available categories for the new item
         self.fields['category'].queryset = Category.objects.all()
 
-    def clean_item_picture(self):
-        pic = self.cleaned_data['item_picture']
+    def clean(self):
+        super().clean()
+
+
+        uplPos = self._request.POST.getlist('uplPos').copy()
+        currUpl = self._request.POST.getlist('currUpl').copy()
+        cleanedPics = []
+        validationErrors = []
+        for pic in self._request.FILES.getlist('curr_picture'):
+            # please, god, deliver these unto me in source ordering
+            #  despite not mentioning this feature anywhere in your holy texts, the Django docs,
+            #   which I guess in this metaphor makes StackExchange the equivalent of rabbinic commentaries
+            try:
+                result = self._clean_a_picture(pic)
+                if result is not None:
+                    cleanedPics.append(result)
+            except forms.ValidationError as e:
+                validationErrors.append(e)
+        if len(validationErrors) > 0:
+            raise forms.ValidationError(validationErrors)
+        if len(cleanedPics) + len(currUpl) == 0:
+            raise forms.ValidationError( "At least one picture is needed!", code="empty")
+
+
+        '''
+        The loops are intertwined: uplPos is *only* for the preexisting images,
+        which are already in the database. So the loops are combined because the
+        position tracker i is updated after each step -- each loop *either*
+        pulls in an already-uploaded image, *or* makes a new CatalogItemPicture,
+        but either way the relevant position is assigned and i is incremented.
+        '''
+        self.otherPictures = self.instance.pictures
+        self.specialPictures = []
+        self.cleaned_data["pictures"] = []
+        i = 1
+        catpic = None
+        while(1):
+            if len(uplPos) > 0 and str(i) == uplPos[0]:
+                uplPos.pop(0)
+                pk = currUpl.pop(0)
+                catpic = CatalogItemPicture.objects.get(pk=pk)     #item.pictures.filter
+                self.otherPictures = self.otherPictures.exclude(pk=pk)
+                self.specialPictures.append(catpic)
+                catpic.position = i
+            elif len(cleanedPics) > 0:
+                catpic = CatalogItemPicture(picture=cleanedPics.pop(0), item=self.instance, position=i )
+            else:
+                break
+            self.cleaned_data["pictures"].append(catpic)
+            i += 1
+
+    def save(self, commit=True):
+        item = super().save(commit=False)
+
+        if item.item_price < 0:
+            item.item_price = 0
+        item.username = self._request.user
+
+        if commit:
+            item.save()
+
+            # we have to be careful about order here, because of the
+            #  unique_together constraint and sqlite doesn't allow deferred
+            for pic in self.otherPictures.all():
+                pic.delete()    # clear out taken positions
+            for pic in self.specialPictures:
+                pic.position += 2*len(self.cleaned_data["pictures"])
+                pic.save()  # move them up to guaranteed-untaken positions
+            for pic in self.specialPictures:
+                pic.position -= 2*len(self.cleaned_data["pictures"])
+                pic.save()      # move still-around ones to new positions
+            for pic in self.cleaned_data["pictures"]:
+                pic.save()      # save everything
+
+        return item
+
+    def _clean_a_picture(self, pic):
+        #pic = self.cleaned_data['curr_picture']
         if pic.size > settings.MAX_UPLOAD_SIZE:
             raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
             params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
+
+        im = Image.open(pic)
+        if im.format.lower() not in settings.ALLOWED_UPLOAD_IMAGES:
+            raise forms.ValidationError(_("Unsupported file format. Supported formats are %s."
+                                          % ", ".join(settings.ALLOWED_UPLOAD_IMAGES)))
+        # removed the below because fields *should* be marked required
+        #if pic.name == "/static/mainsite/images/imagenotfound.png":
+        #    return None        # -- uncomment if that ever changes
         return pic
 
     def clean_item_price(self):
