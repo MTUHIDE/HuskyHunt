@@ -93,7 +93,3 @@ def sendSuspendUserEmail(user, type, reason):
         reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
         )
     email.send();
-
-# def sendItemMarkedAsAcceptableEmail():
-
-# def sendRideMarkedAsAcceptableEmail():
