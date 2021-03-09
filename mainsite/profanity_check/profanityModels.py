@@ -25,6 +25,9 @@ class ProfFiltered_ModelForm( ModelForm ):
     def save(self, commit=True):
         retval = super().save(commit=False)
 
+        if not hasattr(retval, 'archived'):
+            return retval
+
         # Item has been flagged by the profanity filter.
         if self.profResult:
             # Report the item, mark it as archived, and hide it.
