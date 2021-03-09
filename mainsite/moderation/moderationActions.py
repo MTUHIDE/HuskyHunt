@@ -17,11 +17,13 @@ def remove_item(queryset, reason):
         profile.save()
 
         sendRemoveItemEmail(item, reason, should_issue_suspension(profile))
-    
 
-#def delete_item(queryset, reason):
-
-#def allow_item(queryset, reason):
+# Allows an item
+# reported=False, archived=False, type=visble
+def allow_item(queryset):
+    queryset.update(reported=False)
+    queryset.update(archived=False)
+    queryset.update(archivedType=ArchivedType.Types.VISIBLE)
 
 #def ignore_item_report(queryset):
 
