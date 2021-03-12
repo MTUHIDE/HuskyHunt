@@ -47,7 +47,7 @@ def sendApproveItemEmail(item):
     #The body of the email
     message = (
         'Hello ' + user.first_name + ',\n\n' +
-        'Your item titled ' + item.item_title + ' has been approved by a moderator.' + 
+        'Your item titled ' + item.item_title + ' has been approved by a moderator. ' + 
         'It will now be published on the HuskyHunt catalog.');
 
     message += ('\n\nFor more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu' + 
@@ -108,7 +108,7 @@ def sendApproveRideEmail(item):
     #The body of the email
     message = (
         'Hello ' + user.first_name + ',\n\n' +
-        'Your ride to ' + ride.destination_city + ' on ' + ride.date_leaving.strftime("%m/%d/%Y") + ' has been approved by a moderator.' + 
+        'Your ride to ' + ride.destination_city + ' on ' + ride.date_leaving.strftime("%m/%d/%Y") + ' has been approved by a moderator. ' + 
         'It will now be published on the HuskyHunt catalog.');
 
     message += ('\n\nFor more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu' + 
