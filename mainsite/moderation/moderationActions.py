@@ -3,6 +3,8 @@ from accountant.models import user_profile
 from profanity_check.models import ArchivedType
 from .moderationEmails import *
 import math
+from datetime import datetime, timedelta
+import pytz
 
 # Ignores a report
 # Sets reported=False
@@ -21,7 +23,10 @@ def remove_item(queryset, reason):
         profile.points = profile.points - 3
         profile.save()
 
-        sendRemoveItemEmail(item, reason, getSuspensionDuration(profile))
+        autoSuspensionDuration = __getSuspensionDuration(profile);
+        __suspend_user(user_profile.objects.filter(user = item.username), autoSuspensionDuration);
+
+        sendRemoveItemEmail(item, reason, autoSuspensionDuration)
 
 # Makes an item public
 # Sets reported=false, archived=False, type=Visible
@@ -43,9 +48,12 @@ def remove_ride(queryset, reason):
     for ride in queryset:
         profile = user_profile.objects.get(user = ride.username)
         profile.points = profile.points - 3
-        profile.save()
+        profile.save
 
-        sendRemoveRideEmail(ride, reason, getSuspensionDuration(profile))
+        autoSuspensionDuration = __getSuspensionDuration(profile);
+        __suspend_user(user_profile.objects.filter(user = item.username), autoSuspensionDuration);
+
+        sendRemoveRideEmail(ride, reason, autoSuspensionDuration)
 
 # Makes a ride public
 # Sets reported=false, archived=False, type=Visible
@@ -57,21 +65,58 @@ def make_ride_public(queryset):
     for ride in queryset:
         sendApproveRideEmail(ride)
 
+# Suspends a user for a specifed duration
+# Parameters:
+#   queryset: Queryset of user_profiles to suspend
+#   reason: The reason for the suspension (string)
+#   duration: Duration of the suspension in days
+#       greater than 31 days is a ban.
+def suspend_user(queryset, reason, duration):
+    suspensionString = suspend_user(queryset, duration)
+
+    for user in queryset:
+        if suspensionString != '':
+            sendSuspendUserEmail(user, suspensionString, reason)
+
+# Helper function to suspend users without sending an email
+def __suspend_user(queryset, duration):
+    suspensionDuration = 0;
+    suspensionString = '';
+
+    if duration <= 0:
+        suspensionString = '';
+    elif duration <= 7:
+        suspensionDuration = 7
+        suspensionString = 'seven'
+    elif duration <= 31:
+        suspensionDuration = 30
+        sespensionString = 'thirty'
+    else:
+        suspensionDuration = 1000
+        suspensionString = 'banned'
+
+    # Timeout users
+    if suspensionDuration > 0:
+        banned_untilDateTime = (datetime.now() + timedelta(days=suspensionDuration)).astimezone(pytz.timezone('UTC'))
+        queryset.update(banned_until = banned_untilDateTime)
+
+    return suspensionString
+
+
 # ------------------------------------------------------
 # TODO
-# - User suspension & ban functionality
 # - Make admin functions use our moderation actions here
 # ------------------------------------------------------
 
 # Determines if a suspension should be given
 # And if so, executes that suspension
 # Returns the duration of the suspension in days
-def getSuspensionDuration(profile):
-    if (profile.points < 20):
+def __getSuspensionDuration(profile):
+    if (profile.points < -20):
     	return math.inf
-    elif (profile.points < 10):
+    elif (profile.points < -10):
     	return 30
-    elif (profile.points < 5): 
+    elif (profile.points < -5): 
     	return 7
     else:
     	return 0
