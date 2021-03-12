@@ -4,6 +4,11 @@ from profanity_check.models import ArchivedType
 from .moderationEmails import *
 import math
 
+# Ignores a report
+# Sets reported=False
+def ignore_report(queryset):
+    queryset.update(reported=False)
+
 # Removes an item
 # Sets reported=True, archived=True, type=Removed
 def remove_item(queryset, reason):
@@ -16,22 +21,52 @@ def remove_item(queryset, reason):
         profile.points = profile.points - 3
         profile.save()
 
-        sendRemoveItemEmail(item, reason, should_issue_suspension(profile))
+        sendRemoveItemEmail(item, reason, getSuspensionDuration(profile))
 
-# Allows an item
-# reported=False, archived=False, type=visble
-def allow_item(queryset):
+# Makes an item public
+# Sets reported=false, archived=False, type=Visible
+def make_item_public(queryset):
     queryset.update(reported=False)
     queryset.update(archived=False)
     queryset.update(archivedType=ArchivedType.Types.VISIBLE)
 
-#def ignore_item_report(queryset):
+    for item in queryset:
+        sendApproveItemEmail(item)
 
+# Removes a ride
+# Sets reported=True, archived=True, type=Removed
+def remove_ride(queryset, reason):
+    queryset.update(reported=True)
+    queryset.update(archived=True)
+    queryset.update(archivedType=ArchivedType.Types.REMOVED)
+    # Decrement number of points by three
+    for ride in queryset:
+        profile = user_profile.objects.get(user = ride.username)
+        profile.points = profile.points - 3
+        profile.save()
+
+        sendRemoveRideEmail(ride, reason, getSuspensionDuration(profile))
+
+# Makes a ride public
+# Sets reported=false, archived=False, type=Visible
+def make_ride_public(queryset):
+    queryset.update(reported=False)
+    queryset.update(archived=False)
+    queryset.update(archivedType=ArchivedType.Types.VISIBLE)
+
+    for ride in queryset:
+        sendApproveRideEmail(ride)
+
+# ------------------------------------------------------
+# TODO
+# - User suspension & ban functionality
+# - Make admin functions use our moderation actions here
+# ------------------------------------------------------
 
 # Determines if a suspension should be given
 # And if so, executes that suspension
 # Returns the duration of the suspension in days
-def should_issue_suspension(profile):
+def getSuspensionDuration(profile):
     if (profile.points < 20):
     	return math.inf
     elif (profile.points < 10):
