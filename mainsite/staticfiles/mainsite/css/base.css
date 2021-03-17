@@ -206,14 +206,22 @@ th {
   border-radius: 12px !important;
 }
 
+.carousel-control-prev {
+  background-color: black;
+}
+
+.carousel-control-next {
+  background-color: black;
+}
+
 .carousel-control-prev-icon {
-  width: 40px;
-  height: 40px;
+  width: 70%;
+  height: 70%;
 }
 
 .carousel-control-next-icon {
-  width: 40px;
-  height: 40px;
+  width: 70%;
+  height: 70%;
 }
 
 .husky-button-light, .husky-button-dark:hover {
