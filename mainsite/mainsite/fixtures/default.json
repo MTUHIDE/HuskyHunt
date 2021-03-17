@@ -864,86 +864,6 @@
   }
 },
 {
-  "model": "catalog.subcategory",
-  "pk": 1,
-  "fields": {
-    "category_name": "Computer Science",
-    "subcategory_of": 1,
-    "date_created": "2018-10-30",
-    "date_updated": "2018-10-30T16:01:05.581Z"
-  }
-},
-{
-  "model": "catalog.subcategory",
-  "pk": 2,
-  "fields": {
-    "category_name": "Summer",
-    "subcategory_of": 4,
-    "date_created": "2018-10-30",
-    "date_updated": "2018-10-30T16:01:15.512Z"
-  }
-},
-{
-  "model": "catalog.subcategory",
-  "pk": 3,
-  "fields": {
-    "category_name": "Winter",
-    "subcategory_of": 4,
-    "date_created": "2018-10-30",
-    "date_updated": "2018-10-30T16:01:22.419Z"
-  }
-},
-{
-  "model": "catalog.subcategory",
-  "pk": 4,
-  "fields": {
-    "category_name": "Gaming",
-    "subcategory_of": 3,
-    "date_created": "2018-10-30",
-    "date_updated": "2018-10-30T16:01:39.679Z"
-  }
-},
-{
-  "model": "catalog.subcategory",
-  "pk": 5,
-  "fields": {
-    "category_name": "Computer",
-    "subcategory_of": 3,
-    "date_created": "2018-10-30",
-    "date_updated": "2018-10-30T16:01:56.719Z"
-  }
-},
-{
-  "model": "catalog.subcategory",
-  "pk": 6,
-  "fields": {
-    "category_name": "Math",
-    "subcategory_of": 1,
-    "date_created": "2018-10-30",
-    "date_updated": "2018-10-30T16:02:17.294Z"
-  }
-},
-{
-  "model": "catalog.subcategory",
-  "pk": 7,
-  "fields": {
-    "category_name": "Furniture",
-    "subcategory_of": 2,
-    "date_created": "2018-10-30",
-    "date_updated": "2018-10-30T16:04:37.935Z"
-  }
-},
-{
-  "model": "catalog.subcategory",
-  "pk": 8,
-  "fields": {
-    "category_name": "Device",
-    "subcategory_of": 5,
-    "date_created": "2018-10-30",
-    "date_updated": "2018-10-30T16:07:11.396Z"
-  }
-},
-{
   "model": "catalog.catalogitem",
   "pk": 12,
   "fields": {
@@ -956,8 +876,7 @@
     "views": 0,
     "archived": false,
     "reported": false,
-    "archivedType": "VI",
-    "subcategory": []
+    "archivedType": "VI"
   }
 },
 {
@@ -973,8 +892,7 @@
     "views": 0,
     "archived": false,
     "reported": false,
-    "archivedType": "VI",
-    "subcategory": []
+    "archivedType": "VI"
   }
 },
 {
@@ -990,8 +908,7 @@
     "views": 0,
     "archived": false,
     "reported": false,
-    "archivedType": "VI",
-    "subcategory": []
+    "archivedType": "VI"
   }
 },
 {
@@ -1007,8 +924,7 @@
     "views": 0,
     "archived": false,
     "reported": false,
-    "archivedType": "VI",
-    "subcategory": []
+    "archivedType": "VI"
   }
 },
 {
@@ -1024,8 +940,7 @@
     "views": 0,
     "archived": false,
     "reported": false,
-    "archivedType": "VI",
-    "subcategory": []
+    "archivedType": "VI"
   }
 },
 {
@@ -1041,8 +956,7 @@
     "views": 0,
     "archived": false,
     "reported": false,
-    "archivedType": "VI",
-    "subcategory": []
+    "archivedType": "VI"
   }
 },
 {
@@ -1058,8 +972,7 @@
     "views": 0,
     "archived": false,
     "reported": false,
-    "archivedType": "VI",
-    "subcategory": []
+    "archivedType": "VI"
   }
 },
 {

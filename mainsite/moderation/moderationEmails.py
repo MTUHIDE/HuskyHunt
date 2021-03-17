@@ -38,6 +38,35 @@ def sendRemoveItemEmail(item, reason, suspensionDuration):
         )
     email.send();
 
+# Sends an email notification to a user whose item has been approved by moderation.
+# Parameters:
+#   item: The CatalogItem being approved
+def sendApproveItemEmail(item):
+    user = User.objects.get(username = item.username)
+
+    #The body of the email
+    message = (
+        'Hello ' + user.first_name + ',\n\n' +
+        'Your item titled ' + item.item_title + ' has been approved by a moderator. ' + 
+        'It will now be published on the HuskyHunt catalog.');
+
+    message += ('\n\nFor more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu' + 
+        '\n\n\nThis is an automated message.');
+
+    #The email that this message is sent from
+    from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
+    to_email = user.email
+
+    email = EmailMessage(
+        'Item Approved By Moderator', # subject
+        message, #body
+        from_email, # from_email
+        [to_email],  # to email
+        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
+        )
+    email.send();
+
+
 # Sends an email notification to a user whose ride has been removed by moderation.
 # Parameters:
 #   ride: The RideItem being removed.
@@ -69,6 +98,35 @@ def sendRemoveRideEmail(ride, reason, suspensionDuration):
         reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
         )
     email.send();
+
+# Sends an email notification to a user whose ride has been approved by moderation.
+# Parameters:
+#   ride: The RideItem being approved
+def sendApproveRideEmail(item):
+    user = User.objects.get(username = ride.username)
+
+    #The body of the email
+    message = (
+        'Hello ' + user.first_name + ',\n\n' +
+        'Your ride to ' + ride.destination_city + ' on ' + ride.date_leaving.strftime("%m/%d/%Y") + ' has been approved by a moderator. ' + 
+        'It will now be published on the HuskyHunt catalog.');
+
+    message += ('\n\nFor more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu' + 
+        '\n\n\nThis is an automated message.');
+
+    #The email that this message is sent from
+    from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
+    to_email = user.email
+
+    email = EmailMessage(
+        'Ride Approved By Moderator', # subject
+        message, #body
+        from_email, # from_email
+        [to_email],  # to email
+        reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
+        )
+    email.send();
+
 
 # Sends an email notification to a user who is being suspended
 # Parameters:
