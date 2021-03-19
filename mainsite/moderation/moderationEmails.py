@@ -102,7 +102,7 @@ def sendRemoveRideEmail(ride, reason, suspensionDuration):
 # Sends an email notification to a user whose ride has been approved by moderation.
 # Parameters:
 #   ride: The RideItem being approved
-def sendApproveRideEmail(item):
+def sendApproveRideEmail(ride):
     user = User.objects.get(username = ride.username)
 
     #The body of the email

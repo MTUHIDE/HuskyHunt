@@ -24,7 +24,7 @@ def remove_item(queryset, reason):
         profile.save()
 
         autoSuspensionDuration = __getSuspensionDuration(profile);
-        __suspend_user(user_profile.objects.filter(user = item.username), autoSuspensionDuration);
+        __suspend_user_helper(user_profile.objects.filter(user = item.username), autoSuspensionDuration);
 
         sendRemoveItemEmail(item, reason, autoSuspensionDuration)
 
@@ -51,7 +51,7 @@ def remove_ride(queryset, reason):
         profile.save
 
         autoSuspensionDuration = __getSuspensionDuration(profile);
-        __suspend_user(user_profile.objects.filter(user = item.username), autoSuspensionDuration);
+        __suspend_user_helper(user_profile.objects.filter(user = ride.username), autoSuspensionDuration);
 
         sendRemoveRideEmail(ride, reason, autoSuspensionDuration)
 
@@ -72,14 +72,17 @@ def make_ride_public(queryset):
 #   duration: Duration of the suspension in days
 #       greater than 31 days is a ban.
 def suspend_user(queryset, reason, duration):
-    suspensionString = suspend_user(queryset, duration)
+    suspensionString = __suspend_user_helper(queryset, duration)
 
     for user in queryset:
         if suspensionString != '':
-            sendSuspendUserEmail(user, suspensionString, reason)
+            if isinstance(user, user_profile):
+                sendSuspendUserEmail(user.user, suspensionString, reason)
+            else:
+                sendSuspendUserEmail(user, suspensionString, reason)
 
 # Helper function to suspend users without sending an email
-def __suspend_user(queryset, duration):
+def __suspend_user_helper(queryset, duration):
     suspensionDuration = 0;
     suspensionString = '';
 
@@ -101,12 +104,6 @@ def __suspend_user(queryset, duration):
         queryset.update(banned_until = banned_untilDateTime)
 
     return suspensionString
-
-
-# ------------------------------------------------------
-# TODO
-# - Make admin functions use our moderation actions here
-# ------------------------------------------------------
 
 # Determines if a suspension should be given
 # And if so, executes that suspension
