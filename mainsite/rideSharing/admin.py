@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import RideItem, RideCategory
 from accountant.models import user_profile
 from profanity_check.models import ArchivedType
+from moderation.moderationActions import *
 
 
 class RideCategoryAdmin(admin.ModelAdmin):
@@ -20,24 +21,15 @@ class RideItemAdmin(admin.ModelAdmin):
     actions = ['remove_post', 'allow_post', 'ignore_post', ]
 
     def remove_post(self, request, queryset):
-        queryset.update(reported=False)
-        queryset.update(archived=True)
-        queryset.update(archivedType=ArchivedType.Types.REMOVED)
-        # Decrement number of points by three
-        for item in queryset:
-            profile = user_profile.objects.get(user = item.username)
-            profile.points = profile.points - 3
-            profile.save()
+        remove_ride(queryset, '[ADMIN MANUAL REMOVAL]')
     remove_post.short_description = "Remove offending posts"
 
     def allow_post(self, request, queryset):
-        queryset.update(reported=False)
-        queryset.update(archived=False)
-        queryset.update(archivedType=ArchivedType.Types.VISIBLE)
+        make_ride_public(queryset)
     allow_post.short_description = "Unarchive: mark acceptable"
 
     def ignore_post(self, request, queryset):
-        queryset.update(reported=False)
+        ignore_report(queryset)
     ignore_post.short_description = "Ignore report (don't use this, unarchive instead)"
 
     def get_actions(self, request):
