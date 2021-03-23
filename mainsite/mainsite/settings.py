@@ -25,6 +25,9 @@ EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
 EMAIL_PORT = env.int('EMAIL_PORT')
 
 SHOW_COMING_SOON = env.bool('SHOW_COMING_SOON', False)
+DISABLE_RIDESHARING = env.bool('DISABLE_RIDESHARING', False)
+DISABLE_CATALOG = env.bool('DISABLE_CATALOG', False)
+DISABLE_SELLING = env.bool('DISABLE_SELLING', False)
 
 DATABASES = {
     'default': env.db('DATABASE_URL', default='sqlite:///huskydb')

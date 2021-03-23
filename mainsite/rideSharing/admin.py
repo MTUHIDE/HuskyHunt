@@ -18,7 +18,7 @@ class RideItemAdmin(admin.ModelAdmin):
     	'destination_state', 'date_leaving', 'return_date' )
     list_filter = ['reported', 'archived', 'date_added', 'username']
     # search_fields ?
-    actions = ['remove_post', 'allow_post', 'ignore_post', ]
+    actions = ['remove_post', 'allow_post', 'ignore_post', 'delete_post']
 
     def remove_post(self, request, queryset):
         remove_ride(queryset, '[ADMIN MANUAL REMOVAL]')

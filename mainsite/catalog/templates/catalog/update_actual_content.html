@@ -71,19 +71,32 @@
      </div>
    </div>
 
-
-
-<!-- Used to prevent multiple submits -->
 <script type="text/javascript">
-  function ItemInputSubmit() {
+// Used to prevent multiple submits
+function ItemInputSubmit() {
     document.getElementById("btnRealButton").disabled = true;
     return true;
-  }
+}
+
+// Prevent negative numbers
+var number = document.getElementById('id_item_price');
+if (number) {
+    // Prevent spinner arrows from allowing negative
+    number.setAttribute("min", "0");
+    // Prevent user from entering negative sign
+    number.onkeydown = function(e) {
+        if(!((e.keyCode > 95 && e.keyCode < 106)
+        || (e.keyCode > 47 && e.keyCode < 58) 
+        || e.keyCode == 8)) {
+            return false;
+        }
+    }
+}
 </script>
 
 <!-- TODO: Fix -->
 <template id="pic_upload_template">
-    <div class="row row_center">
+    <div class="row row_center mb-4">
         <div class="col-md-2">
             <div style="height: 100%;  display: flex; flex-direction: column; flex-flow: column noWrap; justify-content: space-between; align-items: stretch;">
                 <button type="button" class="up_button husky-button-dark" style="display: block;">Move Up</button>
@@ -97,6 +110,7 @@
         </div>
 
         <div class="col-md-6">
+            <br>
             <label for="id_curr_picture">Picture:
                 <input type="file" name="curr_picture" accept="image/*" required="" class="form-control">
             </label>
@@ -108,9 +122,11 @@
     <div class="row">
         <br> {% comment %} Yeah this should be done w/ CSS. #TODO {% endcomment %}
         <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;"><button class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button></div>
-        </div>
+            <div class="col-md-4">
+                <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;">
+                    <button class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button>
+                </div>
+            </div>
         <div class="col-md-4"></div>
         <br>
     </div>
@@ -191,7 +207,6 @@
         let myInt = getRowFromButton_I(this);
 
         let clone_i = constructIntermediate();
-        myInt.parentElement.insertBefore(clone_i, myInt);
         let clone_r = constructRow();
         myInt.parentElement.insertBefore(clone_r, myInt);
     };

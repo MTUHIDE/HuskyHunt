@@ -165,3 +165,20 @@ def getStartByRequest(ride_item):
 
         lon, lat = (req.json())["features"][0]["center"]
         return lat, lon;
+
+# Disabled Page
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+def disabled(request):
+    
+    #The CSS for this function can be found here
+    template = 'selling/disabled.html'
+    #The title for the webpage
+    title = "Forbidden"
+
+    #Packages the information to be displayed into context
+    context = {
+        'title': title
+    }
+
+    return render(request, template, context)
