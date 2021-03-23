@@ -9,6 +9,8 @@ from profanity_check.models import ArchivedType
 from rideSharing.models import RideItem
 from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from datetime import datetime, timedelta
+from moderation.moderationActions import make_item_public, ignore_report, remove_item, suspend_user, make_ride_public, remove_ride
+
 import pytz
 import math
 # Create your views here.
@@ -170,7 +172,7 @@ def index(request):
 
     reported_profile_list = None
 
-    #a_profile = reported_profiles.first()
+    #a_ride = reported_rides.first()
 
     my_filter = request.GET.get('filter')
 
@@ -200,87 +202,78 @@ def index(request):
 @login_required(login_url='/')
 @user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 @user_passes_test(isUserModerator, login_url='/', redirect_field_name='/')
-def approve(request, pk):
+def approve_item(request, pk):
+    # Set the template and title.
     template = 'moderation/index.html'
     title = 'MTU Moderation'
 
+    # Get the item from the database.
     try:
-        user = CatalogItem.objects.get(pk=pk)
+        item = CatalogItem.objects.filter(pk=pk)
     except CatalogItem.DoesNotExist:
         return HttpResponseRedirect(reverse('moderation:index'))
 
-    ban_user(queryset=user)
+    # If the item was only reported, just ignore the report.
+    if not item.first().archived:
+        ignore_report(item)
+        return index(request)
+
+    # Make the item public.
+    make_item_public(item)
+
+    # Refresh the page.
+    return index(request)
+
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserModerator, login_url='/', redirect_field_name='/')
+def deny_item(request, pk):
+
+    item = CatalogItem.objects.filter(pk=pk)
+
+    #TODO: Specify denial reason.
+    remove_item(item, request.GET.get('reason'))
 
     return index(request)
 
 @login_required(login_url='/')
 @user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 @user_passes_test(isUserModerator, login_url='/', redirect_field_name='/')
-def deny(request, pk):
-    template = 'moderation/index.html'
-    title = 'MTU Moderation'
+def approve_ride(request, pk):
+    ride = RideItem.objects.filter(pk=pk)
 
-    try:
-        item = CatalogItem.objects.get(pk=pk)
-    except CatalogItem.DoesNotExist:
-        return HttpResponseRedirect(reverse('moderation:index'))
+    # If the ride was only reported, just ignore the report.
+    if not ride.first().archived:
+        ignore_report(ride)
+        return index(request)
 
-    item.reported = True
-    item.archived = True
-    item.archivedType=ArchivedType.Types.REMOVED
+    # Make the item public.
+    make_ride_public(ride)
 
-    profile = user_profile.objects.get(user = item.username)
-    profile.points = profile.points - 3
-    profile.save()
+    # Refresh the page.
+    return index(request)
 
-    item.save()
+@login_required(login_url='/')
+@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
+@user_passes_test(isUserModerator, login_url='/', redirect_field_name='/')
+def deny_ride(request, pk):
 
-    context = {
-        'title': title,
-    }
+    ride = RideItem.objects.filter(pk=pk)
+
+    remove_ride(ride, request.GET.get('reason'))
 
     return index(request)
+
 
 @login_required(login_url='/')
 @user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
 @user_passes_test(isUserModerator, login_url='/', redirect_field_name='/')
 def ban(request, pk):
-    template = 'moderation/index.html'
-    title = 'MTU Moderation'
 
-    try:
-        users = user_profile.objects.filter(pk=pk)
-    except CatalogItem.DoesNotExist:
-        return HttpResponseRedirect(reverse('moderation:index'))
-
-    # Reset points, ban user(s) for 1000 days
-    users.update(points=0)
-    banned_untilDateTime = (datetime.now() + timedelta(days=1000)).astimezone(pytz.timezone('UTC'))
-    users.update(banned_until = banned_untilDateTime)
-
-    # Send emails
-    for user in users:
-        archiveAllUserPosts(user)
-
-        #The body of the email
-        message = ('Your account on HuskyHunt has been banned.\n'
-            + 'For more information, contact the HuskyHunt team at huskyhunt-l@mtu.edu\n\nThis is an automated message.')
-
-        #The email that this message is sent from
-        from_email = 'Admin via HuskyHunt <admin@huskyhunt.com>'
-        to_email = user.user.email
-
-        email = EmailMessage(
-            'Account Banned', # subject
-            message, #body
-            from_email, # from_email
-            [to_email],  # to email
-            reply_to=['huskyhunt-l@mtu.edu'],  # reply to email
-            )
-        email.send();
-
-    context = {
-        'title': title,
-    }
+    user = user_profile.objects.filter(pk=pk)
+    reason = request.GET.get('banReason')
+    duration = int(request.GET.get('banDuration'))
+    
+    suspend_user(user, reason, duration)
 
     return index(request)
