@@ -26,7 +26,7 @@
                 <label>Username:</label><label>{{item.username}}</label><br/>
                 <label>Points:</label><label>{{reported_profiles|getPointsFromUserDict:item.username_id }}</label><br/>
                 <label>Flags Today:</label><label>{{reported_profiles|getFlagsFromUserDict:item.username_id }}</label><br/>
-                <button class="btn btn-outline-danger" onclick="window.location.href='/moderation/{{item.username_id}}/ban'">Ban</button>
+                <button class="btn btn-outline-danger" onclick="openBanModal({{item.username_id}}, '{{item.username}}')">Ban</button>
               </div>
               <div class="d-inline-block">
                 <div id="pic_carousel_{{item.id}}" class="carousel slide" style="max-width:200px;" data-interval="false" >
@@ -62,9 +62,50 @@
               </div>
               </div>
               <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1 text-right">
+                <button class="btn btn-outline-warning mb-3" type="button" onclick="window.location.href='/moderation/item/{{item.id}}/approve'" >Approve</button>
+                <br/>
+                <button class="btn btn-outline-danger" type="button" onclick="openDenyModal('item', {{item.id}}, '{{item.username}}')" >Deny</button>
+              </div>
+            </div>
+          </div>
+          <script type="text/javascript">
+            $(document).ready(function(){
+    		      $('#pic_carousel_{{item.id}}').carousel();
+    	      })
+          </script>
+        {% endfor %}
+      {% endif %}
+      {% if reported_rides %}
+        {#  #}
+        {% for item in reported_rides %}
+          <div class="card h-100 husky-card mb-3">
+            <div class="row no-gutters m-3">
+              <div class="col-8 col-sm-9 col-md-10 col-lg-10 col-xl-11">
+                <div class="d-inline-block align-top mr-4">
+                  <div class="row no-gutters">
+                    <div class="col">
+                      <img src="{{reported_profiles|getPFPFromUserDict:item.username_id }}" class="rounded"/>
+                    </div>
+                  </div>
+                  <label>Username:</label><label>{{item.username}}</label><br/>
+                  <label>Points:</label><label>{{reported_profiles|getPointsFromUserDict:item.username_id }}</label><br/>
+                  <label>Flags Today:</label><label>{{reported_profiles|getFlagsFromUserDict:item.username_id }}</label><br/>
+                  <button class="btn btn-outline-danger" onclick="openBanModal({{item.username_id}}, '{{item.username}}')">Ban</button>
+                </div>
+                <div class="d-inline-block">
+                  <!--TODO: Update this.-->
+                  <div id="mapid_{{item.id}}" name="mapid" style="height: 300px; width=100%;" class="mapclass" onclick='updateMap({{item.id}})' ></div>
+                </div>
+                <div class="d-inline-block align-top ml-4">
+                  <label>To: {{item.destination_city}}, {{item.destination_state}} {{item.destination_zipcode}}</label><br/>
+                  <label>Roundtrip: {{item.round_trip|yesno:"Yes,No,Maybe"}}</label><br/>
+                  <label>Notes: {{item.notes}}</label>
+                </div>
+              </div>
+              <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1 text-right">
                 <button class="btn btn-outline-warning mb-3" type="button" onclick="window.location.href='/moderation/{{item.id}}/approve'" >Approve</button>
                 <br/>
-                <button class="btn btn-outline-danger" type="button" onclick="window.location.href='/moderation/{{item.id}}/deny'" >Deny</button>
+                <button class="btn btn-outline-danger" type="button" onclick="openDenyModal('ride', {{item.id}}, '{{item.username}}')" >Deny</button>
               </div>
             </div>
           </div>
@@ -80,10 +121,164 @@
   </div>
 
 </div>
+<div class="row no-gutters w-100" >
+  <div class="col" >
+
+  </div>
+</div>
+
+<!--Popup window for deny reason.-->
+<!-- The Modal -->
+<div class="modal" id="denyModal">
+  <div class="modal-dialog">
+    <div class="modal-content husky-card mt-2" style='background-color:#1c1c21;'>
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title" id="denyModalTitle">Deny</h4>
+        <button type="button" class="btn btn-dark" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="denyReasonTextArea">Denial Reason</label>
+            <textarea class='form-control' id="denyReasonTextArea" rows='3'></textarea>
+            <small id="denyReasonWarning" class="form-text text-danger"></small>
+            <small id="denyReasonHelp" class="form-text text-muted">This will be sent in an email to the user.</small>
+          </div>
+          <button type="button" class="btn btn-primary float-right" onclick="completeDenyModal()">Submit</button>
+        </form> 
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 <script type="text/javascript">
+  let cardType = "ride";
+  let itemId = -1;
 
+  // Called to open the deny window.
+  function openDenyModal(type, id, user)
+  {
+    $('#denyModal').modal('show');
+    $('#denyModalTitle').text("Deny " + user);
+    cardType = type;
+    itemId = id;
+  }
 
+  // Called when the user has filled out the deny window dialogue and submits.
+  function completeDenyModal()
+  {
+    // Get the reason for denial.
+    denyReason = $('#denyReasonTextArea').val();
+
+    // Check that a reason is given.
+    if(denyReason == "") {
+      // Warn the user and return.
+      $('#denyReasonWarning').text("You must supply a deny reason!");
+      return;
+    }
+
+    // Redirect to the appropriate url.
+    if(cardType == "ride") {
+      window.location.href='/moderation/ride/' + itemId + '/deny?reason=' + encodeURIComponent(denyReason);
+    }
+    else {
+      
+      window.location.href='/moderation/item/' + itemId + '/deny?reason=' + encodeURIComponent(denyReason);
+    }
+    
+  }
 </script>
+<!--End deny reason popup.-->
 
+
+<!--Ban popup-->
+<div class="modal" id="banModal">
+  <div class="modal-dialog">
+    <div class="modal-content husky-card mt-2" style='background-color:#1c1c21;'>
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title" id="banModalTitle">Ban</h4>
+        <button type="button" class="btn btn-dark" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="banReasonTextArea">Ban Reason</label>
+            <textarea class='form-control' id="banReasonTextArea" rows='3'></textarea>
+            <small id="banReasonWarning" class="form-text text-danger"></small>
+            <small id="banReasonHelp" class="form-text text-muted">This will be sent in an email to the user.</small>
+          </div>
+          <div class="form-group">
+            <label for="banDurationInput">Ban Duration</label>
+            <input type="number" class="form-control" id="banDurationInput" min="0" max="1000" />
+            <small id="banDurationWarning" class="form-text text-danger"></small>
+            <small id="banDurationHelp" class="from-text text-muted">This is how long the ban will last.</small>
+          </div>
+          <button type="button" class="btn btn-primary float-right" onclick="completeBanModal()">Submit</button>
+        </form> 
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  let userId = -1;
+
+  // Called when the user wishes to open the Ban window.
+  function openBanModal(id, user)
+  {
+    $('#banModal').modal('show');
+    $('#banModalTitle').text("Ban " + user);
+    userId = id;
+  }
+
+  // Called when the user has filled out the ban window and is ready to submit.
+  function completeBanModal()
+  {
+    // Get the ban reason.
+    banReason = $('#banReasonTextArea').val();
+
+    // Verify a ban reason is given.
+    if(banReason == "") {
+      $('#banReasonWarning').text("You must supply a ban reason!");
+      return;
+    }
+
+    // Check the ban duration.
+    banDuration = $('#banDurationInput').val();
+
+    // Verify a ban duration is given.
+    if(banDuration == "") {
+      $('#banDurationWarning').text("You must supply a ban duration!");
+      return;
+    }
+
+    // Redirect the user to the appropriate url.
+    window.location.href='/moderation/' + userId + '/ban?banReason=' + encodeURIComponent(banReason) + "&banDuration=" + encodeURIComponent(banDuration);
+
+    
+  }
+</script>
+<!--End Ban popup.-->
 {% endblock %}
