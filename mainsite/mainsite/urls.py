@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^auth/', include('social_django.urls', namespace='social')),  # <- Here
     path('auth/complete/google-oauth2/', include('accountant.urls', namespace='authsuccess')),
     path('api/', include(router.urls)),
+    path('moderation/', include('moderation.urls', namespace='moderation')),
 ]
 
 if settings.SHOW_COMING_SOON:
