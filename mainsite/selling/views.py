@@ -8,6 +8,7 @@ from catalog.views import isUserNotBanned
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from datetime import datetime
+from django.conf import settings
 
 from .forms import SellingForm
 from catalog.models import CatalogItem
@@ -131,7 +132,7 @@ def index(request):
 
 
 def getLocationByRequest(ride_item):
-        access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
+        access_token = settings.ACCESS_TOKEN
 
         destination_city = ride_item.destination_city
         destination_state = ride_item.destination_state
@@ -149,7 +150,7 @@ def getLocationByRequest(ride_item):
         return lat, lon;
 
 def getStartByRequest(ride_item):
-        access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg'
+        access_token = settings.ACCESS_TOKEN
 
         start_city = ride_item.start_city
         start_state = ride_item.start_state
