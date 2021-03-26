@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Q
 from catalog.views import isUserNotBanned
 from catalog.models import CatalogItem
 from accountant.models import user_profile
@@ -125,12 +126,14 @@ def index(request):
 
     # Query for reported items.
     reported_items = CatalogItem.objects.filter(
-        archived='True', reported='True', archivedType=ArchivedType.Types.HIDDEN
+        Q(archived='True', reported='True', archivedType=ArchivedType.Types.HIDDEN) |
+        Q(reported = 'True', archived='False', archivedType=ArchivedType.Types.VISIBLE)
     ).order_by('-date_added')
 
     # Query for reported rides.
     reported_rides = RideItem.objects.filter(
-        archived='True', reported='True', archivedType=ArchivedType.Types.REMOVED
+        Q(archived='True', reported='True', archivedType=ArchivedType.Types.REMOVED) |
+        Q(reported = 'True', archived='False', archivedType=ArchivedType.Types.VISIBLE)
     ).order_by('-date_added')
 
     #TODO: Remove this

@@ -20,7 +20,7 @@
               <div class="d-inline-block align-top mr-4">
                 <div class="row no-gutters">
                   <div class="col">
-                    <img src="{{reported_profiles|getPFPFromUserDict:item.username_id }}" class="rounded"/>
+                    <img src="{{reported_profiles|getPFPFromUserDict:item.username_id }}" class="rounded" style="height:200px;"/>
                   </div>
                 </div>
                 <label>Username:</label><label>{{item.username}}</label><br/>
@@ -84,7 +84,7 @@
                 <div class="d-inline-block align-top mr-4">
                   <div class="row no-gutters">
                     <div class="col">
-                      <img src="{{reported_profiles|getPFPFromUserDict:item.username_id }}" class="rounded"/>
+                      <img src="{{reported_profiles|getPFPFromUserDict:item.username_id }}" class="rounded" style="height:200px;"/>
                     </div>
                   </div>
                   <label>Username:</label><label>{{item.username}}</label><br/>
@@ -105,7 +105,7 @@
                 </div>
               </div>
               <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1 text-right">
-                <button class="btn btn-outline-warning mb-3" type="button" onclick="window.location.href='/moderation/{{item.id}}/approve'" >Approve</button>
+                <button class="btn btn-outline-warning mb-3" type="button" onclick="window.location.href='/moderation/ride/{{item.id}}/approve'" >Approve</button>
                 <br/>
                 <button class="btn btn-outline-danger" type="button" onclick="openDenyModal('ride', {{item.id}}, '{{item.username}}')" >Deny</button>
               </div>
