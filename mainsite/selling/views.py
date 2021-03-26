@@ -127,6 +127,7 @@ def index(request):
         'too_many_items': too_many_items,
         'too_many_rides': too_many_rides,
         'manual_review': manual_review,
+        'access_token': settings.ACCESS_TOKEN
     }
     return render(request, template, context)
 
