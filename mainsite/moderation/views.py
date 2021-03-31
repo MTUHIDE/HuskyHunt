@@ -234,7 +234,7 @@ def deny_item(request, pk):
 
     item = CatalogItem.objects.filter(pk=pk)
 
-    #TODO: Specify denial reason.
+    # Remove the item.
     remove_item(item, request.GET.get('reason'))
 
     return index(request)

@@ -7,6 +7,7 @@ class ModerationActionType:
     class Types(models.TextChoices):
         APPROVE = 'AP', _('Approve')
         DENY = 'DY', _('Deny')
+        REMOVE = 'RM', _('Remove')
 
     def moderationActionTypeField():
         return models.CharField(
@@ -23,7 +24,7 @@ class ItemModerationActions(models.Model):
   reason = models.CharField(max_length=255, blank = False, null=False);
 
   def __str__(self):
-        return self.item_id
+        return str(self.item_id.id)
 
 class RideModerationActions(models.Model):
   ride_id = models.ForeignKey(RideItem, on_delete=models.CASCADE)
@@ -32,4 +33,4 @@ class RideModerationActions(models.Model):
   reason = models.CharField(max_length=255, blank = False, null=False);
 
   def __str__(self):
-        return self.ride_id
+        return str(self.ride_id.id)
