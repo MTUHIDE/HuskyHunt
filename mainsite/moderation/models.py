@@ -33,12 +33,3 @@ class RideModerationActions(models.Model):
 
   def __str__(self):
         return self.ride_id
-
-
-
-
-
-
-    #def myContent(archivedType):
-    #    return (archivedType == ArchivedType.Types.HIDDEN) or (archivedType == ArchivedType.Types.REMOVED)
-    #Q_myContent = Q(archived='False') | Q(archivedType=Types.HIDDEN) | Q(archivedType=Types.REMOVED)
