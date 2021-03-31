@@ -1,6 +1,7 @@
 from catalog.models import CatalogItem, Category
 from accountant.models import user_profile
 from profanity_check.models import ArchivedType
+from .models import ItemModerationActions, RideModerationActions, ModerationActionType
 from .moderationEmails import *
 import math
 from datetime import datetime, timedelta
@@ -28,6 +29,9 @@ def remove_item(queryset, reason):
 
         sendRemoveItemEmail(item, reason, autoSuspensionDuration)
 
+        moderationReport = ItemModerationActions(item_id=item, action_type=ModerationActionType.Types.REMOVE, reason=reason)
+        moderationReport.save()
+
 # Makes an item public
 # Sets reported=false, archived=False, type=Visible
 def make_item_public(queryset):
@@ -54,6 +58,9 @@ def remove_ride(queryset, reason):
         __suspend_user_helper(user_profile.objects.filter(user = ride.username), autoSuspensionDuration);
 
         sendRemoveRideEmail(ride, reason, autoSuspensionDuration)
+
+        moderationReport = RideModerationActions(ride_id=ride, action_type=ModerationActionType.Types.REMOVE, reason=reason)
+        moderationReport.save()
 
 # Makes a ride public
 # Sets reported=false, archived=False, type=Visible
