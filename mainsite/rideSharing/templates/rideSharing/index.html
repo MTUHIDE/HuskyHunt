@@ -229,12 +229,12 @@
                             <div>
                                 <div id="mapid_{{ride.pk}}" name="mapid" style="height: 300px" ></div>
                             </div>
-                            <br>
+                            <p>*Exact route may vary.</p>
 
                             <div class="row">
                                 <div>
                                   <form action={% url 'rideSharing:report' ride.id %} method="GET" onsubmit="reportButton.disabled = true" id="reportForm">
-                                      <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Post">
+                                      <input type="submit" class="btn btn-default husky-button-light" style="width: 150px;" name="reportButton" value="Report Ride">
                                   </form>
                                 </div>
 
@@ -310,7 +310,7 @@
 
 <script>
 
-var access_token = 'pk.eyJ1IjoiY3NjaHdhIiwiYSI6ImNrNjZxdmdsYTE5MGUzbG84Z3N1dTUzOTcifQ.DKfzMNPM0XvkkwJ-nLQDHg';
+var access_token = "{{access_token}}";
 
 function createMap(element_id) {
     // Create the map object for each ticket

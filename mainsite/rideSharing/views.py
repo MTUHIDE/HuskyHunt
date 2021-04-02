@@ -15,6 +15,7 @@ from accountant.models import user_profile
 from django.contrib.auth.decorators import login_required
 from catalog.views import report_functionality, email_functionality
 from catalog.views import isUserNotBanned
+from django.conf import settings
 
 #This small helper function adds an appropriate error message to the page
 #param: context - the context that's normally passed to the catalog pages;
@@ -85,15 +86,15 @@ def ride(request, pk):
     paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
     page = request.GET.get('page') # Gets the page number to display
     rides = paginator.get_page(page)
-
-
+    
     #Packages the information to be displayed into context
     context = {
         'title': title,
         'rides': rides,
         'search': 0,
         'filters': filters,
-        'failed_search': failed_search
+        'failed_search': failed_search,
+        'access_token': settings.ACCESS_TOKEN
     }
 
     #Displays all the items from the database with repect to the CSS template
@@ -201,6 +202,7 @@ def search(request):
       'search': request.GET['search'],
       'search_split': search_split,
       'filters': filters,
+      'access_token': settings.ACCESS_TOKEN
     }
 
     addErrorOnEmpty(context, 'SearchFail')
@@ -252,7 +254,8 @@ def filter(request):
       'title': title,
       'filters': filters,
       'curFilters': curFilters,
-      'failed_search': failed_search
+      'failed_search': failed_search,
+      'access_token': settings.ACCESS_TOKEN
     }
 
     addErrorOnEmpty(context, 'FilterFail')

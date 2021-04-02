@@ -18,6 +18,8 @@ DEBUG = env('DEBUG')
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('GOOGLE_OAUTH2_SECRET')
 
+ACCESS_TOKEN = env('ACCESS_TOKEN')
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_HOST_USER = env('EMAIL_USER')
@@ -78,6 +80,7 @@ INSTALLED_APPS = [
     'selling',
     'social_django',
     'profanity_check',
+    'moderation',
 ]
 
 REST_FRAMEWORK = {
