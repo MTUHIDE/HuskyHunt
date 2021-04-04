@@ -181,3 +181,5 @@ LOGOUT_REDIRECT_URL = '/'
 MAX_UPLOAD_SIZE = 5242880
 
 ALLOWED_UPLOAD_IMAGES = ('jpg', 'png', 'jpeg')
+
+ADMINS = [('HuskyHunt Admin', 'admin@huskyhunt.com')]
