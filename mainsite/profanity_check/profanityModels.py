@@ -25,6 +25,10 @@ class ProfFiltered_ModelForm( ModelForm ):
     def save(self, commit=True):
         retval = super().save(commit=False)
 
+        if hasattr(retval, 'home_city'):
+            retval.save();
+            return retval;
+
         if not hasattr(retval, 'archived'):
             return retval
 
