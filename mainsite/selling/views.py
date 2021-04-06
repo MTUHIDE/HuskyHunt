@@ -31,7 +31,7 @@ def index(request):
     catalog_form = None
     ride_form = None
 
-    MANUAL_REVIEW_THRESHOLD = 2 # This is the number of points a user must exceed to be "verified" and not require manual review by default
+    MANUAL_REVIEW_THRESHOLD = -1 # This is the number of points a user must exceed to be "verified" and not require manual review by default
     MAX_RIDE_ITEMS = 5
     MAX_CTLG_ITEMS = 10
     num_ride_items = RideItem.objects.filter(Q(username = request.user) & ArchivedType.Q_myContent).count()

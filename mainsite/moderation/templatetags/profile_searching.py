@@ -8,6 +8,8 @@ def getPFPFromUserDict(value, index):
         return value[index].picture.url
     except ValueError:
         return "https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg"
+    except KeyError:
+    	return "https://www.mtu.edu/mtu_resources/images/download-central/social-media/gold-name.jpg"
 
 
 @register.filter
