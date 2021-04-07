@@ -157,7 +157,7 @@ def index(request):
     reported_ids = set()
 
     print(reported_items)
-    print(report_rides)
+    print(reported_rides)
 
     # Find all reported ids.
     for item in reported_items:
