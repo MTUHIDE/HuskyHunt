@@ -182,4 +182,5 @@ MAX_UPLOAD_SIZE = 5242880
 
 ALLOWED_UPLOAD_IMAGES = ('jpg', 'png', 'jpeg')
 
-ADMINS = [('HuskyHunt Admin', 'admin@huskyhunt.com')]
+ADMINS = [('HuskyHunt Admin', 'huskyhunt-l@mtu.edu')]
+SERVER_EMAIL = 'admin@huskyhunt.com'
