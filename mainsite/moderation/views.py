@@ -169,7 +169,7 @@ def index(request):
     print(reported_ids)
 
     # Get all reported profiles.
-    reported_profile_list = list(user_profile.objects.filter(pk__in=reported_ids))
+    reported_profile_list = list(user_profile.objects.filter(user_id__in=reported_ids))
 
     reported_ids = None
 
