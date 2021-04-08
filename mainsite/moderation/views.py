@@ -156,17 +156,12 @@ def index(request):
     reported_rides = page['results'][1]
     reported_ids = set()
 
-    print(reported_items)
-    print(reported_rides)
-
     # Find all reported ids.
     for item in reported_items:
         reported_ids.add(item.username_id)
 
     for ride in reported_rides:
         reported_ids.add(ride.username_id)
-
-    print(reported_ids)
 
     # Get all reported profiles.
     reported_profile_list = list(user_profile.objects.filter(user_id__in=reported_ids))
@@ -176,10 +171,7 @@ def index(request):
     reported_profiles = {}
 
     for profile in reported_profile_list:
-        reported_profiles[profile.id] = profile
-
-    print(reported_profile_list)
-    print(reported_profiles)
+        reported_profiles[profile.user_id] = profile
 
     reported_profile_list = None
 
