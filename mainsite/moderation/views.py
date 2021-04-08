@@ -176,7 +176,7 @@ def index(request):
     reported_profiles = {}
 
     for profile in reported_profile_list:
-        reported_profiles[profile.id] = profile
+        reported_profiles[profile.user_id] = profile
 
     print(reported_profile_list)
     print(reported_profiles)
