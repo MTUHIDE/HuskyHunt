@@ -195,7 +195,7 @@
                           <h6>Driver: {{ ride.first_name }}</h6>
                           <h6>Spots: {{ ride.spots }}</h6>
                           <h6>Price: ${{ ride.price }}</h6>
-                          <h6>Notes: {{ ride.notes }}</h6>
+                          <h6>Notes: {{ ride.notes|linebreaks }}</h6>
                           <br>
                           <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
                             {% if messages %}
