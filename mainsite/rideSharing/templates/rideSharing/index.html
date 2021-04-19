@@ -195,7 +195,7 @@
                           <h6>Driver: {{ ride.first_name }}</h6>
                           <h6>Spots: {{ ride.spots }}</h6>
                           <h6>Price: ${{ ride.price }}</h6>
-                          <h6>Notes: {{ ride.notes }}</h6>
+                          <h6>Notes: {{ ride.notes|linebreaks }}</h6>
                           <br>
                           <div class="form-group" style="position: relative; bottom: 0px; width: 100%;">
                             {% if messages %}
@@ -315,9 +315,9 @@ var access_token = "{{access_token}}";
 function createMap(element_id) {
     // Create the map object for each ticket
     let mymap = L.map(element_id, {
-        renderer: L.svg({ padding: 2 }),
-        maxBounds: L.latLngBounds([77.078784, -156.796875],[0, -35.156250]),
-        minZoom: 3
+        // renderer: L.svg({ padding: 2 }),
+        // maxBounds: L.latLngBounds(starting_coord,ending_coord),
+        // minZoom: 3
     } );
     let tileLayuer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -331,7 +331,7 @@ function createMap(element_id) {
 };
 
 var primaryMap = createMap("primary_map");
-primaryMap.setView([43.597778, -84.7675], 6);
+primaryMap.setView([43.597778, -84.7675], 5);
 
 {% if search and not failed_search %}
     let polylatlngs = [];
@@ -360,21 +360,10 @@ primaryMap.setView([43.597778, -84.7675], 6);
 {% endif %}
 
 var map_dict = {}
+var zoom_dict = {};
 
 document.getElementsByName("mapid").forEach(element => {
-
-    let mymap = createMap(element.id);
-
-    // Store so the object can be accessed later; set size/location on modal being brought up
     let ride_pk = element.id.substring(6);
-    map_dict[ride_pk] = mymap;
-
-    $('#rideModal' + ride_pk).on("shown.bs.modal", function() {
-        let mymap = map_dict[ride_pk];
-        mymap.setView([46.6275, -85.0375 ], 6);
-        // Incidentally, the above bit is why I needed access to jQuery; apparently the event's not exposed in vanilla
-        mymap.invalidateSize();
-    });
 
     // starting location
     let start_city = document.getElementById('startSpan_destination_city_' + ride_pk).innerHTML.trim();
@@ -392,6 +381,50 @@ document.getElementsByName("mapid").forEach(element => {
 
     let starting_coord = [ start_coordinates_lat, start_coordinates_lon];
     let ending_coord = [destination_coordinates_lat, destination_coordinates_lon];
+
+    let avg_lat = (parseFloat(start_coordinates_lat) + parseFloat(destination_coordinates_lat)) / 2.0;
+    let avg_long = (parseFloat(start_coordinates_lon) + parseFloat(destination_coordinates_lon)) / 2.0;
+
+    let mymap = createMap(element.id);
+
+    // Store so the object can be accessed later; set size/location on modal being brought up
+    map_dict[ride_pk] = mymap;
+
+    let zoom = 6;
+
+    if (Math.abs(parseFloat(start_coordinates_lat)-parseFloat(destination_coordinates_lat)) <= 0.06
+        || Math.abs(parseFloat(start_coordinates_lon)-parseFloat(destination_coordinates_lon)) <= 0.06) {
+        // local
+        zoom = 12;
+    }
+    else if (Math.abs(parseFloat(start_coordinates_lat)-parseFloat(destination_coordinates_lat)) <= 1.5
+        || Math.abs(parseFloat(start_coordinates_lon)-parseFloat(destination_coordinates_lon)) <= 1.5) {
+        // Upper peninsula
+        zoom = 6;
+    } else if (Math.abs(parseFloat(start_coordinates_lat)-parseFloat(destination_coordinates_lat)) <= 4.5
+        || Math.abs(parseFloat(start_coordinates_lon)-parseFloat(destination_coordinates_lon)) <= 4.5) {
+        // Midwest
+        zoom = 5;
+    }
+    else if (Math.abs(parseFloat(start_coordinates_lat)-parseFloat(destination_coordinates_lat)) <= 7
+        || Math.abs(parseFloat(start_coordinates_lon)-parseFloat(destination_coordinates_lon)) <= 7) {
+        // Most reasonable drives
+        zoom = 4;
+    }
+    else {
+        // USA
+        zoom = 3;
+    } 
+
+    zoom_dict[ride_pk] = zoom;
+
+    $('#rideModal' + ride_pk).on("shown.bs.modal", function() {
+        let mymap = map_dict[ride_pk];
+
+        mymap.setView([avg_lat, avg_long], zoom_dict[ride_pk]);
+        // Incidentally, the above bit is why I needed access to jQuery; apparently the event's not exposed in vanilla
+        mymap.invalidateSize();
+    });
 
     // Add a marker to the primary_map for the ending location
 
