@@ -144,7 +144,7 @@
                     <div class="card-body">
                         <h3 class="card-title">
                             <div class="text-overflow">
-                                <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title }}</a>
+                                <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title|truncatechars:21 }}</a>
                             </div>
                         </h3>
                         <h4>${{ item.item_price }}</h4>
