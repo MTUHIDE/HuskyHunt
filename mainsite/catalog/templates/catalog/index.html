@@ -163,8 +163,8 @@
     </div>
 
 {% if items.paginator.num_pages > 1 %}
-    <div class="pagination">
-        <span class="step-links">
+    <div class="pagination" style="display: flex; justify-content: center; align-items: center;">
+        <span class="step-links" style="margin-top: 20px;">
             {% if items.has_previous %}
             <button type="button" class="btn btn-link husky-button-light" style="display: inline-block; margin-left: 20px;" onclick="appendToUrl('page', '1')">
             &laquo; first
@@ -175,7 +175,7 @@
             </button>
             {% endif %}
 
-            <span class="current" style="color: #FFCD00; padding: 20px;">
+            <span style="padding: 20px; color: var(--main-itemTitle-color);">
                 Page {{ items.number }} of {{ items.paginator.num_pages }}.
             </span>
 
