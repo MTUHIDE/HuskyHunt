@@ -211,6 +211,7 @@ th {
   background-color: var(--main-border-color);
   border-color: var(--main-btn-bg-color);
 }
+
 .modal-conent{
   background-color: var(--dark);
 }

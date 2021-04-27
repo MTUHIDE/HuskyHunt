@@ -70,7 +70,7 @@ def search(request):
 
     #Uses the filter function to get the data of the searched items
     recent_items = CatalogItem.objects.filter(
-        Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search']),
+        Q(item_description__lower__contains=request.GET['search'].lower()) | Q(item_title__lower__contains=request.GET['search'].lower()),
         archived='False'
     )[:500]
 
