@@ -14,7 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = ['date_added', 'date_updated']
     
 class CatalogItemAdmin(admin.ModelAdmin):
-    list_display = ('reported', 'archived', 'archivedType', 'pk', 'date_added', 'username', 'item_price', 'item_title', 'item_description')
+    list_display = ('pk', 'reported', 'archived', 'archivedType', 'date_added', 'username', 'item_price', 'item_title', 'item_description')
     list_filter = ['reported', 'archived', 'category', 'date_added', 'username']
     search_fields = ['item_title', 'item_description']
     actions = ['remove_post', 'allow_post', 'ignore_post', 'delete_post']
