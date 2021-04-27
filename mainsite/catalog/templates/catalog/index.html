@@ -191,9 +191,21 @@
             {% endif %}
         </span>
     </div>
-    <br>
 {% endif %}
+
+      <div class="row" style="display: flex; justify-content: center; align-items: center;">
+        <div class="disclaimer">
+          <p>
+            <br/>For issues regarding the website, please contact our development team at <a href="mailto:huskyhunt-l@mtu.edu">huskyhunt-l@mtu.edu</a>
+          </p>
+        </div>
+     </div>
   </div>
+
+  {% block devContact %}
+  <!-- Empty block, want to center and not use default bottom -->
+  {% endblock %}
+
 </div>
 
 {% endblock %}
