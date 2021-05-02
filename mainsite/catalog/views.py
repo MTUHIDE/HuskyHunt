@@ -53,47 +53,6 @@ def addErrorOnEmpty(context, type, num_items = 4):
         return True
     return False
 
-
-#This function takes information from the search textfield
-#param: request - array variable that is passed around the website, kinda like global variables
-#returns: all items in the database that contain the string
-#from the search text field in their name or description
-@login_required(login_url='/')
-@user_passes_test(isUserNotBanned, login_url='/', redirect_field_name='/')
-def search(request):
-
-    #The CSS code for this function can be found here
-    template = 'catalog/index.html'
-
-    #The title for the webpage
-    title = 'MTU Catalog'
-
-    #Uses the filter function to get the data of the searched items
-    recent_items = CatalogItem.objects.filter(
-        Q(item_description__icontains=request.GET['search']) | Q(item_title__icontains=request.GET['search']),
-        archived='False'
-    )[:500]
-
-    #Gets all the different categories
-    filters = Category.objects.all()
-
-    # Paginator will show 16 items per page
-    paginator = Paginator(recent_items, 16, allow_empty_first_page=True)
-    page = request.GET.get('page') # Gets the page number to display
-    items = paginator.get_page(page)
-
-    #Puts all the data to be displayed into context
-    context = {
-      'items': items,
-      'title': title,
-      'filters': filters,
-    }
-
-    addErrorOnEmpty(context, 'SearchFail')
-
-    #Returns a render function call to display onto the website for the user to see
-    return render(request, template, context)
-
 #This function gets all the items from the database
 #and displays them to the screen sorted by most recently added
 #param: request - array variable that is passed around the website, kinda like global variables
@@ -362,7 +321,7 @@ def filter(request):
     # Apply search if it exists
     if (request.GET.getlist('search')):
         recent_items = CatalogItem.objects.filter(
-            Q(item_description__contains=request.GET['search']) | Q(item_title__contains=request.GET['search']),
+            Q(item_description__icontains=request.GET['search']) | Q(item_title__icontains=request.GET['search']),
             archived='False'
         ).order_by('-date_added')
 
