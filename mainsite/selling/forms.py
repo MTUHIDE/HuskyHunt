@@ -8,12 +8,14 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 import math
 from datetime import date, timedelta
-
 from profanity_check.profanityModels import ProfFiltered_ModelForm
+from io import BytesIO
+from django.core.files import File
+
 
 
 #Defines the form to create an item
-class SellingForm( ProfFiltered_ModelForm ):
+class SellingForm(ProfFiltered_ModelForm):
 
     class Meta:
 
@@ -113,19 +115,27 @@ class SellingForm( ProfFiltered_ModelForm ):
         return item
 
     def _clean_a_picture(self, pic):
-        #pic = self.cleaned_data['curr_picture']
-        if pic.size > settings.MAX_UPLOAD_SIZE:
-            raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
-            params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
-
         im = Image.open(pic)
         if im.format.lower() not in settings.ALLOWED_UPLOAD_IMAGES:
             raise forms.ValidationError(_("Unsupported file format. Supported formats are %s."
                                           % ", ".join(settings.ALLOWED_UPLOAD_IMAGES)))
-        # removed the below because fields *should* be marked required
-        #if pic.name == "/static/mainsite/images/imagenotfound.png":
-        #    return None        # -- uncomment if that ever changes
-        return pic
+
+        # create a BytesIO object
+        im_io = BytesIO() 
+        # save image to BytesIO object
+        try:
+            im.save(im_io, 'JPEG', quality=60) 
+        except OSError:
+            raise forms.ValidationError (_("There was a problem compressing your image! Please try a different format"))
+        
+        # create a django-friendly Files object
+        new_image = File(im_io, name=pic.name)
+
+        if new_image.size > settings.MAX_UPLOAD_SIZE:
+            raise forms.ValidationError(_('Filesize is too large and image could not be automatically downsized: Please use a smaller or lower-resolution image. Maximum file size is: %(max_size).1f %(type)s'),
+            params={'max_size': 1024**(math.log(settings.MAX_UPLOAD_SIZE, 1024)%1), 'type': ["B", "KB", "MB", "GB", "TB"][int(math.floor(math.log(settings.MAX_UPLOAD_SIZE, 1024)))] }, code='toolarge')
+
+        return new_image
 
     def clean_item_price(self):
         price = self.cleaned_data['item_price']
