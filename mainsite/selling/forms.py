@@ -123,7 +123,11 @@ class SellingForm(ProfFiltered_ModelForm):
         # create a BytesIO object
         im_io = BytesIO() 
         # save image to BytesIO object
-        im.save(im_io, 'JPEG', quality=60) 
+        try:
+            im.save(im_io, 'JPEG', quality=60) 
+        except OSError:
+            raise forms.ValidationError (_("There was a problem compressing your image! Please try a different format"))
+        
         # create a django-friendly Files object
         new_image = File(im_io, name=pic.name)
 
