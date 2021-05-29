@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<title>Forbidden</title>
+	<style>
+	  body { text-align: center; padding: 150px; }
+	  .h1Class { font-size: 50px; }
+	  .bodyClass { font: 20px Helvetica, sans-serif; color: #333; }
+	  article { display: block; text-align: left; width: 650px; margin: 0 auto; }
+	  .aClass { color: #dc8100; text-decoration: none; }
+	  .aClass:hover { color: #333; text-decoration: none; }
+	</style>
+
+	<article class=bodyClass>
+	    <h1 class="h1Class">Oops! You don't have access to view that page.</h1>
+	    <div>
+	        <p>Sorry about that. If you need to, you can always <a class="aClass" href="mailto:huskyhunt-l@mtu.edu">contact us.</a></p>
+	        <p>&mdash; The HuskyHunt Development Team</p>
+	    </div>
+	</article>
+
+{% endblock %}
