@@ -2,7 +2,7 @@ from django_cron import CronJobBase, Schedule
 from catalog.models import CatalogItem
 from datetime import date, timedelta
 from django.utils import timezone
-from profanity_check import ArchivedType
+from profanity_check.models import ArchivedType
 
 # Used to archive items that are old
 class archiveOldItems(CronJobBase):
@@ -23,9 +23,9 @@ class archiveOldItems(CronJobBase):
 
         # For each item, set it to archived
         for item in archive_items:
-        	item.archived = "True"
+            item.archived = "True"
             item.archivedType = ArchivedType.Types.ARCHIVED
-        	item.save()
+            item.save()
 
 # Used to delete old archived items
 class deleteOldItems(CronJobBase):
