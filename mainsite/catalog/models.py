@@ -77,10 +77,10 @@ class CatalogItem(models.Model):
     #An integer identifying the item
     views = models.IntegerField(default=0)
 
-    # If the ride has been archived or not
+    # If the item has been archived or not
     archived = models.BooleanField(default=False)
 
-    # If the ride is currently reported (flagged to be reviewed) or not
+    # If the item is currently reported (flagged to be reviewed) or not
     reported = models.BooleanField(default=False)
 
     # VIsible, HiDden, REmoved, or ARchived
