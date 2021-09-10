@@ -143,10 +143,14 @@
                     <a href="\catalog\{{item.id}}"><img class="product-icon" src="{% if item.item_picture is not None %}{{item.item_picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" alt=""></a>
                     <div class="card-body">
                         <h3 class="card-title">
+                          <div class="custom-tooltip">
                             <div class="text-overflow">
                                 <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title|truncatechars:21 }}</a>
                             </div>
+                            <span class="custom-tooltiptext">{{item.item_title}}</span>
+                          </div>
                         </h3>
+
                         <h4>${{ item.item_price }}</h4>
                         <h6>Seller: {{ item.first_name }}</h6>
                         <!--
