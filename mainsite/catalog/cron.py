@@ -13,19 +13,25 @@ class archiveOldItems(CronJobBase):
 
     def do(self):
         today = timezone.now()
-        archive_time = today - timezone.timedelta(weeks=4)  # Considered to be archived 4 weeks before today
+        archive_time = today - timezone.timedelta(weeks=6)  # Considered to be archived 6 weeks before today
 
         # Get the items that left before today
         archive_items = CatalogItem.objects.filter(
-            archived=ArchivedType.Q_myContent,
+            archived='False',
+            archivedType='VI',
             date_added__lte=archive_time
         )
 
+        message = "Archived the following items: "
+
         # For each item, set it to archived
         for item in archive_items:
-            item.archived = "True"
+            item.archived = 'True'
             item.archivedType = ArchivedType.Types.ARCHIVED
             item.save()
+            message += "'" + item.item_title + "', "
+
+        return message;
 
 # Used to delete old archived items
 class deleteOldItems(CronJobBase):
@@ -44,5 +50,13 @@ class deleteOldItems(CronJobBase):
             date_added__lte=delete_time
         )
 
+        message = "Deleted the following items: "
+
+        # For each item, set it to archived
+        for item in delete_items:
+            message += "'" + item.item_title + "', "
+
         # Delete these old items
         delete_items.delete()
+
+        return message

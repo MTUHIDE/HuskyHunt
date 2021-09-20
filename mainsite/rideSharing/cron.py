@@ -17,7 +17,8 @@ class ArchiveRides(CronJobBase):
 
         # Considered archived after the ride has left
         archive_rides = RideItem.objects.filter(
-            archived=ArchivedType.Q_myContent,
+            archived='False',
+            archivedType='VI',
             date_leaving__lte=today
         )
 
@@ -26,13 +27,15 @@ class ArchiveRides(CronJobBase):
             ride.archived = "True"
             ride.archivedType = ArchivedType.Types.ARCHIVED
             ride.save()
+        
+        return "Archived " + str(len(archive_rides)) + " rides that left on " + str(today)
 
 # Used to delete old archived rides
 class deleteOldRides(CronJobBase):
     RUN_AT_TIMES = ['04:00'] # Run at 4am
 
     schedule = Schedule(run_at_times=RUN_AT_TIMES)
-    code = 'catalog.deleteOldRides'    # a unique code
+    code = 'rideSharing.deleteOldRides'    # a unique code
 
     def do(self):
         today = timezone.now()
@@ -44,5 +47,9 @@ class deleteOldRides(CronJobBase):
             date_leaving__lte=delete_time
         )
 
+        message = "Deleted " + str(len(delete_rides)) + " rides"
+
         # Delete these old rides
         delete_rides.delete()
+
+        return message
