@@ -13,11 +13,32 @@
 
         <div class="row">
             {% if item.item_picture is None %}
-            <img class="img-end" src="{% static 'mainsite/images/imagenotfound.png' %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+            <img class="img-end" src="{% static 'mainsite/images/imagenotfound.png' %}" class="img-fluid" alt="" style="height: 500px;width: 500px; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
             {% else %}
-
+ 
             {% comment %} https://getbootstrap.com/docs/4.0/components/carousel/ {% endcomment %}
             <div id="pic_carousel" class="carousel slide" data-interval="false">
+            
+            <% if item.pictures.count == 1 %>
+                <style>
+                    .carousel-control-prev {
+                        display:block;
+                        visibility:hidden;
+                    }
+
+                    .carousel-control-next {
+                        display:block;
+                        visibility:hidden;
+                    }
+                </style>
+            <% endif %>
+
+            <style>
+                .carousel-inner {
+                    height: 500px;
+                    width: 500px;   
+                }
+            </style>
 
               <ol class="carousel-indicators">
               {% for picEl in item.pictures.all %}
@@ -28,7 +49,7 @@
               <div class="carousel-inner">
               {% for picEl in item.pictures.all %}
                 <div class="carousel-item{% if forloop.first %} active{% endif %}" >
-                    <img class="d-block w-100" src="{% if picEl is not None and picEl.picture is not None %}{{picEl.picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+                    <img class="d-block w-100" src="{% if picEl is not None and picEl.picture is not None %}{{picEl.picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" class="img-fluid" alt="" style="height: 500px;width: 500px; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
                 </div>
               {% endfor %}
               </div>
