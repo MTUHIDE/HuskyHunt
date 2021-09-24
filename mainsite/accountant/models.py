@@ -6,17 +6,26 @@ from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
-# Create your models here.
+from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
 
 upload_directory = 'account/profilepics/'
+
+def validate_zip(value) :
+    try:
+        int(value)
+    except ValueError:
+        raise ValidationError(
+            ('%(value)s is not a valid zip'),
+            params={'value': value},
+        )
 
 class user_profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE);
     preferred_name = models.CharField(max_length=50, blank = True, null=True);
     home_city = models.CharField(max_length=50, blank = True, null=True);
     home_state = models.CharField(max_length=50, blank = True, null=True);
-    zipcode = models.IntegerField(blank = True, null=True);
+    zipcode = models.CharField(blank = True, null=True, max_length=5, validators=[validate_zip, MinLengthValidator(5)]);
     picture = models.ImageField(upload_to=upload_directory, height_field=None, width_field=None, blank = True, null=True);
     last_email = models.DateTimeField(null=True, auto_now_add=False);
     emails_today = models.IntegerField(blank = False, null=False, default=0);
