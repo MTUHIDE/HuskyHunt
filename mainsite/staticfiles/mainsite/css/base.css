@@ -206,34 +206,6 @@ th {
   border-radius: 12px !important;
 }
 
-.carousel-control-prev {
-  background-color: transparent;
-}
-
-.carousel-control-next {
-  background-color: transparent;
-}
-
-.carousel-indicators {
-  background-color: black;
-  background-size: auto;
-}
-
-.w-100 {
-  max-width: 100%;
-  width: 500px!important;
-}
-
-.carousel-control-prev-icon {
-  width: 40px;
-  height: 40px;
-}
-
-.carousel-control-next-icon {
-  width: 40px;
-  height: 40px;
-}
-
 .husky-button-light, .husky-button-dark:hover {
   color: var(--main-btn-bg-color);
   background-color: var(--main-border-color);
