@@ -73,7 +73,7 @@
 
               <ol class="carousel-indicators">
               {% for picEl in item.pictures.all %}
-                <li data-target="#pic_carouselIndicators" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %} ></li>
+                <li data-target="#pic_carousel" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %} ></li>
               {% endfor %}
               </ol>
 
