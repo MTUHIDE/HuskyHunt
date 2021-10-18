@@ -13,22 +13,72 @@
 
         <div class="row">
             {% if item.item_picture is None %}
-            <img class="img-end" src="{% static 'mainsite/images/imagenotfound.png' %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+            <img class="img-end" src="{% static 'mainsite/images/imagenotfound.png' %}" class="img-fluid" alt="" style="height: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
             {% else %}
-
+ 
             {% comment %} https://getbootstrap.com/docs/4.0/components/carousel/ {% endcomment %}
             <div id="pic_carousel" class="carousel slide" data-interval="false">
+                
+            <style>
+            
+                .carousel-control-next-icon,
+                .carousel-control-prev-icon {
+                width: 40px;
+                height: 40px;
+                }
+            
+                .carousel-control-next,
+                .carousel-control-prev {
+                    background-color: black;
+                    overflow: hidden;
+                    border-radius: 10px;
+                    height: 80px;
+                    margin: auto 0;
+                }
+
+                .carousel-indicators {
+                    background-color: #000000e6;
+                    overflow: hidden;
+                    height: 10px;
+                    border-radius: 4px;
+                    width: fit-content;
+                    border-top: groove;
+                    border-top-color: black;
+                    margin: 0 auto;
+                }
+
+                .carousel-indicators li {
+                    height: 4px;
+                }
+
+                .w-100 {
+                    max-width: 100%;
+                    width: 500px!important;
+                }
+            
+            </style>
+
+            {% if item.pictures.count == 1 %}
+                <style>
+                    .carousel-control-prev,
+                    .carousel-control-next,
+                    .carousel-indicators {
+                        display:block;
+                        visibility:hidden;
+                    }
+                </style>
+            {% endif %}
 
               <ol class="carousel-indicators">
               {% for picEl in item.pictures.all %}
-                <li data-target="#pic_carouselIndicators" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %} ></li>
+                <li data-target="#pic_carousel" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %} ></li>
               {% endfor %}
               </ol>
 
               <div class="carousel-inner">
               {% for picEl in item.pictures.all %}
                 <div class="carousel-item{% if forloop.first %} active{% endif %}" >
-                    <img class="d-block w-100" src="{% if picEl is not None and picEl.picture is not None %}{{picEl.picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" class="img-fluid" alt="" style="height: 75%;width: 100%; max-width: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
+                    <img class="d-block w-100" src="{% if picEl is not None and picEl.picture is not None %}{{picEl.picture.url}}{% else %}{% static 'mainsite/images/imagenotfound.png' %}{% endif %}" class="img-fluid" alt="" style="height: 500px; border: 5px solid black; border-radius: 15px; object-fit: contain;">
                 </div>
               {% endfor %}
               </div>
