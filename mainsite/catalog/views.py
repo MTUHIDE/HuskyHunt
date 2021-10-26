@@ -386,8 +386,14 @@ def update(request, pk):
         catalog_form = SellingForm(request.POST, request.FILES, instance=item, request=request)
 
         if catalog_form.is_valid():
-            catalog_form.save()
-
+            catalog_item = catalog_form.save(commit=False)
+            
+            catalog_item.archived = True
+            catalog_item.archivedType = ArchivedType.Types.HIDDEN
+            catalog_item.reported = True
+            
+            catalog_item.save()
+                        
             return HttpResponseRedirect('/catalog/' + str(pk))
         else:
             return render(request, template, {
