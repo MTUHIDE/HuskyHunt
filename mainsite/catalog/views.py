@@ -399,7 +399,6 @@ def update(request, pk):
                 catalog_item.reported = True
             
             catalog_item.save()
-            catalog_item.save()
                         
             return HttpResponseRedirect('/catalog/' + str(pk))
         else:
