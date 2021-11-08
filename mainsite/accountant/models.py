@@ -86,6 +86,7 @@ class user_profile(models.Model):
     flags_today = models.IntegerField(blank = False, null=False, default=0);
     points = models.IntegerField(blank = False, null=False, default=0);
     banned_until = models.DateTimeField(null=True, auto_now_add=False);
+    digest = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.username
