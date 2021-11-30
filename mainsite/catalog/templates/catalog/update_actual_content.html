@@ -124,7 +124,7 @@ if (number) {
         <div class="col-md-4"></div>
             <div class="col-md-4">
                 <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;">
-                    <button class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button>
+                    <button id="addbtn" class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button>
                 </div>
             </div>
         <div class="col-md-4"></div>
@@ -186,6 +186,11 @@ if (number) {
 
     function delete_func() {
         let myRow = getRowFromButton_3(this);
+        console.log(myRow.parentNode.childElementCount);
+        if (myRow.parentNode.childElementCount < 3) {
+            // remove 'another' text on add picture btn
+            document.getElementById('addbtn').innerText = "Add Picture";
+        }
         myRow.parentNode.removeChild(myRow);
     };
 
@@ -205,6 +210,10 @@ if (number) {
         let clone_i = constructIntermediate();
         let clone_r = constructRow();
         myInt.parentElement.insertBefore(clone_r, myInt);
+        if (myInt.parentNode.childElementCount > 1) {
+            // add 'another' text on add picture btn
+            document.getElementById('addbtn').innerText = "Add Another Picture";
+        }
     };
 
     function input_func() {
@@ -242,6 +251,11 @@ if (number) {
     {% endfor %}
         clone = constructIntermediate();
         table.appendChild(clone);
+        console.dir(table);
+        if (table.childElementCount > 1) {
+            // add 'another' text on add picture btn
+            document.getElementById('addbtn').innerText = "Add Another Picture";
+        }
     };
 
     function submitInterceptor() {
