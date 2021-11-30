@@ -124,7 +124,7 @@ if (number) {
         <div class="col-md-4"></div>
             <div class="col-md-4">
                 <div style="width: 100%; padding-top: 20px; padding-bottom: 20px;">
-                    <button class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button>
+                    <button id="addbtn" class="add_button husky-button-dark" style="display: block; width: 100%; ">Add Picture</button>
                 </div>
             </div>
         <div class="col-md-4"></div>
@@ -177,30 +177,31 @@ if (number) {
 
     function up_func() {
         let myRow = getRowFromButton_3(this);
-        let interm = myRow.previousElementSibling;
-        let prev = myRow.previousElementSibling.previousElementSibling;
+        let prev = myRow.previousElementSibling;
         if(prev == null) return;
 
         let parent = myRow.parentElement;
-        parent.insertBefore(prev, myRow);
-        parent.insertBefore(myRow, interm);
+        parent.insertBefore(myRow, prev);
     };
 
     function delete_func() {
         let myRow = getRowFromButton_3(this);
-        myRow.parentNode.removeChild(myRow.previousElementSibling);    // remove the intermediate
+        console.log(myRow.parentNode.childElementCount);
+        if (myRow.parentNode.childElementCount < 3) {
+            // remove 'another' text on add picture btn
+            document.getElementById('addbtn').innerText = "Add Picture";
+        }
         myRow.parentNode.removeChild(myRow);
     };
 
     function down_func() {
         let myRow = getRowFromButton_3(this);
-        let interm = myRow.nextElementSibling;
-        let next = myRow.nextElementSibling.nextElementSibling;
-        if( next == null) return;
+        let next = myRow.nextElementSibling;
+        let afterNext = myRow.nextElementSibling.nextElementSibling;    // checks if last row was add picture button
+        if( afterNext == null) return;
 
         let parent = myRow.parentElement;
-        parent.insertBefore(myRow, next);
-        parent.insertBefore(next, interm);
+        parent.insertBefore(next, myRow);
     };
 
     function add_func() {
@@ -209,6 +210,10 @@ if (number) {
         let clone_i = constructIntermediate();
         let clone_r = constructRow();
         myInt.parentElement.insertBefore(clone_r, myInt);
+        if (myInt.parentNode.childElementCount > 1) {
+            // add 'another' text on add picture btn
+            document.getElementById('addbtn').innerText = "Add Another Picture";
+        }
     };
 
     function input_func() {
@@ -224,8 +229,7 @@ if (number) {
 
     function reset() {
         table.innerHTML = '';
-        let clone = constructIntermediate();
-        table.appendChild(clone);
+        let clone = null;
         let theimg = null; let sscui_clone = null; let imgp = null;
     {% for pic in catalog_form.instance.pictures.all %}
 
@@ -244,18 +248,23 @@ if (number) {
         clone.appendChild(sscui_clone);
 
         table.appendChild(clone);
+    {% endfor %}
         clone = constructIntermediate();
         table.appendChild(clone);
-    {% endfor %}
+        console.dir(table);
+        if (table.childElementCount > 1) {
+            // add 'another' text on add picture btn
+            document.getElementById('addbtn').innerText = "Add Another Picture";
+        }
     };
 
     function submitInterceptor() {
-        for(let i = 1; i < table.children.length; i += 2) {
+        for(let i = 0; i < table.children.length; i++) {
             let myRow = table.children[i];
             let special = myRow.querySelector("input[name='currUpl']");
             if( special != null) {
                 let cupth_clone = cupth.content.cloneNode(true);
-                cupth_clone.firstElementChild.value = (i-1)/2+1;
+                cupth_clone.firstElementChild.value = i + 1;
                 special.parentNode.insertBefore(cupth_clone, special);
             }
         }
