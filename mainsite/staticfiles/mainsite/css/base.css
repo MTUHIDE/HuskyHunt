@@ -306,6 +306,7 @@ body:not(.covid-warning-disabled) .rona-disabled.link {
 .custom-tooltip {
   position: relative;
   display: inline-block;
+  max-width: 100%;
 }
 
 /* Tooltip text */
