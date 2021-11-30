@@ -142,6 +142,8 @@ def report_functionality(request, pk, item):
         time_remaining = timedelta(hours=24) - (datetime.now().astimezone(pytz.timezone('UTC')) - last_flag)
         messages.error(request, 'You can only report 5 posts per day! Please wait ' + strfdelta(time_remaining, "{hours} hours and {minutes} minutes."), extra_tags=extra_tags)
     
+    elif item.protected:
+        messages.error(request, 'Item protected from reports!', extra_tags=extra_tags)
     else:
         # Set the reported to true
         item.reported = "True" # Report this item
@@ -386,8 +388,21 @@ def update(request, pk):
         catalog_form = SellingForm(request.POST, request.FILES, instance=item, request=request)
 
         if catalog_form.is_valid():
-            catalog_form.save()
 
+            manual_review = False
+            if (user_profile.objects.get(user=request.user).points <= -1):
+                manual_review = True
+            
+            catalog_item = catalog_form.save()
+            
+            if (manual_review):
+                catalog_item.archived = True
+                catalog_item.archivedType = ArchivedType.Types.HIDDEN
+                catalog_item.reported = True
+            
+            catalog_item.protected = False
+            catalog_item.save()
+                        
             return HttpResponseRedirect('/catalog/' + str(pk))
         else:
             return render(request, template, {

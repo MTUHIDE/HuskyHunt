@@ -83,6 +83,9 @@ class CatalogItem(models.Model):
     # If the item is currently reported (flagged to be reviewed) or not
     reported = models.BooleanField(default=False)
 
+    # If the item is protected from reports or not
+    protected = models.BooleanField(default=False)
+
     # VIsible, HiDden, REmoved, or ARchived
     archivedType = ArchivedType.archivedTypeField()
 

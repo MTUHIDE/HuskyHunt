@@ -145,7 +145,7 @@
                         <h3 class="card-title">
                           <div class="custom-tooltip">
                             <div class="text-overflow">
-                                <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title|truncatechars:21 }}</a>
+                                <a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title }}</a>
                             </div>
                             <span class="custom-tooltiptext">{{item.item_title}}</span>
                           </div>
@@ -158,11 +158,21 @@
                             <p class="card-text">{{ item.item_description }}</p>
                         </div>
                     -->
+                    </div>
                 </div>
-
             </div>
-        </div>
         {% endfor %}
+          <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 justify-content-center catalog-item-wrap" style="visibility: hidden; height: 0px;">
+                <div class="card h-100 husky-card">
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <div class="text-overflow">
+                                <a id="itemTitle">xxxxxxxxxxxxxxxxxxxx</a>
+                            </div>
+                        </h3>
+                    </div>
+                </div>
+            </div>
         {% endif %}
     </div>
 
