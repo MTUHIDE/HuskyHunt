@@ -1,0 +1,16 @@
+<!DOCTPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Weekly Digest</title>
+</head>
+<body>
+	<h1>Hello {{user.user.first_name}}</h1>
+	{% for item in items %}
+		<a id="itemTitle" href="\catalog\{{item.id}}">{{ item.item_title }}</a>
+		<h4>${{ item.item_price }}</h4>
+        <h6>Seller: {{ item.first_name }}</h6>
+    {% endfor %}
+</body>
+</html>
