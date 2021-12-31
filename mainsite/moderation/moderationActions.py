@@ -11,6 +11,7 @@ import pytz
 # Sets reported=False
 def ignore_report(queryset):
     queryset.update(reported=False)
+    queryset.update(protected=True)
 
 # Removes an item
 # Sets reported=True, archived=True, type=Removed
