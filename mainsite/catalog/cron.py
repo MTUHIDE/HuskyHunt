@@ -65,24 +65,6 @@ class digestEmail(CronJobBase):
             )
             allMessages.append(email)
 
-        # for user in users:
-            # emailBody = (
-            #     'hello ' + user.user.first_name + ',\n\n' +
-            #     'We thought you would like to know about recent items you might have missed!\n'
-            # );
-
-            # for item in latestItems:
-            #     emailBody += item.item_title + '\n'
-
-            # email = (
-            #     'HuskyHunt Weekly Digest', # subject
-            #     emailBody, #body
-            #     'Admin via HuskyHunt <admin@huskyhunt.com>', # from_email
-            #     [user.user.email]  # to email
-            #     )
-            
-            # allMessages.append(email)
-
         successfullySent = send_mass_html_mail(tuple(allMessages), fail_silently=False)
 
         message = "Successfully sent " + str(successfullySent) + " emails out of " + str(len(allMessages));
