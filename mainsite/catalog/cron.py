@@ -50,6 +50,9 @@ class digestEmail(CronJobBase):
             date_added__gte=lastWeek
         )
 
+        if latestItems.count() == 0:
+            return "No new items to include in weekly email!";
+
         users = user_profile.objects.filter(digest = True);
         allMessages = list(());
 

@@ -32,10 +32,13 @@ from profanity_check.models import ArchivedType
 class EditModelForm( ProfFiltered_ModelForm ):
     class Meta:
         model = user_profile
-        fields = ['preferred_name', 'home_city', 'home_state', 'zipcode', 'picture', 'digest']
+        fields = ['preferred_name', 'home_city', 'home_state', 'zipcode', 'digest', 'picture']
         widgets = {
             #'bio': Textarea(attrs={'rows': 5}),
             'picture': PreviewImageWidget()
+        }
+        labels = {
+            "digest": "Email Digest"
         }
 
     def clean_preferred_name(self):
