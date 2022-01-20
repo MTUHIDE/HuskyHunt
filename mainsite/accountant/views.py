@@ -32,7 +32,7 @@ from profanity_check.models import ArchivedType
 class EditModelForm( ProfFiltered_ModelForm ):
     class Meta:
         model = user_profile
-        fields = ['preferred_name', 'home_city', 'home_state', 'zipcode', 'picture']
+        fields = ['preferred_name', 'home_city', 'home_state', 'zipcode', 'picture', 'digest']
         widgets = {
             #'bio': Textarea(attrs={'rows': 5}),
             'picture': PreviewImageWidget()
