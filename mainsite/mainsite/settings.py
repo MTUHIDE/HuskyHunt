@@ -108,7 +108,8 @@ CRON_CLASSES = [
 	"rideSharing.cron.ArchiveRides",
     "rideSharing.cron.deleteOldRides",
     "catalog.cron.archiveOldItems",
-    "catalog.cron.deleteOldItems"
+    "catalog.cron.deleteOldItems",
+    "catalog.cron.digestEmail",
 ]
 
 ROOT_URLCONF = 'mainsite.urls'

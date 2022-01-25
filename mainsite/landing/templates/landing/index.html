@@ -74,8 +74,13 @@
                     <div class="desc">
                         HuskyHunt allows you to sell your used stuff, as well as carpool services, to the Michigan Tech community.
                         <br>
-                        <br> Use your MTU account to sign in:</div>
-                    <a href="{% url 'social:begin' 'google-oauth2' %}"><img class="login-btn" src="/static/mainsite/gauth.png"></a>
+                        <br> Use your MTU account to sign in:
+                    </div>
+                    {% if request.GET.next %}
+                        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.GET.next }}"><img class="login-btn"src="/static/mainsite/gauth.png"></a>
+                    {% else %}
+                        <a href="{% url 'social:begin' 'google-oauth2' %}"><img class="login-btn" src="/static/mainsite/gauth.png"></a>
+                    {% endif %}
                     <div class="row justify-content-md-center">
                         <div class="col-auto text-center" style="color: #ff0000;">
                             {% if messages %} <br>There was an error:<br> {% for message in messages %}
