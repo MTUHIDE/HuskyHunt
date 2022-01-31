@@ -1,6 +1,7 @@
 from django.apps import AppConfig
 
-#Define the catalog app
+
+# Define the catalog app
 class CatalogConfig(AppConfig):
-    #Name of the app
+    # Name of the app
     name = 'catalog'
