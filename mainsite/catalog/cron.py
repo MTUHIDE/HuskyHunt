@@ -11,7 +11,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None, 
+
+def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None,
                         connection=None):
     """
     Given a datatuple of (subject, text_content, html_content, from_email,
@@ -32,12 +33,13 @@ def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None
         messages.append(message)
     return connection.send_messages(messages)
 
+
 # Sends a weekly email with new posts for the week
 class digestEmail(CronJobBase):
-    RUN_EVERY_MINS = 10080; # Run every 7 days
+    RUN_EVERY_MINS = 10080  # Run every 7 days
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
-    code = 'catalog.digestEmail'    # a unique code
+    code = 'catalog.digestEmail'  # a unique code
 
     def do(self):
         today = timezone.now()
@@ -51,35 +53,35 @@ class digestEmail(CronJobBase):
         )
 
         if latestItems.count() == 0:
-            return "No new items to include in weekly email!";
+            return "No new items to include in weekly email!"
 
-        users = user_profile.objects.filter(digest = True);
-        allMessages = list(());
+        users = user_profile.objects.filter(digest=True)
+        allMessages = list(())
 
         for user in users:
-            html_content = render_to_string("digest_template.html", {'user': user, 'items': latestItems});
-            text_content = strip_tags(html_content);
+            html_content = render_to_string("digest_template.html", {'user': user, 'items': latestItems})
+            text_content = strip_tags(html_content)
             email = (
-                'HuskyHunt Weekly Digest',                    # subject 
-                text_content,                                 # text content
-                html_content,                                 # html content
+                'HuskyHunt Weekly Digest',  # subject
+                text_content,  # text content
+                html_content,  # html content
                 'Admin via HuskyHunt <admin@huskyhunt.com>',  # from email
-                [user.user.email]                             # to email
+                [user.user.email]  # to email
             )
             allMessages.append(email)
 
         successfullySent = send_mass_html_mail(tuple(allMessages), fail_silently=False)
 
-        message = "Successfully sent " + str(successfullySent) + " emails out of " + str(len(allMessages));
-        return message;
-            
+        message = "Successfully sent " + str(successfullySent) + " emails out of " + str(len(allMessages))
+        return message
+
 
 # Used to archive items that are old
 class archiveOldItems(CronJobBase):
-    RUN_AT_TIMES = ['04:00'] # Run at 4am
+    RUN_AT_TIMES = ['04:00']  # Run at 4am
 
     schedule = Schedule(run_at_times=RUN_AT_TIMES)
-    code = 'catalog.archiveOldItems'    # a unique code
+    code = 'catalog.archiveOldItems'  # a unique code
 
     def do(self):
         today = timezone.now()
@@ -101,18 +103,19 @@ class archiveOldItems(CronJobBase):
             item.save()
             message += "'" + item.item_title + "', "
 
-        return message;
+        return message
+
 
 # Used to delete old archived items
 class deleteOldItems(CronJobBase):
-    RUN_AT_TIMES = ['04:00'] # Run at 4am
+    RUN_AT_TIMES = ['04:00']  # Run at 4am
 
     schedule = Schedule(run_at_times=RUN_AT_TIMES)
-    code = 'catalog.deleteOldItems'    # a unique code
+    code = 'catalog.deleteOldItems'  # a unique code
 
     def do(self):
         today = timezone.now()
-        delete_time = today - timezone.timedelta(weeks=16) # Considered to be deleted 16 weeks before today
+        delete_time = today - timezone.timedelta(weeks=16)  # Considered to be deleted 16 weeks before today
 
         # Get the items that left before today
         delete_items = CatalogItem.objects.filter(

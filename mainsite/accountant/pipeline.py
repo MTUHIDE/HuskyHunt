@@ -5,10 +5,13 @@ import requests
 from io import BytesIO
 from accountant.models import user_profile
 
+
 def verify_scope(request, backend, user, response, *args, **kwargs):
     if not user.email.endswith('@mtu.edu'):
         messages.warning(request, 'Please log in with your MTU email.')
+        user.delete()  # Delete the user since we don't need to keep track of users without an mtu email
         return HttpResponseRedirect('/')
+
 
 def update_user_social_data(strategy, *args, **kwargs):
     response = kwargs['response']
