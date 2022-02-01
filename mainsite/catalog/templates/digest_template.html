@@ -27,7 +27,7 @@
 		.card-title {
 			margin-top: 0;
 			margin-bottom: 0.2rem;
-			color: #404040;
+			color: #000;
 			font-size: 1.3rem;
 			font-family: inherit;
 			font-weight: 500;
@@ -81,14 +81,16 @@
 											<div class="husky-card">
 												<div class="card-body">
 													<h3 class="card-title">
-														<a id="itemTitle" href="https://huskyhunt.com/catalog/{{item.id}}">
-															{{ item.item_title }} </a>
-													</h3>
-													<h4
-														style="font-family: sans-serif;font-weight: 400;line-height: 1.4;margin: 0;margin-bottom: 0;color: #000;font-size: 1rem;">
+														{{ item.item_title }} </h3>
+													<h4 style="font-weight: 400;margin: 0;color: #000;font-size: 1rem;">
 														${{ item.item_price }} </h4>
 													<h5 style="color: #000;margin: 0;margin-bottom: 0;font-size: 1rem;">
 														Seller: {{ item.first_name }} </h5>
+													<h4 style="font-weight: 400;margin: 0;color: #000;font-size: 1rem;">
+														{{ item.item_description }} </h4>
+													<a href="https://huskyhunt.com/catalog/{{item.id}}"
+														style="background-color: #ffcd00;border: solid 1px #000;border-radius: 5px;color: #000;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;padding: 5px 10px;text-decoration: none;border-color: #666;">
+														View Details</a>
 												</div>
 											</div>
 											{% endfor %}
@@ -104,8 +106,8 @@
 																	<tr>
 																		<td>
 																			<a href="https://huskyhunt.com" target="_blank"
-																				style="background-color: #ffcd00;border: solid 1px #3498db;border-radius: 5px;box-sizing: border-box;color: #000;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;margin: 0;padding: 12px 25px;text-decoration: none;text-transform: capitalize;border-color: #666;">
-																				To the HuskyHunt site! </a>
+																				style="background-color: #ffcd00;border: solid 1px #000;border-radius: 5px;color: #000;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;padding: 12px 25px;text-decoration: none;border-color: #000;">
+																				To The HuskyHunt Site! </a>
 																		</td>
 																	</tr>
 																</tbody>
