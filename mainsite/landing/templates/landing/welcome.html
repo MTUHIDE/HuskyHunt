@@ -115,6 +115,7 @@
     </a>
 </div>
 
+{% if displayRules %}
 <div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content" style="background-color: var(--main-pg-bg-color)">
@@ -165,6 +166,7 @@
         $('#welcomeModal').modal('show');
     });
 </script>
+{% endif %}
     
 <div class="disclaimer">
     <p>Please be aware when you message a seller your MTU email address will be shared with that seller.  We do not guarantee any reliablity <br>

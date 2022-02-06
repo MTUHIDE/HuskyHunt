@@ -112,6 +112,8 @@ CRON_CLASSES = [
     "catalog.cron.digestEmail",
 ]
 
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+
 ROOT_URLCONF = 'mainsite.urls'
 
 TEMPLATES = [
