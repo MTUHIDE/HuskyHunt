@@ -47,7 +47,7 @@ p {
   color: var(--main-itemTitle-color);
 }
 
-.top-links a, .my-account a, .logout a{
+.top-links a, .my-account a, .logout a {
   color: var(--mtu-yellow);
   padding-left: 1rem;
 }
