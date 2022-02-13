@@ -36,7 +36,7 @@ def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None
 
 # Sends a weekly email with new posts for the week
 class digestEmail(CronJobBase):
-    RUN_EVERY_MINS = 10080  # Run every 7 days
+    RUN_EVERY_MINS = 1440  # Run every 24 hours
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'catalog.digestEmail'  # a unique code
@@ -50,12 +50,19 @@ class digestEmail(CronJobBase):
             archived='False',
             archivedType='VI',
             date_added__gte=lastWeek
-        )
+        )[:10]
 
         if latestItems.count() == 0:
             return "No new items to include in weekly email!"
 
-        users = user_profile.objects.filter(digest=True)
+        users = user_profile.objects.filter(
+            digest=True,
+            lastDigest__lte=lastWeek,
+        ).order_by('?')[:30]
+
+        if users.count() == 0:
+            return "No remaining users to send mass email!"
+
         allMessages = list(())
 
         for user in users:
@@ -69,6 +76,8 @@ class digestEmail(CronJobBase):
                 [user.user.email]  # to email
             )
             allMessages.append(email)
+            user.lastDigest = today
+            user.save()
 
         successfullySent = send_mass_html_mail(tuple(allMessages), fail_silently=False)
 
