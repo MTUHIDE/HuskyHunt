@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import include, path
 from django.conf.urls import url, include
+from django.contrib.staticfiles.urls import static
 from rest_framework import routers
 from api import views
 from . import comingSoon
@@ -44,5 +45,5 @@ urlpatterns = [
 if settings.SHOW_COMING_SOON:
     urlpatterns.insert(0, url(r'^', comingSoon.index, name='index'))
 
-from django.contrib.staticfiles.urls import static
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
