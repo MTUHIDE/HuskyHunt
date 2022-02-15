@@ -13,6 +13,8 @@ from django.urls import reverse
 from accountant.models import user_profile
 from datetime import datetime, timedelta
 import pytz
+
+from moderation.models import InitialContactLog
 from profanity_check.models import ArchivedType
 from selling.forms import SellingForm
 
@@ -265,6 +267,9 @@ def email_functionality(request, pk, item, article, shortdesc, extra_tags):
 
         # Displays that the email was sent successfully
         messages.error(request, 'Message sent successfully!', extra_tags=extra_tags)
+
+        # Log the email
+        InitialContactLog.create(user_email, to_email, datetime.now().astimezone(pytz.timezone('UTC')), request.GET['message'])
 
     # If the message is empty then an error message is displayed
     else:
