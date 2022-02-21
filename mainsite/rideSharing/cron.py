@@ -7,10 +7,10 @@ from profanity_check.models import ArchivedType
 
 # Used to archive rides that have already "left"
 class ArchiveRides(CronJobBase):
-    RUN_AT_TIMES = ['04:00'] # Run at 4am
+    RUN_AT_TIMES = ['04:00']  # Run at 4am
 
-    schedule = Schedule(run_at_times = RUN_AT_TIMES)
-    code = 'rideSharing.archive_rides'    # a unique code
+    schedule = Schedule(run_at_times=RUN_AT_TIMES)
+    code = 'rideSharing.archive_rides'  # a unique code
 
     def do(self):
         today = date.today()
@@ -27,19 +27,21 @@ class ArchiveRides(CronJobBase):
             ride.archived = "True"
             ride.archivedType = ArchivedType.Types.ARCHIVED
             ride.save()
-        
+
         return "Archived " + str(len(archive_rides)) + " rides that left on " + str(today)
+
 
 # Used to delete old archived rides
 class deleteOldRides(CronJobBase):
-    RUN_AT_TIMES = ['04:00'] # Run at 4am
+    RUN_AT_TIMES = ['04:00']  # Run at 4am
 
     schedule = Schedule(run_at_times=RUN_AT_TIMES)
-    code = 'rideSharing.deleteOldRides'    # a unique code
+    code = 'rideSharing.deleteOldRides'  # a unique code
 
     def do(self):
         today = timezone.now()
-        delete_time = today - timezone.timedelta(weeks=16) # Considered to be deleted if the ride left more than 16 weeks ago
+        delete_time = today - timezone.timedelta(
+            weeks=16)  # Considered to be deleted if the ride left more than 16 weeks ago
 
         # Get the rides that left before today
         delete_rides = RideItem.objects.filter(

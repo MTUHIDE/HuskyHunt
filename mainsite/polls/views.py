@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from polls.models import Choice, Question
 
+
 # Create your views here.
 @login_required(login_url='/')
 def index(request):
@@ -20,10 +21,12 @@ def index(request):
     }
     return render(request, template, context)
 
+
 @login_required(login_url='/')
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', { 'question': question })
+    return render(request, 'polls/results.html', {'question': question})
+
 
 @login_required(login_url='/')
 def vote(request, question_id):
@@ -39,10 +42,11 @@ def vote(request, question_id):
     else:
         selected_choice.votes += 1
         selected_choice.save()
-        #Always return an HttpResponseRedirect after successfully
-        #dealing with POST data.  This prevents data from being posted twice
-        #if a user hits the Back button in the browser.
+        # Always return an HttpResponseRedirect after successfully
+        # dealing with POST data.  This prevents data from being posted twice
+        # if a user hits the Back button in the browser.
         return HttpResponseRedirect(reverse('polls:results', args=(question.pk,)))
+
 
 class DetailView(generic.DetailView):
     model = Question
