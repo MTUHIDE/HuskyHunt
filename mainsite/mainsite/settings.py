@@ -30,6 +30,7 @@ SHOW_COMING_SOON = env.bool('SHOW_COMING_SOON', False)
 DISABLE_RIDESHARING = env.bool('DISABLE_RIDESHARING', False)
 DISABLE_CATALOG = env.bool('DISABLE_CATALOG', False)
 DISABLE_SELLING = env.bool('DISABLE_SELLING', False)
+DIGEST_EMAILS = env.bool('DIGEST_EMAILS', False)
 
 DATABASES = {
     'default': env.db('DATABASE_URL', default='sqlite:///huskydb')
