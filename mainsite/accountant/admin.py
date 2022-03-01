@@ -11,7 +11,7 @@ def archiveAllUserPosts(user):
 
 @admin.register(user_profile)
 class user_profileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'points', 'banned_until')
+    list_display = ('user', 'points', 'banned_until', 'digest', 'lastDigest')
 
     name = 'test'
     actions = ['timeout_user_seven', 'timeout_user_thirty', 'ban_user']

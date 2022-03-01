@@ -49,6 +49,14 @@ def passwordReset(email, from_email):
 
 def welcome(request):
     template = 'landing/welcome.html'
-    context = {}
+
+    displayRules = False
+    if not request.session.has_key('displayRules'):
+        displayRules = True
+        request.session['displayRules'] = False
+
+    context = {
+        'displayRules': displayRules
+    }
 
     return render(request, template, context)
