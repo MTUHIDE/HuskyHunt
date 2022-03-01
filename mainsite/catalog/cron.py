@@ -5,6 +5,7 @@ from django.utils import timezone
 from profanity_check.models import ArchivedType
 from accountant.models import user_profile
 from django.core.mail import BadHeaderError, EmailMessage, send_mass_mail, get_connection
+from django.conf import settings
 
 # HTML EMAIL
 from django.core.mail import EmailMultiAlternatives
@@ -42,47 +43,50 @@ class digestEmail(CronJobBase):
     code = 'catalog.digestEmail'  # a unique code
 
     def do(self):
-        today = timezone.now()
-        lastWeek = today - timezone.timedelta(weeks=1)  # Considered latest items in last week
+        if settings.DIGEST_EMAILS:
+            today = timezone.now()
+            lastWeek = today - timezone.timedelta(weeks=1)  # Considered latest items in last week
 
-        # Get public items in last week
-        latestItems = CatalogItem.objects.filter(
-            archived='False',
-            archivedType='VI',
-            date_added__gte=lastWeek
-        )[:10]
+            # Get public items in last week
+            latestItems = CatalogItem.objects.filter(
+                archived='False',
+                archivedType='VI',
+                date_added__gte=lastWeek
+            )[:10]
 
-        if latestItems.count() == 0:
-            return "No new items to include in weekly email!"
+            if latestItems.count() == 0:
+                return "No new items to include in weekly email!"
 
-        users = user_profile.objects.filter(
-            digest=True,
-            lastDigest__lte=lastWeek,
-        ).order_by('?')[:30]
+            users = user_profile.objects.filter(
+                digest=True,
+                lastDigest__lte=lastWeek,
+            ).order_by('?')[:30]
 
-        if users.count() == 0:
-            return "No remaining users to send mass email!"
+            if users.count() == 0:
+                return "No remaining users to send mass email!"
 
-        allMessages = list(())
+            allMessages = list(())
 
-        for user in users:
-            html_content = render_to_string("digest_template.html", {'user': user, 'items': latestItems})
-            text_content = strip_tags(html_content)
-            email = (
-                'HuskyHunt Weekly Digest',  # subject
-                text_content,  # text content
-                html_content,  # html content
-                'Admin via HuskyHunt <admin@huskyhunt.com>',  # from email
-                [user.user.email]  # to email
-            )
-            allMessages.append(email)
-            user.lastDigest = today
-            user.save()
+            for user in users:
+                html_content = render_to_string("digest_template.html", {'user': user, 'items': latestItems})
+                text_content = strip_tags(html_content)
+                email = (
+                    'HuskyHunt Weekly Digest',  # subject
+                    text_content,  # text content
+                    html_content,  # html content
+                    'Admin via HuskyHunt <admin@huskyhunt.com>',  # from email
+                    [user.user.email]  # to email
+                )
+                allMessages.append(email)
+                user.lastDigest = today
+                user.save()
 
-        successfullySent = send_mass_html_mail(tuple(allMessages), fail_silently=False)
+            successfullySent = send_mass_html_mail(tuple(allMessages), fail_silently=False)
 
-        message = "Successfully sent " + str(successfullySent) + " emails out of " + str(len(allMessages))
-        return message
+            message = "Successfully sent " + str(successfullySent) + " emails out of " + str(len(allMessages))
+            return message
+        else:
+            return "Digest Emails Disabled"
 
 
 # Used to archive items that are old
