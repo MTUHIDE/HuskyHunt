@@ -4,11 +4,11 @@ from . import views
 
 app_name = 'selling'
 if not settings.DISABLE_SELLING:
-	urlpatterns = [
-	    path('', views.index, name='index')
-	]
+    urlpatterns = [
+        path('', views.index, name='index')
+    ]
 else:
-  urlpatterns = [
-    path('', views.disabled, name="index"),
-    re_path(r'^.*/$', views.disabled, name='index'),
-  ]
+    urlpatterns = [
+        path('', views.disabled, name="index"),
+        re_path(r'^.*/$', views.disabled, name='index'),
+    ]

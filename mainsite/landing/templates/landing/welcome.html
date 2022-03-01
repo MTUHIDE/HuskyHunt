@@ -114,6 +114,59 @@
         </div>
     </a>
 </div>
+
+{% if displayRules %}
+<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content" style="background-color: var(--main-pg-bg-color)">
+      <div class="modal-header" style="background-color: var(--main-topbarBackground-color)">
+        <h5 class="modal-title" id="rulesAndProcedures" style="color: var(--mtu-yellow)">Rules and Procedures</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: var(--white)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>Welcome to HuskyHunt!</h5>
+        <h6>We have a few simple rules.</h6>
+        <ul style="color: var(--main-itemTitle-color)">
+            <li>Be respectful of others.</li>
+            <li>Keep profanity to a minimum.</li>
+            <li>Be safe.</li>
+        </ul>
+
+        <h6>Messaging a seller:</h6>
+        <p>
+            To message a seller, click on the item and type your message in the "message seller" text box.
+            Our email service will message the seller and share your MTU email address with the seller. The seller can contact you
+            via email to dicuss more.
+        </p>
+
+        <h6>Selling an item</h6>
+        <p>
+            Once your item is posted on the site, check your MTU inbox for messages from potential buyers. To message a potential buyer back,
+            message their MTU email address provided in the email. 
+        </p>
+
+      </div>
+      <div class="modal-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    $(window).on('load', function() {
+        $('#welcomeModal').modal('show');
+    });
+</script>
+{% endif %}
     
 <div class="disclaimer">
     <p>Please be aware when you message a seller your MTU email address will be shared with that seller.  We do not guarantee any reliablity <br>

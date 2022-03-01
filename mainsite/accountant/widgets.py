@@ -1,7 +1,5 @@
-from django.template import loader
 from django.utils.translation import gettext_lazy as _
 from django.forms.widgets import ClearableFileInput
-
 
 
 class PreviewImageWidget(ClearableFileInput):
@@ -14,17 +12,23 @@ class PreviewImageWidget(ClearableFileInput):
 
     def clear_button_name(self, name):
         return name + '-clear'
+
     def clear_button_id(self, name):
         return name + '_id'
+
     def preview_image_name(self, name):
         return name + '-preview'
+
     def preview_image_id(self, name):
         return name + '_id'
+
     def reset_check_name(self, name):
         return name + '-reset'
+
     def reset_check_id(self, name):
         return name + '_id'
-    #def format_value:
+
+    # def format_value:
 
     def get_context(self, name, value, attrs):
         width = attrs.get('width', self.default_width)
@@ -43,7 +47,7 @@ class PreviewImageWidget(ClearableFileInput):
             context.pop(i, None)
 
         context['widget'].update({
-            #'value':  #presumably passed up in the ModelForm
+            # 'value':  #presumably passed up in the ModelForm
             'defaultPictureURL': self.defaultPictureURL,
 
             'button_name': button_name,
@@ -53,7 +57,7 @@ class PreviewImageWidget(ClearableFileInput):
             'reset_check_id': reset_check_id,
             'reset_check_name': reset_check_name,
 
-            #name, attrs -- inherited
+            # name, attrs -- inherited
             'id': (name + '_id'),
 
             'preview_text': "Uploaded Image",

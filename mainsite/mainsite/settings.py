@@ -30,6 +30,7 @@ SHOW_COMING_SOON = env.bool('SHOW_COMING_SOON', False)
 DISABLE_RIDESHARING = env.bool('DISABLE_RIDESHARING', False)
 DISABLE_CATALOG = env.bool('DISABLE_CATALOG', False)
 DISABLE_SELLING = env.bool('DISABLE_SELLING', False)
+DIGEST_EMAILS = env.bool('DIGEST_EMAILS', False)
 
 DATABASES = {
     'default': env.db('DATABASE_URL', default='sqlite:///huskydb')
@@ -40,11 +41,10 @@ MEDIA_ROOT = env.str('MEDIA_ROOT', os.path.join(BASE_DIR, 'uploads'))
 ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = 'landing'
-LOGIN_REDIRECT_URL = 'catalog'
 
 AUTHENTICATION_BACKENDS = (
- 'social_core.backends.google.GoogleOAuth2',  # for Google authentication
- 'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',  # for Google authentication
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 SOCIAL_AUTH_PIPELINE = (
@@ -105,11 +105,14 @@ MIDDLEWARE = [
 ]
 
 CRON_CLASSES = [
-	"rideSharing.cron.ArchiveRides",
+    "rideSharing.cron.ArchiveRides",
     "rideSharing.cron.deleteOldRides",
     "catalog.cron.archiveOldItems",
-    "catalog.cron.deleteOldItems"
+    "catalog.cron.deleteOldItems",
+    "catalog.cron.digestEmail",
 ]
+
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 ROOT_URLCONF = 'mainsite.urls'
 
@@ -154,7 +157,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'America/New_York'
@@ -179,7 +181,7 @@ MEDIA_URL = '/uploads/'
 LOGIN_REDIRECT_URL = 'catalog/'
 LOGOUT_REDIRECT_URL = '/'
 
-#For images uploaded for items/etc
+# For images uploaded for items/etc
 MAX_UPLOAD_SIZE = 5242880
 
 ALLOWED_UPLOAD_IMAGES = ('jpg', 'png', 'jpeg')
