@@ -1,9 +1,4 @@
 from django.contrib import admin
-from accountant.models import user_profile
-from datetime import datetime, timedelta
-import pytz
-from django.core.mail import BadHeaderError, send_mail, EmailMessage
-from catalog.models import CatalogItem
 from moderation.moderationActions import *
 
 

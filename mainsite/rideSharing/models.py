@@ -1,8 +1,5 @@
-from django.contrib.auth.models import User
 from accountant.models import user_profile
-from django.db import models
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
 from profanity_check.models import ArchivedType
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator

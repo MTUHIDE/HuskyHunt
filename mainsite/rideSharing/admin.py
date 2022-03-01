@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RideCategory
+from .models import RideCategory, RideItem
 from moderation.moderationActions import *
 
 
