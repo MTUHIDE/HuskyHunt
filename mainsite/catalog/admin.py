@@ -1,7 +1,5 @@
 from django.contrib import admin
 from .models import CatalogItem, Category
-from accountant.models import user_profile
-from profanity_check.models import ArchivedType
 from moderation.moderationActions import *
 
 

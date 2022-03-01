@@ -4,7 +4,6 @@ from datetime import date, timedelta
 from django.utils import timezone
 from profanity_check.models import ArchivedType
 from accountant.models import user_profile
-from django.core.mail import BadHeaderError, EmailMessage, send_mass_mail, get_connection
 from django.conf import settings
 
 # HTML EMAIL

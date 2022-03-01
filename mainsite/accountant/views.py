@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import user_passes_test
@@ -6,12 +6,9 @@ from catalog.models import CatalogItem, Category
 from rideSharing.models import RideItem
 from catalog.views import isUserNotBanned
 from rest_framework.authtoken.models import Token
-from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 from accountant.models import user_profile
-from django.db.models import Q
-from django.contrib.auth.models import User
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -19,7 +16,6 @@ from django.conf import settings
 import math
 
 from django.urls import reverse
-from django.forms import ModelForm
 
 from .widgets import PreviewImageWidget
 

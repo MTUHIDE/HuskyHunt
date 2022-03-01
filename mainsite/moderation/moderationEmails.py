@@ -1,9 +1,5 @@
-from django.core.mail import BadHeaderError, send_mail, EmailMessage
-from datetime import datetime, timedelta
-from catalog.models import CatalogItem
-from rideSharing.models import RideItem
+from django.core.mail import EmailMessage
 from django.contrib.auth.models import User
-from datetime import datetime
 import math
 
 

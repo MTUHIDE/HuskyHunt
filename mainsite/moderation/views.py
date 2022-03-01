@@ -10,11 +10,8 @@ from django.utils import timezone
 from catalog.views import isUserNotBanned
 from catalog.models import CatalogItem
 from accountant.models import user_profile
-from accountant.admin import archiveAllUserPosts
 from profanity_check.models import ArchivedType
 from rideSharing.models import RideItem
-from django.core.mail import BadHeaderError, send_mail, EmailMessage
-from datetime import datetime, timedelta
 from moderation.moderationActions import make_item_public, ignore_report, remove_item, suspend_user, make_ride_public, \
     remove_ride
 
