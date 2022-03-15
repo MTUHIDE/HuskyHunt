@@ -1,12 +1,11 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from catalog.models import CatalogItem, Category
 from django.utils import timezone
 from django.db.models import Q
-from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
-from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.urls import reverse

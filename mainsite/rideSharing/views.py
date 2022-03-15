@@ -1,5 +1,5 @@
 import re  # eeeeee
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Q

@@ -1,15 +1,11 @@
-from django.contrib.auth.models import User  # imports the user table
 from django.db import models
 from django.conf import settings
 from accountant.models import user_profile
 from django.dispatch import receiver
 from django.db.models.signals import post_delete, pre_save
-from django.utils.translation import ugettext_lazy as _
-from django.db.models import Q
+
 from profanity_check.models import ArchivedType
-from django.core.exceptions import FieldError
 from django.contrib import admin
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 # Defines a table of categories

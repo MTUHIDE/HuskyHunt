@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save, pre_save, post_delete
@@ -8,6 +7,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
+from django.utils import timezone
 
 upload_directory = 'account/profilepics/'
 
@@ -90,6 +90,7 @@ class user_profile(models.Model):
     points = models.IntegerField(blank=False, null=False, default=0)
     banned_until = models.DateTimeField(null=True, auto_now_add=False)
     digest = models.BooleanField(default=True)
+    lastDigest = models.DateTimeField(null=False,default=timezone.now)
 
     def __str__(self):
         return self.user.username

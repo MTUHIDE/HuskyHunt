@@ -1,4 +1,3 @@
-from catalog.models import CatalogItem, Category
 from accountant.models import user_profile
 from profanity_check.models import ArchivedType
 from .models import ItemModerationActions, RideModerationActions, ModerationActionType

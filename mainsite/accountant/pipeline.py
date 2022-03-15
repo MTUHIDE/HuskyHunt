@@ -1,9 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.core import files
 from django.contrib import messages
-import requests
-from io import BytesIO
-from accountant.models import user_profile
 
 
 def verify_scope(request, backend, user, response, *args, **kwargs):

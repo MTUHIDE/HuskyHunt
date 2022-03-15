@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
-from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.models import User
-from social_core.pipeline.partial import partial
+
 from catalog.views import isUserNotBanned
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -51,6 +49,14 @@ def passwordReset(email, from_email):
 
 def welcome(request):
     template = 'landing/welcome.html'
-    context = {}
+
+    displayRules = False
+    if not request.session.has_key('displayRules'):
+        displayRules = True
+        request.session['displayRules'] = False
+
+    context = {
+        'displayRules': displayRules
+    }
 
     return render(request, template, context)
