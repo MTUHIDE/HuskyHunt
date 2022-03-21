@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 import pytz
 
 from moderation.models import InitialContactLog
+from profanity_check import predict_prob
 from profanity_check.models import ArchivedType
 from selling.forms import SellingForm
 
@@ -186,6 +187,21 @@ def email(request, pk):
 
 
 def email_functionality(request, pk, item, article, shortdesc, extra_tags):
+
+    # Perform a profanity check on the message
+    # A number from 0-1 representing how strong we should enforce the profanity filter
+    # using the profanity check probability model, the function for probability profanity checking
+    # returns the probability [0, 1] for how likely a string contains profanity
+    PROFANITY_FILTER_STRENGTH = .70
+    probably_contains_profanity = predict_prob([request.GET['message']])
+
+    # If we more than likely detected profanity,
+    if probably_contains_profanity >= PROFANITY_FILTER_STRENGTH:
+        # Error them out
+        messages.error(request, 'There was profanity detected in your message! Please try again.', extra_tags=extra_tags)
+        return
+
+
     name = request.user.first_name
 
     MAX_EMAIL_COUNT = 10  # 5 seemed too little if you're buying and trying to coordinate rides
