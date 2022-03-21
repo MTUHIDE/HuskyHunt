@@ -200,11 +200,11 @@ def email_functionality(request, pk, item, article, shortdesc, extra_tags):
     user_email = request.user.email
 
     # The body of the email
-    message = (name +
-               ' has messaged you about ' + article + " " + shortdesc + ' you posted on HuskyHunt!\n\n' +
-               'Message from ' + name + ': ' + request.GET['message'] +
-               '\n\nYou can respond by replying to this email, or by contacting ' +
-               name + ' directly: ' + user_email)
+
+    message = f"{name} has messaged you about an item that you posted on HuskyHunt!\n\nThey are interested in the " \
+              f"following item:\n{item.item_title}:\n{item.item_description}\n\nMessage from " \
+              f"{name}: {request.GET['message']}\n\nYou can respond by replying to this email, or by contacting " \
+              f"{name} directly by emailing: {user_email} "
 
     # The email that this message is sent from
     from_email = name + ' via HuskyHunt <admin@huskyhunt.com>'
