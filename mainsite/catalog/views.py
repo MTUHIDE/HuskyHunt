@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 import pytz
 
 from moderation.models import InitialContactLog
+from profanity_check import predict_prob
 from profanity_check.models import ArchivedType
 from selling.forms import SellingForm
 
@@ -186,6 +187,21 @@ def email(request, pk):
 
 
 def email_functionality(request, pk, item, article, shortdesc, extra_tags):
+
+    # Perform a profanity check on the message
+    # A number from 0-1 representing how strong we should enforce the profanity filter
+    # using the profanity check probability model, the function for probability profanity checking
+    # returns the probability [0, 1] for how likely a string contains profanity
+    PROFANITY_FILTER_STRENGTH = .70
+    probably_contains_profanity = predict_prob([request.GET['message']])
+
+    # If we more than likely detected profanity,
+    if probably_contains_profanity >= PROFANITY_FILTER_STRENGTH:
+        # Error them out
+        messages.error(request, 'There was profanity detected in your message! Please try again.', extra_tags=extra_tags)
+        return
+
+
     name = request.user.first_name
 
     MAX_EMAIL_COUNT = 10  # 5 seemed too little if you're buying and trying to coordinate rides
@@ -200,11 +216,11 @@ def email_functionality(request, pk, item, article, shortdesc, extra_tags):
     user_email = request.user.email
 
     # The body of the email
-    message = (name +
-               ' has messaged you about ' + article + " " + shortdesc + ' you posted on HuskyHunt!\n\n' +
-               'Message from ' + name + ': ' + request.GET['message'] +
-               '\n\nYou can respond by replying to this email, or by contacting ' +
-               name + ' directly: ' + user_email)
+
+    message = f"{name} has messaged you about an item that you posted on HuskyHunt!\n\nThey are interested in the " \
+              f"following item:\n{item.item_title}:\n{item.item_description}\n\nMessage from " \
+              f"{name}: {request.GET['message']}\n\nYou can respond by replying to this email, or by contacting " \
+              f"{name} directly by emailing: {user_email} "
 
     # The email that this message is sent from
     from_email = name + ' via HuskyHunt <admin@huskyhunt.com>'
