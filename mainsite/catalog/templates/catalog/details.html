@@ -205,7 +205,7 @@
 
             {% if messages %}
                 {% for message in messages %}
-                    {% if message.message == "Please enter a message!" or message.message|slice:":27" in 'You can only send 5 messages per day!' or message.message|slice:":27" in 'You can only report 5 posts per day!'  %}
+                    {% if message.message == "Please enter a message!" or message.message|slice:":27" in 'You can only send 5 messages per day!' or message.message|slice:":27" in 'You can only report 5 posts per day!' or message.message == 'There was profanity detected in your message! Please try again.' %}
                         <div class="alert alert-red">
                             <strong>{{ message }}</strong> </br> Message failed to send!
                     {% elif message.message == "Please wait one minute between emails!" or message.message == "Please wait one minute between reporting posts!"  %}

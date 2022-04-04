@@ -3,14 +3,36 @@
 
 <!-- BEGIN FILTERS BLOCK FOR MOBILE DEVICES -->
 {% block filtersmobile %}
-<div style="width: 50%; margin-left: 25%">
+
+<style> 
+
+  .mobile {
+    width: 50%;
+    margin-left: 25%;
+  }
+
+  .mobile-husky-btn {
+    width: 100%; 
+    margin-bottom: 20px;
+  }
+
+  .mobile-husky-color-btn {
+    width: 100%; 
+    margin-bottom: 20px; 
+    background-color: #ffc107; 
+    color: black;
+  }
+
+</style>
+
+<div class="mobile">
   {% for filter in filters %}
   <form id="{{ filter|cut:' ' }}Form" action="/catalog/filter" method="get" onsubmit="return {{ filter|cut:' ' }}Submit();">
 
   {% if filter.category_name in curFilters %}
-  <button type="submit" id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
+  <button type="submit" id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning mobile-husky-color-btn">{{filter.category_name}}</button>
   {% else %}
-  <button type="submit"  id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+  <button type="submit"  id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning mobile-husky-btn">{{filter.category_name}}</button>
   {% endif %}
   </form>
 
@@ -41,7 +63,7 @@
 
   {% endfor %}
 
-  <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'catalog:index' %}">Clear Filters</a>
+  <a type="button" class="btn btn-outline-warning husky-btn" href="{% url 'catalog:index' %}">Clear Filters</a>
 </div>
 {% endblock %}
 <!-- END FILTERS BLOCK FOR MOBILE DEVICES -->
@@ -51,24 +73,107 @@
 
 {% block content %}
 
-<div class="row" style="width: 100%;">
-  <!--Aligns all the contents of the side bar to the cetner, and fixes the size of the col the side bar in in -->
+<style> 
+
+  .husky-btn {
+    width: 100%; 
+    margin-bottom: 20px;
+  }
+
+  .husky-color-btn {
+    width: 100%; 
+    margin-bottom: 20px; 
+    background-color: #ffc107; 
+    color: black;
+  }
+
+  .width {
+    width: 100%;
+  }
+
+  .align {
+    text-align: center;
+  }
+
+  .inline {
+    display: inline-block;
+  }
+
+  .husky-col {
+    position: static;
+    height: 100%;
+  }
+
+  .failed-search {
+    background-color: black; 
+    border: 2px solid black; 
+    border-spacing: 10px; 
+    text-align: center; 
+    margin-bottom: 20px; 
+    margin-top: 10px;
+  }
+
+  .failed-search-header {
+    color: #ffcd00; 
+    margin-top: 3px; 
+    margin-bottom: 1.5px;
+  }
+
+  .failed-search-body {
+    color: #ffcd00; 
+    margin-top: 1.5px; 
+    margin-bottom: 3px;
+  }
+
+  .margin-zero {
+    margin: 0px;
+  }
+
+  .margin-top {
+    margin-top: 20px;
+  }
+
+  .invis {
+    visibility: hidden; 
+    height: 0px;
+  }
+
+  .inline-margin {
+    display: inline-block; 
+    margin-left: 20px;
+  }
+
+  .page-style {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+  }
+
+  .page-num {
+    padding: 20px; 
+    color: var(--main-itemTitle-color);
+  }
+
+</style>
+
+<div class="row width">
+  <!--Aligns all the contents of the side bar to the center, and fixes the size of the col the side bar in in -->
  <div class="main-split col align-center">
   <div class="wrapper">
     <!--Fixes the size of the side bar so it doent grow or shink. -->
     <div id="sidebar">
       <div class="sidebar-header">
-        <h1 id="title" class="my-4" style="text-align: center;">Catalog</h1>
+        <h1 id="title" class="my-4 align">Catalog</h1>
       </div>
-      <div style="display: inline-block;">
+      <div class="inline">
 
        {% for filter in filters %}
           <form id="{{ filter|cut:' ' }}Form" action="/catalog/filter" method="get" onsubmit="return {{ filter|cut:' ' }}Submit();">
 
           {% if filter.category_name in curFilters %}
-          <button type="submit" id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px; background-color: #ffc107; color: black;">{{filter.category_name}}</button>
+          <button type="submit" id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning husky-color-btn">{{filter.category_name}}</button>
           {% else %}
-          <button type="submit"  id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;">{{filter.category_name}}</button>
+          <button type="submit"  id="{{ filter|cut:' ' }}Button" name="filter" value="{{filter.category_name}}" class="btn btn-outline-warning husky-btn">{{filter.category_name}}</button>
           {% endif %}
            </form>
 
@@ -99,7 +204,7 @@
 
         {% endfor %}
 
-        <a type="button" class="btn btn-outline-warning" style="width: 100%; margin-bottom: 20px;" href="{% url 'catalog:index' %}">Clear Filters</a>
+        <a type="button" class="btn btn-outline-warning husky-btn" href="{% url 'catalog:index' %}">Clear Filters</a>
       </div>
     </div>
   </div>
@@ -107,15 +212,15 @@
 
 
     <!-- /.col-lg-3 -->
-    <div class="col " style="position: static;height: 100%;">
+    <div class="col husky-col">
       <div class="sidebar-header pgtitle-mobile">
-        <h1 id="title" class="my-4" style="text-align: center;">Catalog</h1>
+        <h1 id="title" class="my-4 align">Catalog</h1>
       </div>
 
       {% if failed_search %}
-        <div style="background-color: black; border: 2px solid black; border-spacing: 10px; text-align: center; margin-bottom: 20px; margin-top: 10px;">
-            <h1 style="color: #ffcd00; margin-top: 3px; margin-bottom: 1.5px;">Oops!</h1>
-            <h6 style="color: #ffcd00; margin-top: 1.5px; margin-bottom: 3px;">
+        <div class="failed-search">
+            <h1 class="failed-search-header">Oops!</h1>
+            <h6 class="failed-search-body">
 
               {% if failed_search == 'MisformedFilterFail' %}
               Seems like one of your filters isn't valid, so we couldn't find any results.
@@ -135,7 +240,7 @@
       {% endif %}
       <!-- -->
 
-        <div class="row" style="margin: 0px;">
+        <div class="row margin-zero">
             {% if items %}
             {% for item in items %}
             <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 justify-content-center catalog-item-wrap">
@@ -162,7 +267,7 @@
                 </div>
             </div>
         {% endfor %}
-          <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 justify-content-center catalog-item-wrap" style="visibility: hidden; height: 0px;">
+          <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 justify-content-center catalog-item-wrap invis">
                 <div class="card h-100 husky-card">
                     <div class="card-body">
                         <h3 class="card-title">
@@ -177,28 +282,28 @@
     </div>
 
 {% if items.paginator.num_pages > 1 %}
-    <div class="pagination" style="display: flex; justify-content: center; align-items: center;">
-        <span class="step-links" style="margin-top: 20px;">
+    <div class="pagination page-style">
+        <span class="step-links margin-top">
             {% if items.has_previous %}
-            <button type="button" class="btn btn-link husky-button-light" style="display: inline-block; margin-left: 20px;" onclick="appendToUrl('page', '1')">
+            <button type="button" class="btn btn-link husky-button-light inline-margin" onclick="appendToUrl('page', '1')">
             &laquo; first
             </button>
 
-            <button type="button" class="btn btn-link husky-button-light" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.previous_page_number }}')">
+            <button type="button" class="btn btn-link husky-button-light inline" onclick="appendToUrl('page', '{{ items.previous_page_number }}')">
             previous
             </button>
             {% endif %}
 
-            <span style="padding: 20px; color: var(--main-itemTitle-color);">
+            <span class="page-num">
                 Page {{ items.number }} of {{ items.paginator.num_pages }}.
             </span>
 
             {% if items.has_next %}
-            <button type="button" class="btn btn-link husky-button-light" style="display: inline-block;" onclick="appendToUrl('page', '{{ items.next_page_number }}')">
+            <button type="button" class="btn btn-link husky-button-light inline" onclick="appendToUrl('page', '{{ items.next_page_number }}')">
             next
             </button>
 
-            <button type="button" class="btn btn-link husky-button-light" style="display: inline-block; margin-right: 20px;" onclick="appendToUrl('page', '{{ items.paginator.num_pages }}')">
+            <button type="button" class="btn btn-link husky-button-light inline-margin" onclick="appendToUrl('page', '{{ items.paginator.num_pages }}')">
             last &raquo;
             </button>
 
@@ -207,7 +312,7 @@
     </div>
 {% endif %}
 
-      <div class="row" style="display: flex; justify-content: center; align-items: center;">
+      <div class="row page-style">
         <div class="disclaimer">
           <p>
             <br/>For issues regarding the website, please contact our development team at <a href="mailto:huskyhunt-l@mtu.edu">huskyhunt-l@mtu.edu</a>

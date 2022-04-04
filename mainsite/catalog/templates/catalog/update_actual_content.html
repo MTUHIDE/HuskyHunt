@@ -30,7 +30,6 @@
                 {{ catalog_form.as_p}}
                 <hr size="4" >
                 <div class="container" id="official_table">
-
                 </div>
                 <hr size="4" >
                 <button type="submit" class="btn btn-primary husky-button-light" id="btnRealButton">Submit</button>
@@ -46,11 +45,27 @@
             {% endfor %}
 
             <script type="text/javascript">
-              document.getElementById("id_item_picture").classList.add('file-field');
-              document.getElementById("id_item_picture").style.backgroundColor = 'transparent';
-              document.getElementById("id_item_picture").style.border = 'transparent';
-              document.getElementById("id_item_picture").style.color = '#a6b1b7';
-              document.getElementById("id_item_picture").style.padding = '0px';
+                // This seems to cause errors, commented out for now
+              {#document.getElementById("id_item_picture").classList.add('file-field');#}
+              {#document.getElementById("id_item_picture").style.backgroundColor = 'transparent';#}
+              {#document.getElementById("id_item_picture").style.border = 'transparent';#}
+              {#document.getElementById("id_item_picture").style.color = '#a6b1b7';#}
+              {#document.getElementById("id_item_picture").style.padding = '0px';#}
+              document.getElementById("id_item_price").setAttribute("placeholder", "Enter USD");
+
+              // Loop through all the labels on the page
+              var labels = document.getElementsByTagName('LABEL');
+              for (var i = 0; i < labels.length; i++) {
+                  label = labels[i];
+                  // If the label is for id_item_price
+                  if (label.htmlFor == "id_item_price") {
+                      document.getElementById("id_item_price").label = label;
+                      break;
+                  }
+                }
+
+              document.getElementById("id_item_price").label.innerHTML = "Enter Price (USD):"
+
             </script>
 
             <!-- Highlight Fields -->
